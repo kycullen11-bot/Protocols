@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0e131a">
+<title>NJ Patrol Field Reference</title>
+<style>
+:root{
+  --bg:#0e131a; --surface:#171f29; --surface2:#1e2833; --line:#2b3846;
+  --text:#e8eef5; --muted:#93a4b8; --dim:#6f8296;
+  --blue:#5aa1e8; --red:#f0555c; --green:#3fbc86; --amber:#eab04a; --violet:#ab86e8; --slate:#8fa3ba;
+  --accent:var(--blue);
+  --radius:14px;
+}
+body.day{
+  --bg:#f2f5f8; --surface:#ffffff; --surface2:#eef2f7; --line:#d6dee8;
+  --text:#141b23; --muted:#4f6070; --dim:#6d7f90;
+  --blue:#1c5fa8; --red:#b02franchise; --green:#1d7a55; --amber:#8a5c10; --violet:#6b45a8; --slate:#465768;
+}
+body.day{ --red:#b0303a; }
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:16px; line-height:1.45;
+  padding-bottom:calc(96px + env(safe-area-inset-bottom));
+}
+.eyebrow{
+  font-family:"Avenir Next Condensed","Helvetica Neue Condensed",Avenir,Helvetica,sans-serif;
+  text-transform:uppercase; letter-spacing:.13em; font-weight:600;
+}
+
+/* ---- header ---- */
+header{
+  position:sticky; top:0; z-index:40; background:var(--bg);
+  padding:calc(10px + env(safe-area-inset-top)) 14px 8px; border-bottom:1px solid var(--line);
+}
+.titlebar{display:flex; align-items:baseline; gap:10px; margin-bottom:9px;}
+.titlebar h1{
+  font-family:"Avenir Next Condensed","Helvetica Neue Condensed",Avenir,sans-serif;
+  text-transform:uppercase; letter-spacing:.05em; font-size:20px; font-weight:700; margin:0; flex:1;
+}
+.titlebar .ver{font-size:11px; color:var(--dim); letter-spacing:.08em;}
+.modebtn{
+  background:var(--surface2); color:var(--muted); border:1px solid var(--line);
+  border-radius:20px; padding:6px 11px; font-size:12px; font-weight:600; cursor:pointer;
+}
+.searchwrap{position:relative;}
+#search{
+  width:100%; padding:12px 40px 12px 14px; font-size:16px;
+  background:var(--surface); color:var(--text);
+  border:1px solid var(--line); border-radius:12px; outline:none;
+}
+#search::placeholder{color:var(--dim);}
+#search:focus{border-color:var(--accent);}
+#clear{
+  position:absolute; right:6px; top:50%; transform:translateY(-50%);
+  background:none; border:none; color:var(--dim); font-size:20px; padding:6px 10px; cursor:pointer; display:none;
+}
+.chips{display:flex; gap:7px; overflow-x:auto; padding:9px 0 3px; scrollbar-width:none;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{
+  flex:0 0 auto; background:var(--surface); border:1px solid var(--line); color:var(--muted);
+  border-radius:20px; padding:7px 13px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
+}
+.chip.on{background:var(--accent); border-color:var(--accent); color:#0b1017; }
+body.day .chip.on{color:#fff;}
+
+/* ---- sections ---- */
+main{padding:6px 12px 0;}
+.section{margin:18px 0 4px;}
+.section-head{
+  display:flex; align-items:center; gap:9px; padding:0 2px 8px;
+}
+.section-head .bar{width:4px; height:20px; border-radius:2px; background:var(--sc);}
+.section-head h2{
+  font-family:"Avenir Next Condensed","Helvetica Neue Condensed",Avenir,sans-serif;
+  text-transform:uppercase; letter-spacing:.09em; font-size:15px; font-weight:700; margin:0; color:var(--sc);
+}
+.card{
+  background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--sc);
+  border-radius:var(--radius); margin-bottom:9px; overflow:hidden;
+}
+.card > button.head{
+  width:100%; display:flex; align-items:center; gap:10px; text-align:left;
+  background:none; border:none; color:var(--text); padding:14px 14px; font-size:16px;
+  font-weight:650; cursor:pointer; font-family:inherit; line-height:1.3;
+}
+.card > button.head:focus-visible{outline:2px solid var(--accent); outline-offset:-3px;}
+.head .caret{margin-left:auto; color:var(--dim); font-size:13px; transition:transform .18s ease; flex:0 0 auto;}
+.card.open .head .caret{transform:rotate(90deg);}
+.body{display:none; padding:0 14px 14px;}
+.card.open .body{display:block;}
+
+/* ---- content blocks ---- */
+p.lede{margin:0 0 10px; color:var(--muted); font-size:14.5px;}
+ul.list{margin:0 0 10px; padding-left:18px;}
+ul.list li{margin-bottom:7px; font-size:14.5px;}
+.rows{border-top:1px solid var(--line);}
+.row{padding:9px 0; border-bottom:1px solid var(--line);}
+.row .k{font-size:12px; color:var(--sc); font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:2px;}
+.row .v{font-size:14.5px;}
+.steps{counter-reset:s; margin:2px 0 10px; padding:0; list-style:none;}
+.steps li{
+  counter-increment:s; position:relative; padding:8px 0 8px 30px; font-size:14.5px;
+  border-bottom:1px solid var(--line);
+}
+.steps li:last-child{border-bottom:none;}
+.steps li::before{
+  content:counter(s); position:absolute; left:0; top:9px;
+  width:20px; height:20px; border-radius:6px; background:var(--surface2); color:var(--sc);
+  font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;
+}
+.box{border-radius:10px; padding:11px 12px; margin:0 0 10px; font-size:14.5px; border:1px solid;}
+.box .bt{font-size:11px; letter-spacing:.11em; text-transform:uppercase; font-weight:700; margin-bottom:5px; display:block;}
+.box.warn{background:rgba(240,85,92,.09); border-color:rgba(240,85,92,.4);}
+.box.warn .bt{color:var(--red);}
+.box.go{background:rgba(63,188,134,.09); border-color:rgba(63,188,134,.35);}
+.box.go .bt{color:var(--green);}
+.box.info{background:var(--surface2); border-color:var(--line);}
+.box.info .bt{color:var(--muted);}
+.box ul{margin:0; padding-left:17px;} .box li{margin-bottom:5px;}
+b,strong{font-weight:700;}
+.hit{background:rgba(90,161,232,.28); border-radius:3px;}
+
+/* ---- 2AM button + sheet ---- */
+#amBtn{
+  position:fixed; right:16px; bottom:calc(18px + env(safe-area-inset-bottom)); z-index:60;
+  width:62px; height:62px; border-radius:50%; border:1px solid var(--line);
+  background:var(--surface); color:var(--text); cursor:pointer;
+  box-shadow:0 6px 22px rgba(0,0,0,.45);
+  font-family:"Avenir Next Condensed","Helvetica Neue Condensed",Avenir,sans-serif;
+  font-size:15px; font-weight:700; letter-spacing:.04em; line-height:1.05;
+}
+#amBtn small{display:block; font-size:9px; letter-spacing:.14em; color:var(--dim); font-weight:600;}
+#sheet{
+  position:fixed; inset:0; z-index:70; background:rgba(0,0,0,.6);
+  display:none; align-items:flex-end; backdrop-filter:blur(2px);
+}
+#sheet.on{display:flex;}
+.sheet-inner{
+  width:100%; max-height:88vh; overflow:auto; background:var(--surface);
+  border-radius:20px 20px 0 0; border-top:3px solid var(--blue);
+  padding:18px 18px calc(26px + env(safe-area-inset-bottom));
+  animation:up .22s ease;
+}
+@keyframes up{from{transform:translateY(24px); opacity:.4;}to{transform:none; opacity:1;}}
+.sheet-inner h3{margin:0 0 3px; font-size:17px;}
+.sheet-inner .sub{color:var(--muted); font-size:13.5px; margin:0 0 12px;}
+.q{padding:11px 0; border-bottom:1px solid var(--line); font-size:15px; display:flex; gap:11px;}
+.q span{color:var(--blue); font-weight:700; flex:0 0 auto;}
+.closebtn{
+  width:100%; margin-top:16px; padding:14px; border-radius:12px; border:1px solid var(--line);
+  background:var(--surface2); color:var(--text); font-size:15px; font-weight:650; cursor:pointer;
+}
+#empty{display:none; text-align:center; color:var(--muted); padding:44px 20px; font-size:15px;}
+footer{padding:26px 16px 10px; color:var(--dim); font-size:12px; line-height:1.5; text-align:center;}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="titlebar">
+    <h1>NJ Patrol Field Reference</h1>
+    <button class="modebtn" id="mode">Day</button>
+  </div>
+  <div class="searchwrap">
+    <input id="search" type="search" placeholder="Search: odor, TRO, frisk, Gant, screening…" autocomplete="off" autocorrect="off" spellcheck="false">
+    <button id="clear" aria-label="Clear search">&times;</button>
+  </div>
+  <div class="chips" id="chips"></div>
+</header>
+
+<main id="main"></main>
+<div id="empty">No match. Try a different word — try “consent”, “odor”, “aggressor”, or “commitment”.</div>
+
+<footer>
+  Practical field aid — not legal advice. Verify DV arrest procedures, commitment criteria, and juvenile handling against current statutes, AG Directives, county prosecutor guidance, and your department SOPs.
+</footer>
+
+<button id="amBtn">2AM<small>RULE</small></button>
+
+<div id="sheet">
+  <div class="sheet-inner">
+    <h3>The 2 A.M. Rule</h3>
+    <p class="sub">Answer these before you act. If you can't answer confidently — pause, gather more, call a supervisor, get a warrant.</p>
+    <div class="q"><span>1</span><div>What crime, if any, am I investigating?</div></div>
+    <div class="q"><span>2</span><div>What level of suspicion do I have <b>right now</b> — none, reasonable suspicion, or probable cause?</div></div>
+    <div class="q"><span>3</span><div>Am I detaining or arresting?</div></div>
+    <div class="q"><span>4</span><div>Am I searching? What <b>specific authority</b> allows it?</div></div>
+    <div class="q"><span>5</span><div>Am I entering a home? Warrant or a valid exception?</div></div>
+    <div class="q"><span>6</span><div>Could I explain this clearly to a judge six months from now?</div></div>
+    <button class="closebtn" id="closeSheet">Back to guide</button>
+  </div>
+</div>
+
+<script>
+/* ============ CONTENT ============ */
+const SECTIONS = [
+{ id:"found", name:"Foundation", color:"var(--blue)", cards:[
+  { t:"The 5 patrol questions", tags:["basics","search","arrest"], open:true, blocks:[
+    {type:"lede", v:"Every call reduces to these. Answer them and you can defend the call."},
+    {type:"steps", v:[
+      "Am I <b>detaining</b>? What standard justifies it — consensual, reasonable suspicion, or probable cause?",
+      "Am I <b>searching</b>? Which warrant exception applies?",
+      "Am I <b>arresting</b>? What facts establish probable cause?",
+      "Am I <b>questioning someone in custody</b>? Miranda first.",
+      "Am I <b>entering a home</b>? Warrant, consent, emergency aid, or exigency?"]}
+  ]},
+  { t:"Ladder of suspicion", tags:["basics","stop"], blocks:[
+    {type:"rows", v:[
+      ["Nothing","Consensual encounter only. Person is free to leave and free to refuse."],
+      ["Reasonable suspicion","Specific, articulable facts that crime may be afoot — not a hunch. Allows a brief Terry stop; frisk <b>only if</b> also armed and dangerous."],
+      ["Probable cause","Facts that would lead a reasonable officer to believe this person committed a crime. Allows arrest, complaint, warrant, automobile exception."]]}
+  ]},
+  { t:"Consensual vs Terry stop vs arrest", tags:["basics","stop","miranda"], blocks:[
+    {type:"rows", v:[
+      ["Consensual","No facts needed &bull; free to leave &bull; no Miranda &bull; search by consent only"],
+      ["Terry stop","Reasonable suspicion &bull; not free to leave &bull; usually no Miranda &bull; frisk only if armed/dangerous &bull; only as long as reasonably necessary"],
+      ["Arrest","Probable cause &bull; in custody &bull; Miranda before questioning &bull; search incident to arrest"]]}
+  ]},
+  { t:"Terry stops &amp; frisks", tags:["stop","frisk","search"], blocks:[
+    {type:"list", v:[
+      "<b>Handcuffs</b> are allowed during a Terry stop when reasonably necessary for safety. Cuffs alone do not equal arrest.",
+      "<b>Transport</b> during a Terry stop: generally no, unless it has become an arrest.",
+      "<b>A frisk needs two things:</b> a lawful stop <b>and</b> reasonable belief the person is armed and dangerous. Outer clothing only — safety, not evidence.",
+      "<b>Plain feel:</b> seize only if the object is <i>immediately apparent</i> contraband. No squeezing, no manipulating. A wallet is not searchable."]}
+  ]},
+  { t:"Miranda = custody + interrogation", tags:["miranda","arrest"], blocks:[
+    {type:"lede", v:"Both, or it doesn't apply."},
+    {type:"box", style:"go", bt:"No Miranda needed", v:"Traffic stops &bull; Terry stops &bull; general on-scene investigation (“What happened tonight?”) &bull; spontaneous or voluntary statements &bull; victim and witness interviews"},
+    {type:"box", style:"warn", bt:"Miranda required", v:"Post-arrest questioning (“Why'd you shove her?”) &bull; any question reasonably likely to elicit an incriminating response from someone in custody"},
+    {type:"list", v:[
+      "<b>Spontaneous statements</b> with no questioning are admissible — don't interrupt, keep BWC rolling.",
+      "<b>Public safety exception:</b> “Where's the gun?” is allowed without Miranda when danger is immediate.",
+      "<b>Invokes silence:</b> stop; may re-approach later under proper circumstances. <b>Invokes attorney:</b> all questioning stops — only the suspect can reinitiate."]}
+  ]}
+]},
+
+{ id:"search", name:"Search &amp; Seizure", color:"var(--blue)", cards:[
+  { t:"Warrant exceptions", tags:["search","vehicle","consent"], blocks:[
+    {type:"lede", v:"Default rule: get a warrant. Searching without one means naming the exception before you touch anything."},
+    {type:"rows", v:[
+      ["Consent","Voluntary &bull; can be limited &bull; can be withdrawn <b>at any time</b> &bull; stay in scope &bull; document on BWC"],
+      ["Incident to arrest","Person + immediate grabbing area. Vehicle only under <b>Gant</b>: arrestee can access it, or evidence of the offense of arrest is likely inside."],
+      ["Automobile exception","Probable cause + readily mobile vehicle, per current NJ case law"],
+      ["Plain view","Lawfully present + immediately apparent contraband + lawful access"],
+      ["Plain feel","During a lawful frisk; immediately apparent; no manipulation"],
+      ["Inventory","After a lawful impound, per department policy. Administrative — never a pretext to investigate."],
+      ["Emergency aid / exigency","Objectively reasonable basis: injury, destruction of evidence, hot pursuit, safety"],
+      ["Abandoned property","No expectation of privacy — may seize"]]}
+  ]},
+  { t:"Search decision tree", tags:["search"], blocks:[
+    {type:"steps", v:[
+      "Warrant? Execute within its scope.",
+      "No warrant — <b>consent?</b> Voluntary, in scope, not withdrawn.",
+      "<b>Incident to arrest?</b> Person + reach; Gant for vehicles.",
+      "<b>Automobile exception?</b> PC + mobility.",
+      "<b>Plain view or plain feel?</b>",
+      "<b>Inventory?</b> Lawful impound + policy.",
+      "<b>Emergency aid or exigency?</b>",
+      "None apply — <b>get a warrant.</b>"]}
+  ]},
+  { t:"Home entries &amp; welfare checks", tags:["home","welfare","search","crisis"], blocks:[
+    {type:"lede", v:"A home gets maximum protection. Without a warrant you need consent, emergency aid, exigent circumstances, or hot pursuit."},
+    {type:"list", v:[
+      "<b>Emergency aid examples:</b> screaming, suicide threats, visible blood, unconscious person, shots fired.",
+      "<b>Community caretaking cannot routinely justify entering a home.</b> A welfare check alone is not an entry ticket.",
+      "<b>Welfare check playbook:</b> knock, call the phone, check with neighbors and family, observe. No emergency + no consent + no warrant = <b>do not enter</b>.",
+      "<b>Protective sweep</b> incident to an in-home arrest is limited — looking only for dangerous persons.",
+      "Consent to enter can be revoked at any time, and scope matters."]}
+  ]}
+]},
+
+{ id:"dv", name:"Domestic Violence", color:"var(--red)", cards:[
+  { t:"Step 1 — Does the PDVA apply?", tags:["dv","domestic"], open:false, blocks:[
+    {type:"lede", v:"Work it in order: relationship → predicate offense → probable cause → mandatory arrest → weapons → TRO/FRO → report."},
+    {type:"rows", v:[
+      ["Qualifying relationship","Current or former spouses &bull; current or former dating relationship &bull; current or former household members &bull; parents of a common child &bull; expecting a child together"],
+      ["Predicate offense","Simple assault &bull; harassment &bull; terroristic threats &bull; criminal mischief &bull; stalking &bull; criminal restraint / false imprisonment &bull; sexual assault or criminal sexual contact &bull; burglary &bull; criminal coercion &bull; contempt of a DV order &bull; others"]]},
+    {type:"box", style:"info", bt:"No qualifying relationship", v:"It isn't DV. Handle it as a regular criminal complaint — see Family disputes."}
+  ]},
+  { t:"Step 2 — Mandatory arrest", tags:["dv","domestic","arrest"], blocks:[
+    {type:"box", style:"warn", bt:"Arrest is generally mandatory when PC exists and:", v:"<ul><li>The victim shows signs of <b>injury</b></li><li>A <b>weapon</b> was involved</li><li>An existing <b>TRO or FRO was violated</b></li><li>Other statutory mandatory-arrest circumstances apply</li></ul>"},
+    {type:"lede", v:"If not mandatory, you still determine whether PC exists and follow discretionary-arrest procedures per the AG Directive and your SOPs."}
+  ]},
+  { t:"Primary aggressor — avoid dual arrests", tags:["dv","domestic"], blocks:[
+    {type:"lede", v:"There is usually one primary aggressor. Cross-complaints only when truly appropriate."},
+    {type:"list", v:[
+      "Who initiated? Who was in fear? Who was defending themselves?",
+      "History of abuse, size difference, offensive vs defensive injuries.",
+      "Witnesses, 911 audio, BWC — let the recordings resolve the story."]}
+  ]},
+  { t:"Evidence, weapons &amp; removal", tags:["dv","domestic","evidence"], blocks:[
+    {type:"list", v:[
+      "Photograph injuries and damage. Collect medical records, 911 audio, excited utterances, admissions, witness statements — build a case that survives a recanting victim.",
+      "<b>Weapons:</b> when authorized, seize, secure safely, and document."]},
+    {type:"box", style:"warn", bt:"You cannot order someone out of their own home", v:"Removal requires an arrest, a TRO, a court order, or other legal authority. Never say “you have to stay somewhere else tonight” without it."}
+  ]},
+  { t:"TRO / FRO", tags:["dv","tro","fro","domestic"], blocks:[
+    {type:"rows", v:[
+      ["TRO","Temporary, judge-issued, immediately enforceable, entered in NCIC. <b>Read the actual order</b> — terms vary."],
+      ["FRO","Issued after a hearing. Long-term and fully enforceable."],
+      ["Violations","Any contact — calls, texts, third-party contact &bull; returning home &bull; weapons possession. PC of a violation generally means arrest for contempt."]]}
+  ]}
+]},
+
+{ id:"crisis", name:"Crisis, Commitments &amp; Overdose", color:"var(--green)", cards:[
+  { t:"The three screening questions", tags:["crisis","suicidal","commitment","mental health"], blocks:[
+    {type:"box", style:"go", bt:"Ask on every crisis call", v:"<ul><li>Is the person a <b>danger to self</b>?</li><li>Is the person a <b>danger to others</b>?</li><li>Is the person <b>unable to care for basic needs</b> because of mental illness?</li></ul>"},
+    {type:"lede", v:"These calls turn on criteria and documentation. Write down which criterion is met and the facts behind it."}
+  ]},
+  { t:"Which pathway?", tags:["crisis","commitment","suicidal","mental health"], blocks:[
+    {type:"rows", v:[
+      ["Immediate danger","Attempt in progress, weapon, running into traffic, violent psychosis. Do not delay — emergency action, secure person and scene, EMS, transport."],
+      ["Meets criteria, refuses","Involuntary process. Follow department procedures and coordinate with the county screening service. Document the criteria met and the supporting facts."],
+      ["Agrees to go","Voluntary transport to hospital or screening. Still document statements and observations."],
+      ["No emergency","Escalating behavior, family asking for help, needs resources → 262-HELP / crisis intervention. Document and refer."]]}
+  ]},
+  { t:"Suicide risk checklist", tags:["crisis","suicidal","mental health"], blocks:[
+    {type:"lede", v:"Ask and document all of it — your report is what the screener and hospital rely on. Thin documentation gets people released."},
+    {type:"list", v:["Statements made","Plan","Access to means","Prior attempts","Mental health history","Substances on board","Medications","Family and witness concerns"]}
+  ]},
+  { t:"Entry and de-escalation", tags:["crisis","home","welfare"], blocks:[
+    {type:"list", v:[
+      "Suicide threats or credible risk inside a residence can support <b>emergency aid</b> entry — articulate the objectively reasonable basis.",
+      "No emergency, no consent, no warrant means no entry. Use phone contact, family, and screening services.",
+      "Slow it down when you can. Time, distance, and one calm voice resolve most of these calls."]}
+  ]},
+  { t:"Overdoses", tags:["overdose","od","crisis","medical"], blocks:[
+    {type:"list", v:[
+      "<b>Medical first, always.</b> Narcan if indicated, EMS and fire, hospital.",
+      "<b>Good Samaritan protections may apply</b> to both the caller and the victim — know current NJ law before charging possession or paraphernalia.",
+      "Then work it as a scene: secure, photograph, collect paraphernalia and packaging, take statements, notify detectives when appropriate.",
+      "<b>Fatal overdose is a death investigation.</b> Preserve everything — packaging and phones matter for strict-liability drug death cases. Medical examiner, detectives, photographs, witnesses."]}
+  ]}
+]},
+
+{ id:"mv", name:"Motor Vehicle, DWI &amp; CREAMMA", color:"var(--amber)", cards:[
+  { t:"The stop", tags:["mv","traffic","stop"], blocks:[
+    {type:"list", v:[
+      "Need reasonable suspicion or PC of <b>any</b> MV violation to stop.",
+      "May request license, registration, insurance. May run license, vehicle, warrants.",
+      "May order the <b>driver</b> out; passengers out when constitutionally justified under current NJ law.",
+      "Mission-related questions are fine — identity, documents, travel, ownership, safety.",
+      "<b>Do not extend the stop</b> into an unrelated criminal investigation without independent reasonable suspicion."]}
+  ]},
+  { t:"Vehicle search authority", tags:["mv","vehicle","search","gant"], blocks:[
+    {type:"rows", v:[
+      ["Consent","Voluntary, within scope, revocable at any time"],
+      ["Automobile exception","PC + readily mobile, per current NJ case law"],
+      ["Incident to arrest","Gant only — access, or evidence of the offense of arrest"],
+      ["Inventory","After a lawful impound, per policy. Never tow just to search."],
+      ["Containers &amp; backpacks","<b>Determine ownership first.</b> Passengers have standing in their own property. Authority depends on whose it is and which exception applies. Locked containers need clear authority."]]}
+  ]},
+  { t:"Towing", tags:["mv","tow","impound"], blocks:[
+    {type:"lede", v:"Tow when: abandoned, driver arrested, unsafe, evidence, statutory authority, or department policy."},
+    {type:"list", v:["Inventory follows a <b>lawful</b> tow and department policy.","Private-property tows — know your local ordinance."]}
+  ]},
+  { t:"DWI", tags:["dwi","dui","mv","impaired"], blocks:[
+    {type:"rows", v:[
+      ["Building PC","Driving observations, crash facts, odor, admissions, SFSTs, witness statements"],
+      ["Evidence","BWC and dash from the start, open containers, paraphernalia, receipts"],
+      ["Arrest","PC → arrest → transport → breath testing per procedure. DRE if drug impairment is suspected."]]}
+  ]},
+  { t:"Marijuana (CREAMMA)", tags:["marijuana","creamma","odor","mv"], blocks:[
+    {type:"box", style:"warn", bt:"The odor rule changed", v:"Odor of marijuana alone generally does <b>not</b> create PC to search or detain. Do not build a stop or a search on odor."},
+    {type:"list", v:[
+      "Personal possession within legal limits is <b>not a crime</b> — don't assume.",
+      "Unlicensed <b>distribution is still illegal</b> — you need PC.",
+      "<b>Driving high is still DWI</b> — build it on observations, SFSTs, DRE, and evidence.",
+      "Juveniles: separate warning and notification procedures apply."]}
+  ]}
+]},
+
+{ id:"prop", name:"Shoplifting &amp; Property", color:"var(--violet)", cards:[
+  { t:"Shoplifting playbook", tags:["shoplifting","theft","retail"], blocks:[
+    {type:"steps", v:[
+      "Separate the suspect. Identify witnesses and employees.",
+      "Recover and photograph the merchandise. Note the value — grading depends on it.",
+      "<b>Preserve store video immediately</b> — it gets overwritten.",
+      "Establish PC: video + employee observations + recovered property + admissions + receipt, or the lack of one.",
+      "Complaint per current law: adult or juvenile, value, priors. Document prior convictions for repeat offenders."]}
+  ]},
+  { t:"Theft vs burglary vs mischief", tags:["theft","burglary","property"], blocks:[
+    {type:"rows", v:[
+      ["Theft","Taking property with intent to deprive"],
+      ["Burglary","<b>Entering</b> a structure with intent to commit an offense — entry is the key element"],
+      ["Criminal mischief","Intentional damage — document and photograph value"],
+      ["Fraud","Intentional deception — investigate before dismissing it as civil"]]}
+  ]},
+  { t:"Stolen &amp; recovered vehicles", tags:["stolen","vehicle","property"], blocks:[
+    {type:"list", v:[
+      "Verify NCIC before acting. Secure scene and occupants, photograph, verify VIN, tow, notify detectives.",
+      "Recovered vehicle: photograph, print if appropriate, inventory, notify the owner."]}
+  ]},
+  { t:"Evidence &amp; report writing", tags:["evidence","report","bwc"], blocks:[
+    {type:"list", v:[
+      "<b>Photograph everything.</b> BWC on early — statements, scene, evidence.",
+      "<b>Chain of custody:</b> never break it, document every transfer.",
+      "Grab digital evidence early — Ring and doorbell cameras, business surveillance, phones.",
+      "Answer who, what, when, where, why, how. Write facts and observations — not opinions, conclusions, or guesses.",
+      "Articulate your RS and PC in plain language, with a timeline."]}
+  ]}
+]},
+
+{ id:"civil", name:"Disputes, Trespass &amp; Juveniles", color:"var(--violet)", cards:[
+  { t:"Civil or criminal?", tags:["civil","dispute","neighbor"], blocks:[
+    {type:"lede", v:"Most of a quiet town's call volume lives here. The question is whether there's criminal intent or just a disagreement. When unsure — investigate; don't reflexively call it civil."},
+    {type:"rows", v:[
+      ["Usually civil","Contracts and money &bull; fences and property lines &bull; HOA issues &bull; custody schedules &bull; divorce &bull; landlord-tenant lease issues"],
+      ["Usually criminal","Theft &bull; assault &bull; burglary &bull; criminal mischief &bull; harassment &bull; trespass"]]}
+  ]},
+  { t:"Family disputes (non-PDVA)", tags:["family","dispute","domestic"], blocks:[
+    {type:"list", v:[
+      "Adult siblings, parent vs adult child, roommates without a qualifying relationship, neighbors, friends — <b>not DV</b>.",
+      "No crime? Document, separate the parties, keep the peace, and clear.",
+      "<b>You cannot order anyone to leave their own home</b> absent arrest or court order."]}
+  ]},
+  { t:"Landlord-tenant", tags:["landlord","tenant","eviction","civil"], blocks:[
+    {type:"box", style:"info", bt:"Police do not evict — courts do", v:"Lock changes and property removal are usually civil, but an illegal lockout can become criminal. If there's a breach of the peace, address the criminal conduct — not the lease."}
+  ]},
+  { t:"Trespass", tags:["trespass","business","property"], blocks:[
+    {type:"steps", v:[
+      "Does the person have a legal right to be there? Co-owner, tenant, or resident makes it complicated — investigate before acting.",
+      "Business or quasi-public — malls, hospitals, apartment common areas, schools: the owner controls the property despite public access.",
+      "Owner or resident wants them out → ask the person to leave.",
+      "Refusal after a lawful demand → criminal trespass may apply → complaint."]}
+  ]},
+  { t:"Juveniles", tags:["juvenile","minor"], blocks:[
+    {type:"list", v:[
+      "<b>Always determine age.</b>",
+      "Miranda still applies to juveniles. Follow parent or guardian notification and NJ juvenile procedures for interviews, arrest, complaints, and diversion."]}
+  ]},
+  { t:"Missing persons", tags:["missing","runaway","juvenile"], blocks:[
+    {type:"box", style:"warn", bt:"There is no waiting period. Ever.", v:"Refusing a report because “it's only been a few hours” is one of the most common — and most damaging — patrol mistakes."},
+    {type:"list", v:[
+      "Get description, phone, last-seen details, friends and family, medical issues, vehicle, trackers. Check hospitals.",
+      "Broadcast. Enter NCIC when appropriate. Notify required agencies.",
+      "Missing juveniles and runaways are high priority — treat every runaway as a missing child. Know Amber and Silver Alert criteria."]}
+  ]}
+]},
+
+{ id:"cheat", name:"Cheat Sheets", color:"var(--slate)", cards:[
+  { t:"The final cheat sheet", tags:["cheat","basics"], blocks:[
+    {type:"rows", v:[
+      ["Detain","Reasonable suspicion"],
+      ["Arrest","Probable cause"],
+      ["Search","Warrant or a named exception"],
+      ["Home entry","Warrant, consent, emergency aid, or exigency"],
+      ["Miranda","Custody + interrogation"],
+      ["Vehicle search","Consent, PC / automobile exception, Gant, inventory, or other exception"],
+      ["Domestic violence","Qualifying relationship + predicate offense + PC, then check mandatory arrest"],
+      ["Mental health hold","Danger to self, danger to others, or unable to care for self"],
+      ["Civil dispute","Keep the peace — don't create authority you don't have"]]}
+  ]},
+  { t:"Top patrol mistakes", tags:["mistakes","cheat"], blocks:[
+    {type:"list", v:[
+      "Thinking handcuffs automatically require Miranda",
+      "Post-arrest questioning without Miranda",
+      "Searching every vehicle after every arrest",
+      "Searching backpacks without identifying ownership or authority",
+      "Relying on marijuana odor alone to search",
+      "Entering homes on welfare checks without a lawful basis",
+      "Dual DV arrests with no primary-aggressor analysis",
+      "Telling someone they “have to leave tonight” with no authority",
+      "Calling every family argument domestic violence",
+      "Refusing a missing person report because it's only been a few hours",
+      "Treating landlord-tenant disputes as criminal, or vice versa",
+      "Extending traffic stops without independent RS",
+      "Forgetting that consent can be withdrawn at any time",
+      "Forgetting to preserve surveillance video",
+      "Writing conclusions instead of facts",
+      "Confusing reasonable suspicion with probable cause"]}
+  ]},
+  { t:"When you're not sure", tags:["cheat","supervisor"], blocks:[
+    {type:"steps", v:[
+      "Slow down. Most mistakes happen when officers rush.",
+      "Name the legal issue: criminal, civil, mental health, or public safety?",
+      "Ask what legal authority you have <b>right now</b>.",
+      "Use your resources — supervisor, prosecutor's office, screening service, SOPs.",
+      "Document thoroughly. Good reports resolve close legal questions."]}
+  ]}
+]}
+];
+
+const CHIPS = [
+  ["All",""],["DV","dv"],["Crisis","crisis"],["Overdose","overdose"],["MV stop","mv"],
+  ["DWI","dwi"],["Weed","creamma"],["Shoplifting","shoplifting"],["Search?","search"],
+  ["Home entry","home"],["Dispute","dispute"],["Missing","missing"],["Cheat sheet","cheat"]
+];
+
+/* ============ RENDER ============ */
+function block(b){
+  if(b.type==="lede") return '<p class="lede">'+b.v+'</p>';
+  if(b.type==="list") return '<ul class="list">'+b.v.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+  if(b.type==="steps") return '<ol class="steps">'+b.v.map(x=>'<li>'+x+'</li>').join('')+'</ol>';
+  if(b.type==="rows") return '<div class="rows">'+b.v.map(r=>'<div class="row"><div class="k">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>').join('')+'</div>';
+  if(b.type==="box") return '<div class="box '+b.style+'"><span class="bt">'+b.bt+'</span>'+b.v+'</div>';
+  return '';
+}
+const main = document.getElementById('main');
+main.innerHTML = SECTIONS.map(s=>{
+  const cards = s.cards.map((c,i)=>{
+    const tags = (c.tags||[]).join(' ');
+    return '<article class="card'+(c.open?' open':'')+'" data-tags="'+tags+'">'
+      + '<button class="head">'+c.t+'<span class="caret">&#9656;</span></button>'
+      + '<div class="body">'+c.blocks.map(block).join('')+'</div></article>';
+  }).join('');
+  return '<section class="section" id="'+s.id+'" style="--sc:'+s.color+'">'
+    + '<div class="section-head"><span class="bar"></span><h2>'+s.name+'</h2></div>'
+    + cards + '</section>';
+}).join('');
+
+/* ============ INTERACTION ============ */
+main.addEventListener('click', e=>{
+  const h = e.target.closest('button.head');
+  if(h) h.parentElement.classList.toggle('open');
+});
+
+const chipbar = document.getElementById('chips');
+chipbar.innerHTML = CHIPS.map((c,i)=>'<button class="chip'+(i===0?' on':'')+'" data-q="'+c[1]+'">'+c[0]+'</button>').join('');
+chipbar.addEventListener('click', e=>{
+  const c = e.target.closest('.chip'); if(!c) return;
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on');
+  const q = c.dataset.q;
+  input.value = q; filter(q); window.scrollTo({top:0});
+});
+
+const input = document.getElementById('search');
+const clearBtn = document.getElementById('clear');
+const emptyMsg = document.getElementById('empty');
+
+function filter(qRaw){
+  const q = (qRaw||'').trim().toLowerCase();
+  clearBtn.style.display = q ? 'block' : 'none';
+  let shown = 0;
+  SECTIONS.forEach(s=>{
+    const sec = document.getElementById(s.id);
+    let visible = 0;
+    sec.querySelectorAll('.card').forEach(card=>{
+      const hay = (card.textContent + ' ' + card.dataset.tags).toLowerCase();
+      const hit = !q || hay.includes(q);
+      card.style.display = hit ? '' : 'none';
+      if(hit){ visible++; shown++; if(q) card.classList.add('open'); }
+    });
+    sec.style.display = visible ? '' : 'none';
+  });
+  emptyMsg.style.display = shown ? 'none' : 'block';
+}
+input.addEventListener('input', ()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  if(!input.value.trim()) document.querySelector('.chip').classList.add('on');
+  filter(input.value);
+});
+clearBtn.addEventListener('click', ()=>{
+  input.value=''; filter('');
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  document.querySelector('.chip').classList.add('on');
+  input.blur();
+});
+
+/* 2 A.M. sheet */
+const sheet = document.getElementById('sheet');
+document.getElementById('amBtn').addEventListener('click', ()=>sheet.classList.add('on'));
+document.getElementById('closeSheet').addEventListener('click', ()=>sheet.classList.remove('on'));
+sheet.addEventListener('click', e=>{ if(e.target===sheet) sheet.classList.remove('on'); });
+
+/* day / night */
+const modeBtn = document.getElementById('mode');
+modeBtn.addEventListener('click', ()=>{
+  document.body.classList.toggle('day');
+  const day = document.body.classList.contains('day');
+  modeBtn.textContent = day ? 'Night' : 'Day';
+  document.querySelector('meta[name=theme-color]').setAttribute('content', day ? '#f2f5f8' : '#0e131a');
+});
+</script>
+</body>
+</html>

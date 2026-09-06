@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Protocols">
+<title>Protocols</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#1E242E;
+    --ground-2:#262E3A;
+    --edge:#333D4C;
+    --bone:#F2EFE9;
+    --bone-dim:#8D99AB;
+    --amber:#E8A33D;
+    --cyan:#5FD3D8;
+    --tap:68px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{background:var(--ground)}
+  body{
+    background:var(--ground);
+    color:var(--bone);
+    font-family:'Archivo',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.45;
+    min-height:100vh;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:28px 18px 56px}
+
+  header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .count{font-variant-numeric:tabular-nums;color:var(--bone-dim);font-size:15px;font-weight:500}
+  .sub{color:var(--bone-dim);font-size:14px;margin-bottom:26px}
+
+  ul{list-style:none}
+  li{border-top:1px solid var(--edge)}
+  li:last-child{border-bottom:1px solid var(--edge)}
+
+  .row{
+    display:flex;align-items:center;gap:14px;
+    min-height:var(--tap);padding:12px 4px 12px 0;
+    color:var(--bone);text-decoration:none;
+  }
+  .stripe{width:4px;align-self:stretch;background:var(--amber);flex:none;border-radius:2px}
+  li:nth-child(even) .stripe{background:var(--cyan)}
+  .label{flex:1;min-width:0}
+  .name{font-size:18px;font-weight:600;letter-spacing:-.01em}
+  .file{font-size:13px;color:var(--bone-dim);font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .chev{color:var(--bone-dim);font-size:22px;flex:none;padding-right:2px}
+  a.row:active{background:var(--ground-2)}
+  a.row:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+
+  .kill{
+    flex:none;width:44px;height:44px;border:1px solid var(--edge);background:none;
+    color:var(--bone-dim);border-radius:8px;font-size:20px;font-family:inherit;cursor:pointer;
+  }
+  .kill:active{background:var(--ground-2);color:var(--bone)}
+
+  .empty{
+    border:1px dashed var(--edge);border-radius:10px;padding:28px 20px;text-align:center;
+    color:var(--bone-dim);font-size:15px;
+  }
+
+  .bar{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+  button.act{
+    flex:1;min-width:130px;min-height:52px;padding:0 18px;
+    font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;
+    background:var(--amber);color:#1A1206;border:none;border-radius:10px;
+  }
+  button.ghost{background:none;color:var(--bone);border:1px solid var(--edge)}
+  button.act:active{opacity:.75}
+  button.act:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+  .panel{margin-top:22px;border:1px solid var(--edge);border-radius:10px;padding:18px;display:none}
+  .panel.open{display:block}
+  label{display:block;font-size:13px;color:var(--bone-dim);font-weight:500;margin-bottom:6px}
+  input,textarea{
+    width:100%;background:var(--ground-2);border:1px solid var(--edge);color:var(--bone);
+    font-family:inherit;font-size:16px;padding:13px 12px;border-radius:8px;margin-bottom:14px;
+  }
+  textarea{min-height:120px;font-size:13px;line-height:1.5}
+  input:focus,textarea:focus{outline:none;border-color:var(--cyan)}
+  .hint{font-size:13px;color:var(--bone-dim);margin:-6px 0 14px}
+  .warn{font-size:13px;color:var(--amber);margin-top:14px;display:none}
+  .warn.show{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Protocols</h1>
+    <span class="count" id="count"></span>
+  </header>
+  <p class="sub" id="sub">Tap to open. Everything loads offline after the first visit.</p>
+
+  <ul id="list"></ul>
+  <div class="empty" id="empty" hidden>Nothing here yet. Tap Add protocol and point it at one of your uploaded files.</div>
+
+  <div class="bar">
+    <button class="act" id="addBtn">Add protocol</button>
+    <button class="act ghost" id="editBtn">Edit</button>
+    <button class="act ghost" id="backupBtn">Backup</button>
+  </div>
+
+  <div class="panel" id="addPanel">
+    <label for="pName">Name</label>
+    <input id="pName" type="text" placeholder="Morning Stack" autocapitalize="words">
+    <label for="pFile">File name</label>
+    <input id="pFile" type="text" placeholder="protocol_dashboard.html" autocapitalize="none" autocorrect="off" spellcheck="false">
+    <p class="hint">Use the exact file name as it appears in your repo, including .html</p>
+    <div class="bar" style="margin-top:0">
+      <button class="act" id="saveBtn">Save</button>
+      <button class="act ghost" id="cancelBtn">Cancel</button>
+    </div>
+  </div>
+
+  <div class="panel" id="backupPanel">
+    <label for="dump">Your list, as text</label>
+    <textarea id="dump" spellcheck="false" autocapitalize="none"></textarea>
+    <p class="hint">Copy this somewhere safe. To restore, paste it back in and tap Restore.</p>
+    <div class="bar" style="margin-top:0">
+      <button class="act" id="restoreBtn">Restore</button>
+      <button class="act ghost" id="closeBackup">Close</button>
+    </div>
+  </div>
+
+  <p class="warn" id="warn">Storage is blocked here, so changes won't survive a reload. They will once this is hosted properly.</p>
+
+</div>
+
+<script>
+(function(){
+  var KEY = 'protocolHub.v1';
+
+  /* Seeded so you have one working row to test with. Edit or delete it in the app. */
+  var SEED = [
+    { name: 'Integrative Recovery Protocol', file: 'protocol_dashboard.html' }
+  ];
+
+  var mem = null, persists = true;
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : SEED.slice();
+    }catch(e){
+      persists = false;
+      return mem ? mem.slice() : SEED.slice();
+    }
+  }
+  function save(items){
+    mem = items.slice();
+    try{ localStorage.setItem(KEY, JSON.stringify(items)); }
+    catch(e){ persists = false; document.getElementById('warn').classList.add('show'); }
+  }
+
+  var items = load();
+  var editing = false;
+
+  var listEl = document.getElementById('list');
+  var emptyEl = document.getElementById('empty');
+  var countEl = document.getElementById('count');
+
+  function render(){
+    listEl.innerHTML = '';
+    countEl.textContent = items.length ? items.length : '';
+    emptyEl.hidden = items.length > 0;
+
+    items.forEach(function(item, i){
+      var li = document.createElement('li');
+      var row = document.createElement(editing ? 'div' : 'a');
+      row.className = 'row';
+      if(!editing){ row.href = item.file; }
+
+      var stripe = document.createElement('span');
+      stripe.className = 'stripe';
+
+      var label = document.createElement('span');
+      label.className = 'label';
+      var n = document.createElement('div'); n.className = 'name'; n.textContent = item.name;
+      var f = document.createElement('div'); f.className = 'file'; f.textContent = item.file;
+      label.appendChild(n); label.appendChild(f);
+
+      row.appendChild(stripe);
+      row.appendChild(label);
+
+      if(editing){
+        var del = document.createElement('button');
+        del.className = 'kill'; del.type = 'button';
+        del.setAttribute('aria-label', 'Remove ' + item.name);
+        del.textContent = '\u2715';
+        del.addEventListener('click', function(){
+          items.splice(i,1); save(items); render();
+        });
+        row.appendChild(del);
+      }else{
+        var c = document.createElement('span');
+        c.className = 'chev'; c.textContent = '\u203A'; c.setAttribute('aria-hidden','true');
+        row.appendChild(c);
+      }
+
+      li.appendChild(row);
+      listEl.appendChild(li);
+    });
+  }
+
+  function panel(id, open){
+    document.getElementById(id).classList.toggle('open', open);
+  }
+
+  document.getElementById('addBtn').addEventListener('click', function(){
+    panel('backupPanel', false);
+    var p = document.getElementById('addPanel');
+    var willOpen = !p.classList.contains('open');
+    panel('addPanel', willOpen);
+    if(willOpen) document.getElementById('pName').focus();
+  });
+
+  document.getElementById('cancelBtn').addEventListener('click', function(){
+    panel('addPanel', false);
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', function(){
+    var name = document.getElementById('pName').value.trim();
+    var file = document.getElementById('pFile').value.trim();
+    if(!name || !file) return;
+    items.push({ name: name, file: file });
+    save(items);
+    document.getElementById('pName').value = '';
+    document.getElementById('pFile').value = '';
+    panel('addPanel', false);
+    render();
+  });
+
+  document.getElementById('editBtn').addEventListener('click', function(){
+    editing = !editing;
+    this.textContent = editing ? 'Done' : 'Edit';
+    document.getElementById('sub').textContent = editing
+      ? 'Tap the X to remove an item.'
+      : 'Tap to open. Everything loads offline after the first visit.';
+    render();
+  });
+
+  document.getElementById('backupBtn').addEventListener('click', function(){
+    panel('addPanel', false);
+    var p = document.getElementById('backupPanel');
+    var willOpen = !p.classList.contains('open');
+    panel('backupPanel', willOpen);
+    if(willOpen) document.getElementById('dump').value = JSON.stringify(items, null, 2);
+  });
+
+  document.getElementById('closeBackup').addEventListener('click', function(){
+    panel('backupPanel', false);
+  });
+
+  document.getElementById('restoreBtn').addEventListener('click', function(){
+    try{
+      var parsed = JSON.parse(document.getElementById('dump').value);
+      if(!Array.isArray(parsed)) throw 0;
+      items = parsed.filter(function(x){ return x && x.name && x.file; });
+      save(items); render(); panel('backupPanel', false);
+    }catch(e){
+      document.getElementById('dump').value = 'That text was not readable. Paste the full backup, brackets included.';
+    }
+  });
+
+  if(!persists) document.getElementById('warn').classList.add('show');
+  render();
+})();
+</script>
+</body>
+</html>

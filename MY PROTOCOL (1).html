@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Protocol">
+<meta name="theme-color" content="#080C16">
+<title>My Protocol</title>
+<style>
+:root{
+  --ink:#080C16;--panel:#111827;--panel2:#161F33;--line:#222D45;
+  --text:#E6EAF4;--dim:#8A94AD;--dimmer:#5C6683;
+  --sleep:#6C7BE0;--sleep-soft:#3A4494;--nap:#8E7BD8;--shift:#4E5B78;
+  --lamp:#F0A63C;--alert:#E0685C;--ok:#4FBF9A;--warn:#E8B44A;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --disp:"Avenir Next","Avenir",-apple-system,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --pad:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--ink);color:var(--text)}
+body{font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-bottom:calc(74px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+:focus-visible{outline:2px solid var(--lamp);outline-offset:2px;border-radius:4px}
+
+.phase-day{--wash:rgba(240,166,60,.13);--edge:#F0A63C}
+.phase-night{--wash:rgba(108,123,224,.15);--edge:#6C7BE0}
+.phase-turn{--wash:rgba(142,123,216,.14);--edge:#8E7BD8}
+
+header{padding:calc(env(safe-area-inset-top) + 18px) var(--pad) 15px;
+  background:linear-gradient(175deg,var(--wash),transparent 78%);border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.eyebrow .cyc{color:var(--dimmer);letter-spacing:.14em}
+h1{font-family:var(--disp);font-weight:700;font-size:29px;line-height:1.06;letter-spacing:-.015em;margin:9px 0 3px}
+h1 .mark{color:var(--edge)}
+.sub{font-size:13px;color:var(--dim);margin:0}
+.datestamp{font-family:var(--mono);font-size:11.5px;color:var(--dimmer);letter-spacing:.04em}
+
+.cpick{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px}
+.cpick button{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  padding:12px 4px 11px;border-radius:8px;cursor:pointer;border:1px solid var(--line);
+  background:var(--panel);color:var(--dimmer);line-height:1.25}
+.cpick button small{display:block;font-family:var(--body);font-size:9.5px;font-weight:400;
+  letter-spacing:.02em;text-transform:none;color:var(--dimmer);margin-top:3px}
+.cpick button[aria-pressed="true"][data-c="G"]{background:rgba(79,191,154,.14);border-color:var(--ok);color:var(--ok)}
+.cpick button[aria-pressed="true"][data-c="Y"]{background:rgba(232,180,74,.14);border-color:var(--warn);color:var(--warn)}
+.cpick button[aria-pressed="true"][data-c="R"]{background:rgba(224,104,92,.15);border-color:var(--alert);color:var(--alert)}
+.cpick button[aria-pressed="true"] small{color:inherit;opacity:.85}
+.cnote{font-size:11.5px;color:var(--dimmer);margin-top:9px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.cnote a{color:var(--edge);text-decoration:none;font-weight:500;white-space:nowrap;cursor:pointer}
+
+.band-wrap{padding:18px var(--pad) 6px}
+.band-label{font-family:var(--disp);font-size:9.5px;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dimmer);margin-bottom:9px}
+.band{position:relative;height:38px;border-radius:5px;overflow:hidden;background:var(--panel);border:1px solid var(--line)}
+.seg{position:absolute;top:0;bottom:0}
+.seg.sleep{background:linear-gradient(180deg,var(--sleep),var(--sleep-soft))}
+.seg.nap{background:var(--nap)}
+.seg.shift{background:repeating-linear-gradient(135deg,var(--shift) 0 5px,#3F4A63 5px 10px)}
+.seg.lamp{background:var(--lamp);top:auto;height:5px;bottom:0}
+.seg.train{background:var(--ok);top:auto;height:5px;bottom:5px}
+.tick{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.09)}
+.now{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff;box-shadow:0 0 7px rgba(255,255,255,.85)}
+.axis{position:relative;height:15px;margin-top:5px}
+.axis span{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:9.5px;color:var(--dimmer)}
+.key{display:flex;flex-wrap:wrap;gap:11px;margin-top:11px}
+.key i{display:flex;align-items:center;gap:5px;font-style:normal;font-size:10.5px;color:var(--dim)}
+.key b{width:9px;height:9px;border-radius:2px;display:block}
+
+main{padding:0 var(--pad)}
+section{margin:24px 0}
+.shead{font-family:var(--disp);font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);padding-bottom:8px;margin-bottom:2px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.shead em{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--dimmer);letter-spacing:.02em;text-align:right}
+.row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.row:last-child{border-bottom:none}
+.row .t{font-family:var(--mono);font-size:12.5px;color:var(--edge);flex:0 0 62px;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.row .t.quiet{color:var(--dimmer)}
+.row .t.wide{flex:0 0 92px}
+.row .d{flex:1;font-size:14px}
+.row .d em{font-style:normal;color:var(--dim);display:block;font-size:12.5px;margin-top:2px}
+
+.hero{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--edge);
+  border-radius:7px;padding:14px;margin:18px 0}
+.hero.G{border-left-color:var(--ok)} .hero.Y{border-left-color:var(--warn)} .hero.R{border-left-color:var(--alert)}
+.hero .k{font-family:var(--disp);font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.hero .v{font-family:var(--mono);font-size:24px;letter-spacing:-.02em;margin:5px 0 0;font-variant-numeric:tabular-nums}
+.hero .v.sm{font-size:16.5px;font-family:var(--disp);font-weight:600;letter-spacing:0;line-height:1.25}
+.hero .n{font-size:12.5px;color:var(--dim);margin-top:5px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.duo .hero{margin:0}
+.duo .hero .v{font-size:19px}
+
+.flag{border-radius:7px;padding:12px 13px;font-size:13.5px;line-height:1.45;margin:16px 0;
+  background:rgba(224,104,92,.10);border:1px solid rgba(224,104,92,.34);color:#F3C3BD}
+.flag.amber{background:rgba(240,166,60,.09);border-color:rgba(240,166,60,.32);color:#F2D3A2}
+.flag.calm{background:var(--panel2);border-color:var(--line);color:var(--dim)}
+.flag.good{background:rgba(79,191,154,.09);border-color:rgba(79,191,154,.3);color:#A8E2CD}
+.flag b{color:#fff;font-weight:600}
+
+.grid6{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+button.ov{font-family:var(--body);font-size:13px;color:var(--text);background:var(--panel);
+  border:1px solid var(--line);border-radius:7px;padding:12px 10px;text-align:left;line-height:1.3;cursor:pointer}
+button.ov small{display:block;color:var(--dimmer);font-size:10.5px;margin-top:3px}
+button.ov[aria-pressed="true"]{background:var(--wash);border-color:var(--edge);color:#fff}
+button.ov:active{transform:scale(.98)}
+
+.times{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.times label{font-family:var(--disp);font-size:9.5px;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);display:block;margin-bottom:6px}
+.times select{width:100%;font-family:var(--mono);font-size:16px;padding:12px 10px;border-radius:7px;
+  background:var(--panel);border:1px solid var(--edge);color:var(--text);appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+  background-position:calc(100% - 16px) 21px,calc(100% - 11px) 21px;background-size:5px 5px;background-repeat:no-repeat}
+
+.q{margin:20px 0}
+.q .qt{font-size:14.5px;margin-bottom:9px;font-weight:500}
+.q .qt small{display:block;color:var(--dimmer);font-size:11.5px;font-weight:400;margin-top:3px}
+.opts{display:flex;flex-wrap:wrap;gap:7px}
+.opts button{font-family:var(--body);font-size:13px;padding:9px 13px;border-radius:100px;cursor:pointer;
+  background:var(--panel);border:1px solid var(--line);color:var(--dim)}
+.opts button[aria-pressed="true"][data-w="R"]{border-color:var(--alert);background:rgba(224,104,92,.14);color:#F3C3BD}
+.opts button[aria-pressed="true"][data-w="1"]{border-color:var(--warn);background:rgba(232,180,74,.13);color:#F2D3A2}
+.opts button[aria-pressed="true"][data-w="0"]{border-color:var(--ok);background:rgba(79,191,154,.12);color:#A8E2CD}
+.bigbtn{width:100%;font-family:var(--disp);font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  padding:15px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;margin-top:8px}
+.bigbtn.go{background:var(--wash);border-color:var(--edge);color:#fff}
+.tally{font-family:var(--mono);font-size:12px;color:var(--dim);text-align:center;margin-top:12px}
+
+.log{display:flex;gap:6px;margin-top:14px}
+.log div{flex:1;text-align:center;font-family:var(--mono);font-size:9.5px;color:var(--dimmer)}
+.log div b{display:block;height:26px;border-radius:5px;margin-bottom:5px;background:var(--panel);border:1px solid var(--line)}
+.log div b.G{background:rgba(79,191,154,.55);border-color:var(--ok)}
+.log div b.Y{background:rgba(232,180,74,.5);border-color:var(--warn)}
+.log div b.R{background:rgba(224,104,92,.55);border-color:var(--alert)}
+
+/* real calendar */
+.mnav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+.mnav button{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--text);
+  font-size:19px;line-height:1;padding:9px 15px;cursor:pointer}
+.mnav .mlabel{font-family:var(--disp);font-size:15px;font-weight:700;letter-spacing:.04em}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:14px}
+.dow span{text-align:center;font-family:var(--disp);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dimmer)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:6px}
+.cal button{aspect-ratio:.82;border-radius:6px;border:1px solid var(--line);background:var(--panel);
+  color:var(--dim);cursor:pointer;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:2px 0}
+.cal button .dn{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;line-height:1}
+.cal button .l{font-family:var(--disp);font-size:7.5px;font-weight:700;letter-spacing:.02em;line-height:1.1}
+.cal button.blank{background:none;border-color:transparent;cursor:default}
+.cal button.D{background:rgba(240,166,60,.14);border-color:rgba(240,166,60,.3);color:#F2D3A2}
+.cal button.N{background:rgba(108,123,224,.16);border-color:rgba(108,123,224,.34);color:#C3CAF5}
+.cal button.pivot{border-color:var(--nap);color:#D6CDF5}
+.cal button.lift{box-shadow:inset 0 3px 0 var(--ok)}
+.cal button.today{outline:2px solid #fff;outline-offset:-2px;color:#fff}
+.cal button.edited{box-shadow:inset 0 -3px 0 var(--lamp)}
+.cal button.lift.edited{box-shadow:inset 0 3px 0 var(--ok),inset 0 -3px 0 var(--lamp)}
+.cal button.sel{outline:2px solid var(--edge);outline-offset:-2px}
+.legend{display:flex;flex-wrap:wrap;gap:11px;margin-top:12px}
+.legend i{display:flex;align-items:center;gap:5px;font-style:normal;font-size:10.5px;color:var(--dim)}
+.legend b{width:10px;height:10px;border-radius:2px;display:block;border:1px solid var(--line)}
+
+details{border:1px solid var(--line);border-radius:7px;margin-bottom:9px;background:var(--panel);overflow:hidden}
+summary{padding:13px 14px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary .nm{font-family:var(--disp);font-size:13px;font-weight:600;letter-spacing:.02em}
+summary .tm{font-family:var(--mono);font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums;text-align:right;flex:0 0 auto}
+details[open] summary{border-bottom:1px solid var(--line);background:var(--panel2)}
+.pb{padding:4px 14px 12px}
+
+.ex{padding:12px 0;border-bottom:1px solid var(--line)}
+.ex:last-child{border-bottom:none}
+.ex .n{font-size:14px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ex .n span{font-family:var(--mono);font-size:12px;color:var(--edge);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ex .m{font-family:var(--mono);font-size:11px;color:var(--dimmer);margin-top:3px}
+.ex .s{font-size:12.5px;color:var(--dim);margin-top:4px}
+.ex.cut{opacity:.38}
+.ex.cut .n{text-decoration:line-through}
+
+nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(5,1fr);
+  background:rgba(8,12,22,.93);backdrop-filter:blur(18px);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom)}
+nav button{background:none;border:none;padding:13px 2px 12px;cursor:pointer;font-family:var(--disp);
+  font-size:9.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--dimmer)}
+nav button[aria-current="true"]{color:var(--edge)}
+nav button .dot{display:block;width:5px;height:5px;border-radius:50%;margin:0 auto 4px;background:transparent}
+nav button .dot.G{background:var(--ok)} nav button .dot.Y{background:var(--warn)} nav button .dot.R{background:var(--alert)}
+.view{display:none}
+.view.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+footer{padding:26px var(--pad) 8px;font-size:11px;color:var(--dimmer);line-height:1.5}
+</style>
+</head>
+<body class="phase-day">
+
+<header>
+  <div class="eyebrow"><span id="dtype">—</span><span class="cyc" id="cyc">—</span></div>
+  <h1 id="title">—</h1>
+  <p class="sub" id="sub">—</p>
+  <p class="datestamp" id="stamp">—</p>
+  <div class="cpick" id="cpick">
+    <button data-c="G">Green<small>Rested</small></button>
+    <button data-c="Y">Yellow<small>Fatigued</small></button>
+    <button data-c="R">Red<small>Wrecked</small></button>
+  </div>
+  <div class="cnote"><span id="cnote">—</span><a id="gochk">Full check →</a></div>
+</header>
+
+<!-- ============ TODAY ============ -->
+<div class="view on" id="v-today">
+  <div class="band-wrap">
+    <div class="band-label">Your 28 hours · 04:00 today → 08:00 tomorrow</div>
+    <div class="band" id="band"></div>
+    <div class="axis" id="axis"></div>
+    <div class="key">
+      <i><b style="background:var(--sleep)"></b>Sleep</i>
+      <i><b style="background:var(--nap)"></b>Nap</i>
+      <i><b style="background:var(--shift)"></b>On duty</i>
+      <i><b style="background:var(--lamp)"></b>Light</i>
+      <i><b style="background:var(--ok)"></b>Train</i>
+    </div>
+  </div>
+
+  <main>
+    <div class="duo">
+      <div class="hero"><div class="k">Sleep</div><div class="v" id="h-sleep">—</div><div class="n" id="h-sleepn">—</div></div>
+      <div class="hero"><div class="k">Nap</div><div class="v" id="h-nap">—</div><div class="n" id="h-napn">—</div></div>
+    </div>
+
+    <div class="hero" id="h-train"><div class="k">Training today</div><div class="v sm" id="tr-v">—</div><div class="n" id="tr-n">—</div></div>
+    <div id="tr-detail"></div>
+
+    <div class="duo">
+      <div class="hero" id="h-vrt"><div class="k">Vestibular</div><div class="v sm" id="vrt-v">—</div><div class="n" id="vrt-n">—</div></div>
+      <div class="hero"><div class="k">Breathing</div><div class="v sm">10 min × 2</div><div class="n">6/min, 4 in 6 out, nasal. No skip condition, ever.</div></div>
+    </div>
+
+    <div id="today-flag"></div>
+
+    <section>
+      <div class="shead">The sequence</div>
+      <div id="seq"></div>
+    </section>
+
+    <section>
+      <div class="shead">Change today <em id="ovdate">—</em></div>
+      <div class="grid6" id="ovs"></div>
+      <div id="ovtimes"></div>
+      <div class="flag calm" style="margin-top:12px" id="ovnote">Tap what actually happened. Bridge, Reset and Hold re-derive around it.</div>
+    </section>
+
+    <section>
+      <div class="shead">Always here <em>no check required</em></div>
+      <details><summary><span class="nm">Under 5 hours, any cause</span><span class="tm">rescue</span></summary><div class="pb" id="rescue"></div></details>
+      <details><summary><span class="nm">Red card — what you actually do</span><span class="tm">recovery</span></summary><div class="pb" id="redcard"></div></details>
+      <details><summary><span class="nm">Sleep-inertia protocol</span><span class="tm">first 60 min</span></summary><div class="pb" id="inertia"></div></details>
+      <details><summary><span class="nm">Overtime came up</span><span class="tm">take it or not</span></summary><div class="pb" id="otquick"></div></details>
+    </section>
+  </main>
+</div>
+
+<!-- ============ CHECK ============ -->
+<div class="view" id="v-check">
+  <main>
+    <section>
+      <div class="shead">Full readiness check <em id="wk">—</em></div>
+      <p class="sub" style="margin:12px 0 0">Optional. The three buttons at the top of any screen are enough on most days — use this when you want the count rather than the feel.</p>
+      <div id="qs"></div>
+      <div class="tally" id="tally">—</div>
+      <button class="bigbtn go" id="apply">Set today's colour</button>
+      <button class="bigbtn" id="clearchk">Clear answers</button>
+    </section>
+
+    <section>
+      <div class="shead">Last 7 days</div>
+      <div class="log" id="loghist"></div>
+      <div id="weekverdict"></div>
+    </section>
+
+    <section>
+      <div class="shead">What each colour does</div>
+      <div class="row"><span class="t wide" style="color:var(--ok)">GREEN</span><span class="d">The full mapped session<em>Strength at RPE 7–8, about 2–3 in reserve. Full Zone 2 inside your band. Full vestibular dose. The only kind of day you add load.</em></span></div>
+      <div class="row"><span class="t wide" style="color:var(--warn)">YELLOW</span><span class="d">One work set of the first five<em>RPE ceiling 7, no load increases, 30–40 min. Arms, extra core and every finisher cut. Zone 2 down ~40%, bike over treadmill. Vestibular drops to 7 min seated.</em></span></div>
+      <div class="row"><span class="t wide" style="color:var(--alert)">RED</span><span class="d">Recovery, not lying still<em>No strength, no Zone 2. Walk 10–20 min, full mobility, 5 min seated vestibular, breathing twice plus NSDR. Full protein, extra sodium, no deficit.</em></span></div>
+      <div class="flag calm">If the session still feels wrong after the warm-up, stop and take 20–30 min easy Zone 2 plus mobility instead. That's a correct decision, not a failed one.</div>
+    </section>
+
+    <section>
+      <div class="shead">Three things the colour can't override</div>
+      <div class="row"><span class="t quiet">Auto</span><span class="d">Every night-shift day and every between-nights day is no-strength and no-Zone-2 whatever the colour says<em>The colour still governs your vestibular dose and whether you walk or rest.</em></span></div>
+      <div class="row"><span class="t quiet">Alone</span><span class="d">A wearable number never sets your colour by itself<em>Resting HR and HRV flags only count alongside a second flag from sleep, energy, dizziness or soreness.</em></span></div>
+      <div class="row"><span class="t quiet">Default</span><span class="d">An unset day runs as Yellow, never as Green<em>Yellow on a good day costs you one work set. Green on a bad day costs you a week.</em></span></div>
+      <div class="flag">Stop and get evaluated for chest pain that's new or unlike your usual, fainting or near-fainting, a sustained irregular rhythm, or breathlessness clearly out of proportion to the effort. That's the whole cardiac rule — nothing else here is built around it.</div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ CALENDAR ============ -->
+<div class="view" id="v-cal">
+  <main>
+    <section>
+      <div class="shead">Schedule <em id="cyclabel">—</em></div>
+      <div class="mnav">
+        <button id="prevm" aria-label="Previous month">‹</button>
+        <span class="mlabel" id="mlabel">—</span>
+        <button id="nextm" aria-label="Next month">›</button>
+      </div>
+      <div class="dow"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+      <div class="cal" id="cal"></div>
+      <div class="legend">
+        <i><b style="background:rgba(240,166,60,.3)"></b>Day shift</i>
+        <i><b style="background:rgba(108,123,224,.35)"></b>Night</i>
+        <i><b style="background:var(--panel)"></b>Off</i>
+        <i><b style="background:linear-gradient(to bottom,var(--ok) 30%,var(--panel) 30%)"></b>Strength</i>
+        <i><b style="background:linear-gradient(to top,var(--lamp) 30%,var(--panel) 30%)"></b>Changed</i>
+      </div>
+      <button class="bigbtn" id="jumptoday">Back to today</button>
+    </section>
+    <section id="peek"></section>
+  </main>
+</div>
+
+<!-- ============ TRAIN ============ -->
+<div class="view" id="v-train">
+  <main>
+    <section>
+      <div class="shead">Strength <em id="seqnote">—</em></div>
+      <p class="sub" style="margin:12px 0 14px">Six sessions per 28 days. Full body, minimum effective volume, 45–65 min. The sequence is A → B → C whatever the calendar does — a missed session is skipped, never repaid.</p>
+      <div id="lifts"></div>
+      <button class="bigbtn go" id="advance">Mark a session done → advance to the next</button>
+      <button class="bigbtn" id="rewind">Step the sequence back</button>
+    </section>
+    <section>
+      <div class="shead">Progression <em id="wk2">—</em></div>
+      <div id="prog"></div>
+      <div class="flag calm"><b>Don't add load when:</b> sleep averaged under 7 h over the previous 3–4 days · you're Yellow or Red · you only finished by grinding · dizziness is clearly worse for hours after · resting HR and fatigue are both trending wrong · performance dropped across two consecutive sessions.</div>
+    </section>
+    <section>
+      <div class="shead">Zone 2 <em id="z2wk">—</em></div>
+      <div id="z2"></div>
+    </section>
+    <section>
+      <div class="shead">Vestibular / PPPD</div>
+      <p class="sub" style="margin:12px 0 14px">The highest-value item in the whole protocol, and it happens every day including night shifts. Avoidance is what keeps PPPD running — mild provocation is the treatment, not a side effect.</p>
+      <div id="vrtcards"></div>
+      <div class="shead" style="margin-top:22px">The ladder <em>ten rungs</em></div>
+      <div id="ladder"></div>
+      <div class="flag amber"><b>Two timing rules.</b> Never do provocative work within 2 hours of driving to patrol, and never within 2 hours of bed. On strength days, put the session after lifting or several hours away from it.</div>
+    </section>
+    <section>
+      <div class="shead">Mobility <em>4–6 days/week</em></div>
+      <div id="mob"></div>
+    </section>
+    <section>
+      <div class="shead">Walking</div>
+      <div id="walk"></div>
+    </section>
+    <section>
+      <div class="shead">Deload <em>triggered, not scheduled</em></div>
+      <div id="deload"></div>
+    </section>
+    <section>
+      <div class="shead">Polar H10 <em>four uses only</em></div>
+      <div id="h10"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ MORE ============ -->
+<div class="view" id="v-more">
+  <main>
+    <section><div class="shead">Every day type</div><div id="playbook" style="margin-top:12px"></div></section>
+    <section><div class="shead">Overtime <em>the biggest single leak</em></div><div id="otfull"></div></section>
+    <section><div class="shead">Nap law</div><div id="naplaw"></div></section>
+    <section><div class="shead">Light does two opposite jobs</div><div id="light"></div></section>
+    <section><div class="shead">Caffeine &amp; medication timing</div><div id="caff"></div></section>
+    <section><div class="shead">Supplements <em>self-directed layer only</em></div><div id="supps"></div></section>
+    <section><div class="shead">Nutrition</div><div id="nutr"></div></section>
+    <section><div class="shead">CPAP <em>all-sleep treatment</em></div><div id="cpap"></div></section>
+    <section><div class="shead">Weekly &amp; monthly review</div><div id="review"></div></section>
+    <section><div class="shead">Bring to your appointments</div><div id="appts"></div></section>
+    <section><div class="shead">Settings</div><div id="startctl"></div></section>
+    <div class="flag">Raise specifically: the five-hour Reset with an alarm and a drive afterward is the most aggressive element here — worth running past sleep medicine given the job. CPAP re-titration, now that a large share of your sleep is daytime sleep. And the vitamin C timing conflict with your clinician's January plan.</div>
+    <footer>
+      My Protocol · v4 · real-date schedule, variable detail hours, 05:30 day-shift wake.<br>
+      Not medical advice. Every medication, hormone, phlebotomy, sodium-loading and heat decision goes through your clinicians.<br><br>
+      <b style="color:var(--dim)">Install:</b> Safari → Share → Add to Home Screen. Works offline. Everything you tap stays on this device.
+    </footer>
+  </main>
+</div>
+
+<nav>
+  <button data-v="today" aria-current="true"><span class="dot" id="navdot"></span>Today</button>
+  <button data-v="check">Check</button>
+  <button data-v="cal">Schedule</button>
+  <button data-v="train">Train</button>
+  <button data-v="more">More</button>
+</nav>
+
+<script>
+"use strict";
+var mem={};
+function get(k){try{var v=localStorage.getItem(k);return v===null?mem[k]:v}catch(e){return mem[k]}}
+function set(k,v){mem[k]=v;try{localStorage.setItem(k,v)}catch(e){}}
+function jget(k,d){try{var v=JSON.parse(get(k)||"null");return v===null?d:v}catch(e){return d}}
+function jset(k,v){set(k,JSON.stringify(v))}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function today(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function addD(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)}
+function fmt(m){m=((m%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")}
+function hrs(m){var h=Math.floor(m/60),x=m%60;return h+" h"+(x?" "+String(x).padStart(2,"0"):"")}
+
+/* ---------- rotation, keyed to real dates ---------- */
+var ANCHOR=new Date(2026,7,24);                 /* Mon 24 Aug 2026 = position 1 */
+var BASE="DDOODDDOODDOOONNOONNNOONNOOO".split("");
+var LIFTPOS=[3,8,12,18,23,27];
+var Z2POS=[4,9,14,17,22,26,28];
+
+function pos(d){var f=Math.round((d-ANCHOR)/86400000);return ((f%28)+28)%28+1}
+function ovAll(){return jget("ovs2",{})}
+function ovFor(d){return ovAll()[iso(d)]||null}
+function setOv(d,v){var a=ovAll();if(v)a[iso(d)]=v;else delete a[iso(d)];jset("ovs2",a)}
+function eff(d){var o=ovFor(d),b=BASE[pos(d)-1];
+  if(!o)return b;
+  if(o.t==="off")return "O";
+  if(o.t==="swD")return "D";
+  if(o.t==="swN")return "N";
+  return b}                                      /* det + part keep the base letter */
+
+function dtype(d){
+  var o=ovFor(d),s=eff(d),prev=eff(addD(d,-1));
+  if(s==="D")return "DAY";
+  if(s==="N")return prev==="N"?"MID":"FIRST";
+  if(o&&o.t==="det")return prev==="N"?"DETAIL_RED":"DETAIL";
+  if(prev==="N"){for(var i=1;i<=3;i++)if(eff(addD(d,i))==="N")return "BRIDGE"; return "RESET"}
+  for(var b=1;b<=3;b++){
+    if(eff(addD(d,-b))!=="O")break;
+    if(eff(addD(d,-b-1))==="N"){var r=true;
+      for(var j=1;j<=3;j++)if(eff(addD(d,-b+j))==="N")r=false;
+      if(r)return b===1?"STEP1":(b===2?"STEP2":"ALIGNED")}
+  }
+  if(eff(addD(d,1))==="N"){for(var k=1;k<=3;k++)if(eff(addD(d,-k))==="N")return "HOLD"; return "DELAY"}
+  if(eff(addD(d,1))==="O"&&eff(addD(d,2))==="N"){
+    for(var q=1;q<=3;q++)if(eff(addD(d,-q))==="N")return "HOLD"; return "DRIFT"}
+  return "ALIGNED";
+}
+
+var OVS=[{id:"",lbl:"As scheduled",note:"Clear any change"},
+ {id:"det",lbl:"Traffic detail",note:"Set the hours below"},
+ {id:"off",lbl:"Personal day",note:"Didn't work at all"},
+ {id:"part",lbl:"Partial shift",note:"Counts as worked"},
+ {id:"swD",lbl:"Swap to day",note:"Worked 07:00–19:00"},
+ {id:"swN",lbl:"Swap to night",note:"Worked 19:00–07:00"}];
+
+/* ---------- readiness ---------- */
+var QS=[
+ {id:"sleep",q:"Sleep in the last 24 hours",sub:"One block or fragmented — count the total.",
+  o:[["7 h or more","0"],["5.5–6.9 h","1"],["Under 5.5 h","R"]]},
+ {id:"inertia",q:"How long until you felt functional",o:[["Under 45 min","0"],["Over 60 min","1"]]},
+ {id:"energy",q:"Energy right now, 0–10",sub:"Taken at the same point in your wake block each time.",
+  o:[["6 or above","0"],["4–5","1"],["3 or below","R"]]},
+ {id:"pppd",q:"Dizziness against your own baseline",sub:"Not against zero — against your normal.",
+  o:[["At or near baseline","0"],["5–6, or 2+ above","1"],["7+, or balance unsafe","R"]]},
+ {id:"sore",q:"Soreness",o:[["4 or below","0"],["5–6, or past 72 h","1"]]},
+ {id:"load",q:"Workload behind you",sub:"Third consecutive shift, a night block, or a detail in the last 24 h.",
+  o:[["Nothing unusual","0"],["One of those applies","1"],["Marked crash after heavy overtime","R"]]},
+ {id:"hr",q:"Resting HR vs your 7-day average",sub:"Only counts alongside a second flag.",
+  o:[["Within 5 bpm","0"],["6–10 bpm up","1"],["10+ up and feeling unwell","R"]]},
+ {id:"hrv",q:"7-day RMSSD vs your band",sub:"Only counts alongside a second flag.",
+  o:[["In band","0"],["Below band 3+ days","1"]]},
+ {id:"breath",q:"Breathing and rhythm",sub:"Unusual breathlessness at ordinary effort, or palpitations that are new, sustained or unlike your normal.",
+  o:[["Nothing unusual","0"],["Something's off","R"]]},
+ {id:"ill",q:"Illness",o:[["None","0"],["Fever, infection or GI illness","R"]]},
+ {id:"gut",q:"Gut feel, independent of every number above",sub:"It counts on its own.",
+  o:[["Fine","0"],["Just feel wrong","1"],["Genuinely unwell","R"]]}
+];
+function chk(){var c=jget("chk",{});return c.d===iso(today())?c:{d:iso(today()),a:{}}}
+function saveChk(c){jset("chk",c)}
+function score(a){
+  var hard=false,flags=0,soft=0;
+  QS.forEach(function(q){var v=a[q.id];if(v===undefined)return;
+    if(v==="R")hard=true; else if(v==="1"){(q.id==="hr"||q.id==="hrv")?soft++:flags++}});
+  if(hard)return {c:"R",f:flags+soft,hard:true};
+  var total=flags+(flags>0?soft:0);
+  var c=total>=3?"R":(total===2?"Y":"G");
+  if(a.gut==="1"&&c==="G")c="Y";
+  return {c:c,f:total,hard:false};
+}
+function setColour(c){var k=chk();k.c=c;saveChk(k);var L=jget("log",{});L[iso(today())]=c;jset("log",L)}
+function colourRaw(){return chk().c||null}
+function colour(){return colourRaw()||"Y"}
+
+/* ---------- programme week ---------- */
+function startDate(){var s=get("start");if(!s){s=iso(today());set("start",s)}return s}
+function week(){var p=startDate().split("-"),st=new Date(+p[0],+p[1]-1,+p[2]);
+  var w=Math.floor((today()-st)/86400000/7)+1;return w<1?1:w}
+function band(){var w=week();return w<=2?0:w<=4?1:w<=8?2:3}
+function setsFor(){var w=week();
+  return w<=4?{s:"2 work sets",r:"RPE 6–7 · 3–4 in reserve"}
+    :w<=8?{s:"2 sets, +3rd on the first three on Green days",r:"RPE 7–8 · 2–3 in reserve"}
+    :{s:"2–3 sets, same structure",r:"RPE 7–8 · add load and reps, not volume"}}
+var Z2BAND=[{d:"20–25 min",f:"No finisher",wk:"~60–75 min/week"},
+ {d:"25–30 min",f:"Optional 10 min after 1–2 Green sessions",wk:"~75–90 min/week"},
+ {d:"30–40 min",f:"10–15 min after 2 Green sessions",wk:"~90–110 min/week"},
+ {d:"35–45 min",f:"15–20 min after 2–3 Green sessions",wk:"~100–120 min/week"}];
+
+/* ---------- reference content ---------- */
+var WK={
+A:{name:"Workout A",focus:"Quad · incline push · horizontal pull · hinge",ex:[
+ ["Leg press","2–3 × 6–10","RPE 7–8 · rest 2–3 min","Hack squat or belt squat"],
+ ["Incline DB or machine press","2–3 × 6–10","RPE 7–8 · rest 2–3 min","Machine on high-dizziness days"],
+ ["Chest-supported row","2–3 × 8–12","RPE 7–8 · rest 2 min","Seated cable row"],
+ ["Romanian deadlift, DB or Smith","2 × 6–10","RPE 7 · rest 2–3 min","45° back extension, or seated leg curl if the hinge feels unstable"],
+ ["Cable lateral raise","2 × 12–20","RPE 7–8 · rest 60–90 s","Machine lateral raise. No swinging."],
+ ["Rope pressdown","1–2 × 10–15","RPE 7–8 · rest 60–90 s","Cut first on a Yellow day",1],
+ ["Cable curl","1–2 × 10–15","RPE 7–8 · rest 60–90 s","Cut first on a Yellow day",1],
+ ["Pallof press","2 × 10–12/side","RPE 6–7 · rest 60 s","Dead bug. No breath holding.",1]]},
+B:{name:"Workout B",focus:"Squat · vertical pull · flat push",ex:[
+ ["Hack squat or belt squat","2–3 × 8–12","RPE 7–8 · rest 2–3 min","Leg press if position changes provoke symptoms"],
+ ["Neutral-grip lat pulldown","2–3 × 8–12","RPE 7–8 · rest 2 min","Assisted neutral-grip pull-up. Controlled stretch, no kipping."],
+ ["Flat DB or machine press","2–3 × 8–12","RPE 7–8 · rest 2–3 min","Machine when symptoms are elevated"],
+ ["Seated leg curl","2 × 8–12","RPE 7–8 · rest 90 s","Lying leg curl. Smooth reps, no forced eccentrics."],
+ ["Reverse pec deck","2 × 12–20","RPE 7 · rest 60–90 s","Cable face pull — the direct antidote to twelve hours in a patrol car"],
+ ["Seated calf raise","2 × 10–15","RPE 7–8 · rest 60–90 s","Machine calf raise. Brief pause at stretch and top.",1],
+ ["Cable curl","1 × 10–15","RPE 7–8 · rest 60–90 s","Cut first on a Yellow day",1],
+ ["Rope pressdown","1 × 10–15","RPE 7–8 · rest 60–90 s","Cut first on a Yellow day",1],
+ ["Dead bug","2 × 6–10/side","RPE 6–7 · rest 60 s","Pallof press. Exhale on extension, ribs down.",1]]},
+C:{name:"Workout C",focus:"Single leg · row · vertical push · glute",ex:[
+ ["Single-leg press or supported split squat","2–3 × 8–12/side","RPE 7 · rest 2 min","Single-leg press whenever balance or visual motion is irritating. Hold the rack — no reason to make this a balance exercise."],
+ ["Seated cable row","2–3 × 8–12","RPE 7–8 · rest 2 min","Chest-supported row. Neutral or semi-neutral grip."],
+ ["Incline machine press","2–3 × 8–12","RPE 7–8 · rest 2 min","Incline DB press"],
+ ["Hip thrust or 45° back extension","2 × 8–12","RPE 7–8 · rest 2 min","Whichever feels less systemically taxing that day"],
+ ["Machine or landmine shoulder press","2 × 8–12","RPE 7 · rest 2 min","Seated machine with back support — removes the overhead balance demand"],
+ ["Cable lateral raise","2 × 12–20","RPE 7–8 · rest 60–90 s","Machine lateral raise",1],
+ ["Seated calf raise","2 × 10–15","RPE 7–8 · rest 60–90 s","Standing only if symptoms are quiet",1],
+ ["Cable curl + rope pressdown","1 × 10–15 each","RPE 7–8 · rest 60–90 s","Superset only if it doesn't spike fatigue",1],
+ ["Cable anti-rotation hold","2 × 20–30 s/side","RPE 6–7 · rest 60 s","Suitcase carry 3 × 30 yd/side if you'd rather load it. No breath holding.",1]]}};
+var LETTERS=["A","B","C"];
+function nextLetter(){return LETTERS[(+(get("seqn")||0))%3]}
+
+var WARMUP=[["3 min","Easy bike or incline treadmill"],["× 8","Cat-cow, slow, breath-linked"],
+ ["× 8/side","90/90 hip switches"],["× 5/side","World's greatest stretch"],["× 15","Band pull-apart"],
+ ["× 10 / 12","Bodyweight squat, then glute bridge"],
+ ["Ramp","Two or three ramp sets on the first two compounds — roughly 40% × 8, 60% × 5, 75% × 3. Ramp sets don't count as work sets."]];
+
+var VRT={
+G:{n:"Green dose",t:"15 min",b:[
+ ["Gaze","VOR ×1 horizontal then vertical — eyes fixed on a letter, head turning. 60 s each seated, then 60 s each standing."],
+ ["VOR ×2","Head and target moving in opposite directions. 30 s horizontal, 30 s vertical."],
+ ["Habituation","Two movements that reliably provoke you — pick once, keep consistent. 5 reps each, 20 s pause between."],
+ ["Balance","Feet together → semi-tandem → tandem, eyes open then closed, near support. 3 × 30 s."],
+ ["Visual","Optokinetic video or busy scene, standing, feet together. Start 2 min, build to 5."],
+ ["Real world","Whatever rung of the ladder you're on. 10–20 min."]]},
+Y:{n:"Yellow dose",t:"7 min",b:[
+ ["Gaze","Seated VOR ×1 only, 45 s × 2 each plane."],["Balance","Feet together, 3 × 30 s, eyes open."],
+ ["Visual","Visual motion 1–2 min."],["Skip","Habituation and VOR ×2 both come out today."],
+ ["Why","Keep the daily habit intact — that's the whole point of a Yellow dose."]]},
+R:{n:"Red dose",t:"5 min",b:[
+ ["Gaze","Seated VOR ×1, 30 s × 2 each plane."],["Then","10 minutes of breathing."],
+ ["Skip","Nothing standing, no visual motion, no habituation."],
+ ["Rule","Do not stop entirely — a full stop is how a flare becomes a setback."]]}};
+
+var LADDER=["Seated VOR at home, plain wall","Standing VOR, feet together","Walking with head turns, quiet hallway",
+ "Optokinetic video, standing","Busy patterned background at home","Quiet store aisle, then a busy grocery store",
+ "Patterned floors, long aisles, overhead fluorescent light","Gym floor with people and equipment moving",
+ "Passenger in a car, head turning","Driving in ordinary traffic, then busier"];
+
+var MOB=[["45–60 s/side","Couch stretch — hip flexors, the primary casualty of twelve hours seated"],
+ ["10 reps","90/90 hip switches"],["45–60 s/side","Pigeon or supine figure-4"],["45 s/side","Hamstring stretch"],
+ ["8/side","Thoracic open-book"],["8 reps","Cat-cow"],["45 s/side","Lat stretch"],["45 s/side","Doorway pec stretch"],
+ ["45 s/side","Calf stretch"],["5/side","Gentle cervical rotations — slow, small range, never fast"],
+ ["2–3 min","Legs up the wall, slow breathing"]];
+var MOBCAR=[["30 s/side","Standing hip flexor lunge stretch"],["30 s/side","Doorway or car-frame pec stretch"],
+ ["6/side","Standing thoracic rotation, hands on the roof"],["30 s/side","Calf stretch off the curb"],["10 slow","Scapular retraction"]];
+
+var WALK=[["Off day","7,000–11,000 steps"],
+ ["Patrol day","Whatever the shift gives you, plus one 15-minute decompression walk after you're home. Don't top up to a number."],
+ ["Detail","Move every hour during the detail. No additional steps afterward — you've already paid the postural bill."],
+ ["Night block","10–20 min easy walk after waking, if you want it"],["Red day","10–15 min flat, minimum"]];
+
+var DELOAD=[["Trigger","Two consecutive sessions down 5% or more at the same RPE"],
+ ["Trigger","Three or more Yellow/Red days in seven"],["Trigger","Soreness lasting past 72 h repeatedly"],
+ ["Trigger","Sleep average down 45 min or more for five days"],
+ ["Trigger","Energy ≤4/10 for four days, or dizziness up 2+ points for over 48 h"],
+ ["Trigger","A heavy overtime run that clearly left a hole"],
+ ["Dose","7–10 days at roughly half your normal work sets, RPE capped 6–7, no finishers, dedicated Zone 2 cut ~25%. Keep walking, mobility, breathing and tolerable vestibular work. Resume normal volume after three consecutive days back near Green baseline."]];
+
+var H10=[["Morning","Day-aligned mornings only. Immediately on waking, still lying down, before sitting up, caffeine, stimulant or light. Supine, 3 minutes, discard the first 60 s."],
+ ["Not after","Daytime sleep or any night-block day — those readings aren't comparable and only drag the trend around."],
+ ["Breathing","Normal, spontaneous, nasal. Do not pace it — slow paced breathing inflates the numbers and destroys comparability."],
+ ["Metric","RMSSD (or lnRMSSD) plus resting HR from the same recording. Ignore everything else the app offers."],
+ ["Reading it","7-day rolling average against your 28-day baseline. A meaningful signal is the rolling average below band for 3+ days AND matching how you feel."],
+ ["App","Any iPhone app that records raw beat-to-beat intervals — Kubios, Elite HRV, HRV Logger. Pick one and never switch; algorithms differ enough to break your baseline."],
+ ["Baseline","Your first 14 day-aligned mornings establish it. Re-baseline every 12 weeks."],
+ ["Zone 2 band","Don't use a formula. On a Green day, warm up 10 min, settle where you can speak a full sentence and still nasal-breathe, hold 15 min, record average HR. Repeat on another Green day and average the two — that's your centre. Band is centre −5 to +5. Re-derive at weeks 5 and 9."],
+ ["Progress test","Every 28 days, Green only, on the last off day before a day block. Treadmill 3.2 mph at 6% for 12 min, or a reproducible bike setting. Record average HR minutes 8–12, your RPE, and HR at 2 minutes after stopping."],
+ ["Don't","Change today's plan on one morning's reading · retake because you didn't like the first · compare your absolute RMSSD to anyone else's · wear the strap on shift · use a wrist device's sleep stages for anything · chase a rising HRV number as a goal."]];
+
+var NAPLAW=[["20–25","or 90. Nothing between. The 30–80 minute range wakes you out of slow-wave sleep — with severe inertia and a drive to work afterward, that's the worst trade available to you."],
+ ["15:00","Nothing after this on any day you need a normal bedtime."],
+ ["None","Drift · Delay · Hold · Bridge. Each is banking wake pressure for something specific."],
+ ["Test","Is the next sleep worth more than the next four hours of alertness? If yes, skip it. That's the whole rule."]];
+
+var LIGHT=[["Anchor","Day shifts, Aligned days, both Step-down days, details, Reset. 20–30 min at T+8, outdoors or 10,000 lux at arm's length, off-axis."],
+ ["Alert","On night shift. Bright interior light roughly 20 on / 40 off. Begin dimming at 03:00 — that's what protects the daytime sleep."],
+ ["Avoid","Drift · Delay · Bridge · Hold. No light box; you're letting the clock sit late on purpose."],
+ ["07:00","Sunglasses before you exit the building, kept on to the bedroom door. Morning sun at 07:15 is the most disruptive input available to you."],
+ ["Lenses","Very dark neutral for driving, amber indoors pre-bed only. Amber preserves melatonin better but degrades green traffic-signal recognition — and you're driving at your circadian low. Never the other way round."],
+ ["Bedtime","Screens warm and dimmed, house lights to the lowest usable level, 90 min out. Every night except Delay and Hold."]];
+
+var CAFF=[["Day shift","≤250 mg · 100–150 at 05:34, optional 100 by 10:00 · hard cutoff 13:00"],
+ ["Aligned / Step","≤200 mg · 100–150 at T+4 · cutoff 13:00"],
+ ["Traffic detail","≤250 mg · 100–150 at T+4, optional 100 mid-morning · cutoff 8 h before the bed time shown on the card"],
+ ["Drift / Delay","≤250 mg · normal morning dose, small afternoon dose allowed on Delay · cutoff 18:00 on Delay"],
+ ["First night","≤400 mg · morning dose · last pre-nap by 12:30 · 150 at 15:30 · 100–150 at 23:00 · 100 at 02:30 with the nap"],
+ ["Between nights","≤400 mg · 150 at the 14:30 wake · 150 at 16:45 immediately before the 25-min nap · 100–150 at 23:00 · 100 at 02:30"],
+ ["Bridge","≤250 mg · 150 at the 14:30 wake · cutoff 18:00"],
+ ["Hold","≤250 mg · 150 at 09:00, optional 100 midday · cutoff 17:00"],
+ ["Reset","≤150 mg · 150 at the 13:00 wake · cutoff 15:00"],
+ ["Under 5 h","≤250 mg · 150 at T+0, second 100 only if working · cutoff 8 h before intended sleep"],
+ ["The rule","8 hours before intended sleep on day-aligned days. On night blocks that's impossible, so it becomes 5 hours and the 02:30 dose is paired with the nap so the two work together."],
+ ["Caffeine-nap","Dose immediately before a 20–25 min nap so it peaks as you wake. Use it at 16:45 between nights and at 02:30 on shift. Nowhere else."],
+ ["Never","To override a Red day · in the two hours before the 90-minute pre-night nap · any stimulant-containing pre-workout, ever."],
+ ["Stimulant","First dose about 60 min after your wake for that day type — 06:30 on a day shift, 15:15 between nights, 17:00 before a first night. Any second dose lands at least 8 h before intended sleep."],
+ ["TRT","Keep injection day fixed to the same weekday every rotation so bloodwork stays comparable draw to draw."],
+ ["Clinician stack","Everything prescribed continues exactly as prescribed. On night blocks follow the wake–sleep cycle rather than the clock — 'morning' items go at your biological morning, whether that's 06:30 or 14:30."]];
+
+var SUPPS=[["Creatine","5 g · any time · with or without food. Muscle, and cognition specifically under sleep deprivation."],
+ ["Magnesium glycinate","300–400 mg elemental · 45 min pre-sleep, every sleep including daytime."],
+ ["Glycine","3 g · at bedtime, every sleep."],
+ ["Omega-3","2 g EPA+DHA · largest meal of your biological day, with fat. Third-party tested."],
+ ["Vitamin D3 (+K2)","Per your last panel · first fat-containing meal of your biological morning. Never at a post-night bedtime."],
+ ["Sodium","500 mg in 16 oz water at T+6 of every wake, second serving mid-shift."],
+ ["Protein powder","As needed. A tool for hitting the daily target on a 12-hour shift, not a supplement."],
+ ["Melatonin","0.3–0.5 mg, conditional only — 13:30 before a first-night nap, and 21:00 on a Reset night. A phase-shifting signal, not a sedative."],
+ ["L-theanine","100–200 mg with the pre-sleep stack when you're wired, or before a daytime sleep block."],
+ ["Taurine","1–2 g evening, only if already part of your clinician's plan."],
+ ["Not taking","Any iron, or a multivitamin containing iron · ashwagandha or any hormone-modulating supplement outside your supervised protocol · stimulant pre-workouts · anything marketed for blood building, EPO support or testosterone boosting."],
+ ["Ask about","High-dose vitamin C alongside meals drives iron absorption, and your clinician's January plan includes liposomal vitamin C at midday. Either the iron picture reads differently than this assumes, or the timing needs adjusting. Get it settled rather than quietly dropping something they prescribed."],
+ ["Also mention","Creatine mildly raises serum creatinine without harming kidneys — ask for a cystatin C–based estimate so the kidney number stays interpretable."],
+ ["Timing rule","The table keys off your biological morning, not the clock. Vitamin D3 lands at 14:30 on a between-nights day, not at a 07:45 bedtime in daylight."]];
+
+var NUTR=[["Protein","200–230 g/day, roughly 1.8–2.2 g/kg, across 3–4 feedings of 40–50 g."],
+ ["Pre-lift","60–120 min before: 30–50 g protein + 40–80 g carbohydrate. Keep fat and fibre moderate if you're eating close to training."],
+ ["Post-lift","40–50 g protein within 2 hours. Add 40–80 g carbohydrate after a demanding session or if you're working later."],
+ ["Night shift","Largest meal before 18:30. One moderate protein-forward meal around 23:00. No large meal after 02:00."],
+ ["Before daytime sleep","Small and low-fat, or nothing. A big meal at 07:15 fragments an already fragile sleep."],
+ ["Fluid","~3 L across the day. 16–24 oz in the 1–2 hours before training, then to thirst."],
+ ["Sodium","3,000–4,000 mg/day from all sources. Discuss with your prescriber before loading above that, given the hematocrit picture."],
+ ["Deficit","None until three consecutive weeks that were mostly Green with stable sleep. Then 0.5% of bodyweight per week, maximum."],
+ ["Why","Chronic sleep restriction already biases weight loss toward lean tissue, and a steep deficit compounds it while suppressing everything you're trying to raise. Don't use extra training volume to force fat loss — the deficit is subordinate to recovery, permanently."]];
+
+var CPAP=[["Always","Every main sleep period, day or night, without exception."],
+ ["Naps","On for the 90-minute pre-night nap. Optional for 20–25 min naps — the setup cost outweighs the benefit at that length."],
+ ["Environment","Blackout, eye mask, white noise, 65–67 °F. Daytime sleep needs all four."],
+ ["Weekly","Usage hours · mask leak · residual AHI · any nights the mask came off."],
+ ["Target","Coverage of all sleep, not the four-hour threshold. Residual AHI under 5."],
+ ["Escalate","AHI above 5 for a week, repeated mask removal, or leak trending up → request a re-titration. Tell them a meaningful share of your sleep is now daytime sleep, which is lighter and more fragmented."]];
+
+var RESCUE=[["T+0","Caffeine 150 mg immediately. Skip the HRV recording — it won't tell you anything you don't know, and today is Red regardless."],
+ ["T+2","Light, 30 min. Outdoors if at all possible."],["T+5","Cold water, face and forearms, 30 s."],
+ ["T+10","16 oz water with 500 mg sodium, then a 10-minute walk."],["T+25","40–50 g protein."],
+ ["Later","25-min nap before 15:00 if the day allows. 20 min NSDR mid-afternoon. It replaces training, it doesn't supplement it."],
+ ["Bed","30 min earlier than target. Not more — a big early bed rebounds into an 03:00 wake."],
+ ["If working","A second 100 mg dose is allowed, but no later than 8 h before intended sleep on day-aligned days."],
+ ["Don't","Sleep past target wake · add caffeine past cutoff · take optional overtime."]];
+
+var REDCARD=[["Move","10–20 min flat easy walk, outdoors if the light timing works."],
+ ["Mobility","Full 8–10 min sequence. Unhurried, nasal breathing."],
+ ["Vestibular","Red dose — 5 min seated. Do not skip it entirely."],
+ ["Breathing","10 min twice, plus 20 min NSDR mid-afternoon."],
+ ["Nap","25 min, only if it can start before 15:00."],
+ ["Fuel","Full protein target, extra sodium and fluid. No deficit today."],
+ ["Bed","Target time, or at most 30 min early. A 19:00 bedtime backfires."],
+ ["Skip","All strength, all Zone 2, optional overtime, any new supplement or protocol change."],
+ ["Note","Two bad days in a row after a night block is normal. Three or more outside a night block: log it and bring it to your next appointment."]];
+
+var INERTIA=[["A · standard","Day shifts, Aligned days, details, both Step-downs, and the Reset wake. T+0 stay supine and record HRV · T+3 sit on the edge 30 s before standing · T+4 caffeine 100–150 mg · T+6 16 oz water with 500 mg sodium · T+8 light 20–30 min · T+12 cold water on face and forearms · T+15 5–8 min easy movement, no fast head turns · T+25 protein-forward meal 40–50 g · T+60 first prescribed dose."],
+ ["B · daytime","Waking at 14:30 before a night. No HRV recording — daytime readings aren't comparable. T+0 caffeine 150 mg immediately · T+2 bright indoor light or step outside, for alertness not phase shifting, skip the box · T+5 cold water · T+8 water with sodium and 8 min easy movement · T+20 40–50 g protein, and this is your biological breakfast so vitamin D3 and omega-3 go here · T+60 prescribed dose at this wake, not later at the nap."],
+ ["C · from the 90","Waking from the pre-night nap at 15:30. Alarm at 90 minutes exactly, caffeine 150 mg pre-measured beside the bed at T+0 · T+1 bright light, brightest room in the house · T+3 cold water, stand and walk · expect twenty minutes of grogginess, and do not drive during it."],
+ ["D · under 5 h","Run the rescue card above."],
+ ["Free win","Where you can, set alarms at rough 90-minute multiples from sleep onset. Waking out of slow-wave sleep is the single largest driver of severe inertia, and it costs nothing to avoid."]];
+
+var OT=[["Between day shifts","Nearly free. You're already on that clock, the work is light, and you're home early enough to sleep normally. Take these liberally — if you want overtime hours without the recovery tax, this is where to get them."],
+ ["On an off day","Set the hours on the day and the card recalculates your wake, your bed the night before, and whether any training survives. Strength is cancelled, not moved — the A → B → C sequence waits."],
+ ["Right after a night","Decline. You're on patrol until 07:00, so a detail starting that morning makes it a twenty-four-hour block and consumes the exact recovery sleep the rest of the rotation is built around. If it's mandatory: treat the following 48 hours as Red, 25-minute nap immediately on getting home, in bed by 21:00."],
+ ["On a Hold day","The contingency worth planning for. Before a three-night block: decline — that's where you dig the hole you spend the rest of the rotation climbing out of. Before a two-night block: workable, and you can absorb it once."],
+ ["Never both","Two Hold-day details in one night phase means six phase moves in two weeks. Take one or the other."],
+ ["Negotiate the start","This is the highest-value thing you can ask for. Every hour later you start is an hour later you wake — a 09:00 start instead of 07:00 roughly halves the phase shift on a Hold day, and on an ordinary off day it's a whole extra hour of sleep."],
+ ["Non-negotiable","On a Hold day, the 90-minute post-shift nap. If the day makes it impossible, the overtime isn't workable — decline it."],
+ ["Modify the Bridge before it","When a Hold-day detail is coming: 07:45 → 12:30, four and a half hours with an alarm. Longer than a true Reset because you're not banking a whole day phase, short enough that you'll sleep tonight. 12:30 caffeine then outside 20–30 min — use the light box today, unlike a normal Bridge you do want to advance. 14:30 easy outdoor walk 30 min. 15:00 caffeine cutoff, no naps after. 19:30 melatonin 0.5 mg. 20:30 bed, aiming for 9 hours in bed."],
+ ["The Hold detail itself","Full inertia block with the light box at wake. Treat the sitting and standing as the load. The ordinary caffeine cutoff does not apply — you're going to bed at 01:00, not 21:30. Home, then a 90-minute nap 45 minutes later with CPAP on: that's the single most important element. Keep the lights bright all evening, opposite of every other night. 01:00 bed, wake 09:00, run the standard first-night protocol."],
+ ["What it costs","Roughly 3–4 hours of sleep debt across two days, and the one good strength session of that night phase. Expect HRV down and inertia longer for 2–4 days — annotate those days so they don't corrupt your trend lines. If you need more than about four days to feel normal again, that's your answer on whether these shifts are worth taking."]];
+
+var REVIEW=[["Weekly · 5 min","Average sleep · nights under 6 h · typical inertia duration · average energy · average dizziness and any flare · did loads or reps move at the same RPE · Zone 2 minutes · same-workload HR vs last week · resting HR trend · 7-day RMSSD vs band · overtime hours and which day types they hit · CPAP coverage, leak, residual AHI."],
+ ["Then pick one","PROGRESS — average sleep ≥7 h, one or fewer nights under 6, energy trending up, mostly Green: add load or reps. STAY COURSE — mixed week, nothing clearly worse: same weights, same volume. DELOAD — three or more Yellow/Red days, or two sessions down 5%+, or sleep average down 45 min for five days. SLEEP FIRST — average under 6.5 h: hold training volume flat and spend the week on bedtimes, light and CPAP coverage. Nothing else moves until that does."],
+ ["Monthly","Improvement looks like: falling asleep faster on bridge nights, shorter inertia, fewer orthostatic episodes, dizziness trending down with shorter flares, loads climbing at the same effort, lower HR at the same walking pace, fewer bad days per rotation."],
+ ["If unchanged","Don't add anything. Identify which foundation hasn't actually been implemented — it's almost always bridge-day sleep discipline, the 90-minute nap, the sunglasses on the drive home, or daily vestibular work. Fix that one thing for a full rotation before changing the plan."],
+ ["Expect a sawtooth","Improvement won't be linear — you'll drop through every night block and recover afterward. What matters is whether the peaks are rising and the troughs are getting shallower, not whether any single week looked good."],
+ ["If 12 weeks pass with nothing","In order: confirm the workup actually happened · audit adherence honestly, especially bridge-day sleep and overtime selection · escalate the PPPD care if you've been doing this without a vestibular PT and without CBT · revisit stimulant timing with your prescriber, timing first and dose second · re-titrate CPAP · consider formal autonomic testing · and consider whether the schedule itself is the ceiling. Some of this may not be fully solvable while working a rotation that reverses twice a month plus overtime. That's worth knowing rather than attributing the shortfall to insufficient effort."]];
+
+var APPTS=["Fasting transferrin saturation and ferritin drawn together, HFE genotyping, CBC, cystatin C–based eGFR — and reconcile with your clinician's January reading of the iron picture, which differs.",
+ "Prolactin repeat with macroprolactin, TSH, IGF-1, plus a medication review covering everything recently added.",
+ "Morning cortisol, with the caveat that shift work disrupts the cortisol rhythm on its own.",
+ "CPAP re-titration now that a large share of your sleep is daytime sleep.",
+ "Vestibular PT referral for PPPD, and a CBT referral alongside it.",
+ "Stimulant timing and dose in the context of the palpitations and low HRV.",
+ "Approval for a higher sodium and fluid target before going above 4,000 mg/day.",
+ "TRT dose in light of hematocrit and transferrin saturation.",
+ "Your palpitation log — date, activity, duration. The single most useful thing you can hand a cardiologist.",
+ "Whether a five-hour Reset with an alarm, followed by a drive, is appropriate for you."];
+
+/* ---------- day cards ---------- */
+function T(h,m){var v=h*60+(m||0)-240;return v<0?v+1440:v}
+function TM(min){var v=min-240;return v<0?v+1440:v}          /* minutes-from-midnight → band */
+function TM2(min){return Math.min(min-240+1440,1680)}
+function T2(h,m){return Math.min(h*60+(m||0)-240+1440,1680)}
+var W=1680;
+
+var CARDS={
+DAY:{name:"Day shift",phase:"day",title:"Day shift",sub:"07:00–19:00 · home 19:15",
+ sleep:"21:30 → 05:30",sleepn:"8 h",nap:"None",napn:"You don't need one",win:"21:30 → 05:30",
+ segs:[["sleep",0,T(5,30)],["lamp",T(5,38),T(6,8)],["shift",T(7,0),T(19,15)],["sleep",T(21,30),T2(5,30)]],
+ seq:[["05:30","Wake. HRV recording before you sit up, caffeine at 05:34, light at 05:38."],
+  ["06:30","First prescribed dose, per your prescriber."],["12:00","Second dose if prescribed — hard cutoff. Largest meal."],
+  ["13:00","Caffeine cutoff. No exceptions on a day shift."],["19:15","Home. Outdoor light on the walk in if any is left."],
+  ["19:45","Dinner, moderate carbohydrate."],
+  ["20:15","Vestibular session — after you're home, never before driving."],
+  ["20:45","Pre-sleep block: mobility, hot shower, magnesium and glycine, 10 min breathing."],
+  ["21:30","Lights out. CPAP on. Blackout, 65–67 °F."]],
+ flag:{k:"calm",t:"On the third consecutive day shift expect to feel worst. That's accumulated debt, not a warning."}},
+
+ALIGNED:{name:"Aligned off day",phase:"day",title:"Aligned off day",sub:"Off patrol · day-anchored",
+ sleep:"22:00 → 06:30",sleepn:"8 h 30",nap:"Only if under 6.5 h",napn:"20 min, before 14:00",win:"22:00 → 06:30",
+ segs:[["sleep",0,T(6,30)],["lamp",T(6,40),T(7,10)],["train",T(9,0),T(10,5)],["sleep",T(22,0),T2(6,30)]],
+ seq:[["06:30","Wake, no later than 07:00. HRV first, then the full inertia block."],
+  ["06:40","Outside with coffee, 20–30 min. Real daylight beats the box."],
+  ["08:00","Pre-training meal: 30–50 g protein, 40–80 g carbohydrate."],
+  ["09:00","Main session. 45–65 min."],["10:30","40–50 g protein within 2 h. Mobility."],
+  ["13:00","Caffeine cutoff. Largest meal."],["15:00","Vestibular, full dose plus real-world exposure."],
+  ["22:00","Lights out."]],
+ flag:{k:"amber",t:"Don't sleep past 07:00. Drifting later on an off day is what makes the next day shift feel like a night shift."}},
+
+DRIFT:{name:"Drift day",phase:"turn",title:"Drift day",sub:"First half of the two-step delay into nights",
+ sleep:"23:45 → 08:00",sleepn:"8 h 15",nap:"None",napn:"Bank the pressure",win:"23:45 → 08:00",
+ segs:[["sleep",0,T(8,0)],["sleep",T(23,45),T2(8,0)]],
+ seq:[["08:00","Wake. Light box off from this morning — ordinary indoor light only."],
+  ["Midday","Mobility and an easy walk. No mapped session — this day's only job is to sit 90 minutes later without disturbing anything else."],
+  ["15:00","Vestibular, full dose. Caffeine cutoff relaxed to here."],
+  ["23:45","Bed. About 90 minutes later than an ordinary off day."]],
+ flag:{k:"calm",t:"Going from an 06:30 wake straight to an 01:30 bedtime is a four-hour jump in one night. This day halves each step."}},
+
+DELAY:{name:"Delay day",phase:"turn",title:"Delay day",sub:"Last off day before nights",
+ sleep:"01:30 → 09:30",sleepn:"8 h",nap:"None",napn:"Needed for tomorrow's 14:00 nap",win:"01:30 → 09:30 (+1)",
+ segs:[["sleep",0,T(9,30)],["train",T(12,0),T(12,30)],["sleep",T2(1,30),W]],
+ seq:[["09:30","Sleep in. Avoid deliberate bright morning light — you want the clock drifting later."],
+  ["12:00","Mapped Zone 2, easy. Indoors is fine — you're not chasing daylight today."],
+  ["PM","Full recovery block. Foam roll, massage if scheduled. Best full-recovery day of the cycle."],
+  ["15:00","Vestibular, full dose."],
+  ["18:00","Caffeine cutoff relaxed — a small dose here helps you stay up."],
+  ["Evening","Keep indoor lights bright. One of only two evenings you skip the dimming."],
+  ["01:30","Bed, deliberately late. Wake 09:00 tomorrow for the first night."]],
+ flag:{k:"amber",t:"No nap today, and no strength. A nap here steals the wake pressure you need for tomorrow's 90-minute nap, which is the highest-value action of the whole night block."}},
+
+FIRST:{name:"First night",phase:"night",title:"First night",sub:"19:00–07:00 · coming off off-days",
+ sleep:"Wake 09:00",sleepn:"8 h prior",nap:"14:00 → 15:30",napn:"90 min · CPAP on",win:"Wake 09:00 · nap 14:00–15:30",
+ segs:[["sleep",0,T(9,0)],["nap",T(14,0),T(15,30)],["shift",T(18,15),T2(7,0)]],
+ seq:[["09:00","Wake. No later — you need wake pressure for the afternoon nap. No light box."],
+  ["11:00","Vestibular, seated. This is the window — nothing provocative within 2 h of driving to patrol."],
+  ["12:30","Largest meal. Last caffeine before the nap."],["13:30","Melatonin 0.5 mg. Blackout, 65–67 °F."],
+  ["14:00","90-minute nap, CPAP on. Ninety minutes completes a cycle and lands you in light sleep."],
+  ["15:30","Caffeine 150 mg and bright light immediately. Twenty minutes of grogginess is normal — don't drive during it."],
+  ["17:00","Protein-forward meal. First prescribed dose."],
+  ["18:15","Leave. Bright interior light through 03:00 wherever operationally possible."],
+  ["23:00","Caffeine 100–150 mg. Moderate protein-forward meal."],
+  ["02:30","Optional caffeine-nap: 100 mg, then 20–25 min. Never 30–80. Wait 15 min before driving."],
+  ["03:00","Begin dimming. Reduce screen and cabin light where you can."],
+  ["07:00","Very dark neutral sunglasses before you exit the building. Wear them the whole drive."]],
+ flag:{k:"amber",t:"The 14:00 nap is the single highest-value action of the entire block. It is worth more than any other decision you make today."}},
+
+MID:{name:"Between nights",phase:"night",title:"Between nights",sub:"You worked last night · you work again tonight",
+ sleep:"07:45 → 14:30",sleepn:"6 h 45 · CPAP",nap:"16:45 → 17:10",napn:"25 min · caffeine first",win:"07:45 → 14:30 + 25 min",
+ segs:[["shift",0,T(7,0)],["sleep",T(7,45),T(14,30)],["nap",T(16,45),T(17,10)],["shift",T(18,15),T2(7,0)]],
+ seq:[["07:15","Home. Glasses on until the bedroom door. No phone, no screens."],
+  ["07:45","CPAP on. Blackout, eye mask, white noise, 65–67 °F."],
+  ["14:30","Wake block. Caffeine, bright light, movement, 40–50 g protein. No HRV recording."],
+  ["15:15","Prescribed dose. Vestibular, seated. Walk 10–20 min if you want it."],
+  ["16:45","Caffeine 150 mg, then a 25-minute nap. Short on purpose — long enough to help, short enough that you wake clear and can drive."],
+  ["17:15","Bright light. Meal."],
+  ["18:15","Leave. Run every night identically — same caffeine times, same 03:00 dimming, same glasses at 07:00."]],
+ flag:{k:"calm",t:"Don't force eight. Forcing daytime sleep fragments it. Wake at 13:45 feeling finished? Get up."}},
+
+BRIDGE:{name:"Bridge",phase:"night",title:"Bridge",sub:"Nights resume in about two days",
+ sleep:"07:45 → 14:30",sleepn:"6 h 45 · no alarm",nap:"None",napn:"It would wreck the 01:00 bed",win:"07:45 → 14:30, then 01:00",
+ segs:[["shift",0,T(7,0)],["sleep",T(7,45),T(14,30)],["train",T(16,0),T(16,40)],["sleep",T2(1,0),W]],
+ seq:[["07:15","Home. Glasses on until the bedroom."],
+  ["07:45","Long sleep, no alarm. The one post-night sleep you're allowed to extend — your main debt repayment of the block."],
+  ["14:30","Wake block, no light box. Ordinary afternoon daylight is fine and won't shift you much."],
+  ["16:00","Easy outdoor Zone 2 walk, 30–40 min. The only training today."],
+  ["17:00","Vestibular, dose per colour. NSDR 20 min if you're carrying debt."],
+  ["18:00","Caffeine cutoff. Real meal at 19:00."],
+  ["23:30","Pre-sleep block: foam roll, breathing, magnesium and glycine."],
+  ["01:00","Bed — deliberately late. Wake naturally around 09:00."]],
+ flag:{k:"",t:"<b>Do not flip to a day schedule.</b> Nights resume within 48 hours. Flipping and back is two circadian shifts in three days, which costs more than not flipping at all."}},
+
+HOLD:{name:"Hold day",phase:"night",title:"Hold day",sub:"Off, nights resume tomorrow",
+ sleep:"01:00 → 09:00",sleepn:"8 h",nap:"None",napn:"Save it for tomorrow's 14:00",win:"01:00 → 09:00",
+ segs:[["sleep",0,T(9,0)],["train",T(11,0),T(12,5)],["sleep",T2(1,0),W]],
+ seq:[["09:00","Wake. No light box. Coffee outside is fine — you're holding the late phase."],
+  ["10:00","Pre-training meal."],
+  ["11:00","Full strength session plus mobility. Rested, no shift tonight — the one day in a night phase worth training properly."],
+  ["13:30","Largest meal."],["15:00","Recovery block. Foam roll, massage if scheduled. No nap today."],
+  ["17:00","Caffeine cutoff."],["18:00","Vestibular, full dose."],
+  ["01:00","Bed. Wake 09:00 tomorrow for the first night."]],
+ flag:{k:"good",t:"Your best-feeling day of the night phase, and the only strength opportunity in it. You're rested and there's no shift tonight."}},
+
+RESET:{name:"Reset",phase:"turn",title:"Reset",sub:"Final night done · back to days",
+ sleep:"07:45 → 13:00",sleepn:"5 h · ALARM",nap:"Absolutely not",napn:"None after 15:00, regardless",win:"07:45 → 13:00, then 22:00",
+ segs:[["shift",0,T(7,0)],["sleep",T(7,45),T(13,0)],["lamp",T(13,0),T(13,30)],["train",T(15,0),T(15,45)],["sleep",T(22,0),T2(6,15)]],
+ seq:[["07:15","Home. Glasses on until the bedroom."],["07:45","Five hours, alarm set. The hardest instruction here."],
+  ["13:00","Caffeine, then outside 20–30 min. Real daylight is the phase-advance signal doing the actual work."],
+  ["13:30","Real meal, protein-forward."],
+  ["15:00","Easy outdoor Zone 2 walk, 30–45 min. Circadian medicine that happens to be cardio. Caffeine cutoff, and no naps after 15:00 regardless of how you feel."],
+  ["16:30","Vestibular, dose per colour."],["18:30","Last meal, moderate carbohydrate."],
+  ["21:00","Melatonin 0.5 mg. Lights down. Foam roll and breathing."],
+  ["22:00","Bed. You'll sleep hard, and you're essentially day-aligned tomorrow."]],
+ flag:{k:"",t:"<b>Why five hours and not eight.</b> Sleep pressure is a currency. Spend it all on a long daytime sleep and you have nothing left to buy a normal night with. You'll feel rough from about 17:00 to 20:00 — that's one evening, and it buys the whole phase."}},
+
+STEP1:{name:"Step down · 1",phase:"day",title:"Step down",sub:"First rung back onto the day clock",
+ sleep:"21:45 → 05:45",sleepn:"8 h · woke 06:15",nap:"None",napn:"You're rebuilding the anchor",win:"21:45 → 05:45",
+ segs:[["sleep",0,T(6,15)],["lamp",T(6,23),T(6,53)],["train",T(9,0),T(10,5)],["sleep",T(21,45),T2(5,45)]],
+ seq:[["06:15","Wake from the Reset night. Full inertia block with the light box — you're anchoring now."],
+  ["08:00","Pre-training meal if you're lifting."],["09:00","Main session. 45–65 min."],
+  ["13:00","Caffeine cutoff."],["15:00","Vestibular, full dose."],
+  ["21:45","Lights out. Rung one of three."]],
+ flag:{k:"calm",t:"Three steps back onto the day clock beat one jump — 06:15, then 05:45, then 05:30. This is rung one."}},
+
+STEP2:{name:"Step down · 2",phase:"day",title:"Step down",sub:"Last day before the day block",
+ sleep:"21:30 → 05:30",sleepn:"8 h · woke 05:45",nap:"None",napn:"—",win:"21:30 → 05:30",
+ segs:[["sleep",0,T(5,45)],["lamp",T(5,53),T(6,23)],["train",T(9,0),T(9,45)],["sleep",T(21,30),T2(5,30)]],
+ seq:[["05:45","Wake. Full inertia block with the light box."],["09:00","Mapped Zone 2. Progress test today if you're Green."],
+  ["13:00","Caffeine cutoff."],["15:00","Vestibular, full dose."],["Evening","Weekly and monthly review — five minutes."],
+  ["21:30","Lights out. You're on the day clock — tomorrow starts the block without a shock."]],
+ flag:{k:"amber",t:"Rung two. Finish this rotation rested; the day block starts with an 05:30 wake."}},
+
+DETAIL_RED:{name:"Detail after a night",phase:"night",title:"Detail after a night",sub:"You were on patrol until 07:00",
+ sleep:"Bed by 21:00",sleepn:"Treat 48 h as recovery",nap:"25 min on getting home",napn:"Immediately, before anything else",win:"No recovery sleep available",
+ segs:[["shift",0,T(17,0)],["nap",T(17,30),T(17,55)],["sleep",T(21,0),W]],
+ seq:[["07:00","Off patrol, straight onto the detail. This is now a twenty-four-hour block."],
+  ["Home","25-minute nap immediately."],["19:00","Breathing only. Nothing provocative."],["21:00","Bed."],
+  ["+48 h","Treat the next two days as Red. No strength, no Zone 2, decline optional overtime."]],
+ flag:{k:"",t:"<b>Decline this one if you can.</b> A detail starting the morning you come off nights consumes the exact recovery sleep the rest of the rotation is built around. There's no version of it that works."}}};
+
+/* ---------- dynamic traffic-detail card ---------- */
+var DEF_DET={s:420,e:900};                     /* 07:00 → 15:00 */
+function detTimes(d){var o=ovFor(d);
+  return {s:(o&&o.s!=null)?o.s:DEF_DET.s,e:(o&&o.e!=null)?o.e:DEF_DET.e}}
+
+function nextWakeMin(d){
+  var t=dtype(addD(d,1));
+  var M={DAY:330,ALIGNED:390,DRIFT:480,DELAY:570,FIRST:540,MID:870,BRIDGE:870,HOLD:540,
+    RESET:465,STEP1:375,STEP2:345,DETAIL_RED:420};
+  if(t==="DETAIL")return detTimes(addD(d,1)).s-90;
+  return M[t]!=null?M[t]:390;
+}
+
+/* bed the night before a detail: 8 h before wake, normalised to an evening time,
+   and never later than 22:15 or a late start quietly drags the clock later */
+function bedBefore(startMin){
+  var raw=startMin-90-480;
+  if(raw<720)raw+=1440;
+  return Math.min(raw,1335)%1440;
+}
+function detailCard(d){
+  var tt=detTimes(d),start=tt.s,end=tt.e;
+  var wake=start-90, home=end+30;
+  /* bed the night before: 8 h before the wake, but never later than an ordinary off-day bed,
+     or a late start would quietly drag the clock later */
+  var bedPrev=bedBefore(start);
+  var tomorrowWake=nextWakeMin(d);
+  var bed=(tomorrowWake+1440)-480;              /* 8 h before tomorrow's wake */
+  if(bed<1275)bed=1275; if(bed>1335)bed=1335;   /* hold between 21:15 and 22:15 */
+  var opp=(tomorrowWake+1440)-bed;
+  var lateFinish=home>1050, earlyFinish=home<=930;
+
+  return {name:"Traffic detail",phase:"day",title:"Traffic detail",
+   sub:fmt(start)+"–"+fmt(end)+" · home about "+fmt(home),
+   sleep:fmt(bed)+" → "+fmt(tomorrowWake),sleepn:hrs(opp)+" tonight",
+   nap:"Only if under 6 h",napn:"20 min, before 15:00",
+   win:fmt(bed)+" → "+fmt(tomorrowWake),
+   start:start,end:end,wake:wake,home:home,bedPrev:bedPrev,bed:bed,
+   earlyFinish:earlyFinish,lateFinish:lateFinish,
+   segs:[["sleep",0,TM(wake)],["lamp",TM(wake+8),TM(wake+38)],["shift",TM(start),TM(end)],["sleep",TM(bed),TM2(tomorrowWake)]],
+   seq:[[fmt(bedPrev),"Bed the night before. This is the number that actually decides how the detail goes — set it as soon as you know the start time."+
+      (bedBefore(start)===1335?" Held at 22:15 rather than later: a late start shouldn't drag your clock, and the extra sleep is yours to keep.":"")],
+    [fmt(wake),"Wake, 90 minutes before the start. Full inertia block: HRV supine, caffeine at +4, sodium at +6, light at +8."],
+    [fmt(wake+60),"First prescribed dose, per your prescriber."],
+    [fmt(start),"On post. Treat the standing and sitting as the load — move every hour, 3-min patrol mobility twice."],
+    [fmt(Math.max(start+60,bed-480)),"Caffeine cutoff — 8 hours before tonight's "+fmt(bed)+" bed."],
+    [fmt(end),"Off. Home about "+fmt(home)+"."],
+    [fmt(home+15),"Full 8–10 min mobility. It matters more today, not less."],
+    [fmt(home+45),"Real meal at maintenance. No deficit on a detail day."],
+    [fmt(Math.min(home+90,1170)),"Vestibular, full dose. After you're home, never before driving."],
+    [fmt(bed),"Lights out."]],
+   flag:{k:"amber",t:earlyFinish
+     ? "<b>Early finish.</b> Home by "+fmt(home)+" leaves room for the mapped session if you're Green. It's still a long standing day — take the seated substitutions and don't add load."
+     : lateFinish
+     ? "<b>Late finish.</b> Home after 17:30 means mobility and a walk, nothing more. Strength is cancelled, not moved — the A → B → C sequence waits for the next mapped opportunity."
+     : "<b>Strength is cancelled, not moved.</b> The A → B → C sequence waits. Zone 2 only if you're Green and it was already a mapped Zone 2 day."}};
+}
+
+function cardFor(d){var t=dtype(d);return t==="DETAIL"?detailCard(d):CARDS[t]}
+
+var ORDER=["DAY","ALIGNED","DRIFT","DELAY","FIRST","MID","BRIDGE","HOLD","RESET","STEP1","STEP2","DETAIL_RED"];
+var PHASECLASS={day:"phase-day",night:"phase-night",turn:"phase-turn"};
+
+/* ---------- training assignment ---------- */
+function plan(d,col){
+  var t=dtype(d),c=col||"Y",p0=pos(d),lift=LIFTPOS.indexOf(p0)>-1,z2=Z2POS.indexOf(p0)>-1;
+  var p={type:t,colour:c,kind:"none",title:"",note:"",vrt:c};
+
+  if(t==="DETAIL_RED"){p.kind="red";p.title="Recovery only";p.vrt="R";
+    p.note="Walk if you can, 5 min seated vestibular, breathing. Nothing else for 48 hours.";return p}
+  if(t==="FIRST"||t==="MID"){p.kind="walk";p.title="Walking only";p.vrt=(c==="G"?"Y":c);
+    p.note=(t==="FIRST"?"The 14:00 nap is worth more than any session.":"Recovery-debt period, not a training period.")+" Vestibular seated, breathing twice.";return p}
+  if(t==="DAY"){p.kind="walk";p.title="Patrol steps + mobility";p.vrt=c;
+    p.note="One 15-minute decompression walk after you're home, then 8–10 min mobility. Vestibular at 20:15 — after you're home, never before driving.";return p}
+
+  if(c==="R"&&t==="RESET"){p.kind="z2";p.title="Outdoor walk, 20–30 min · shortened";p.vrt="R";
+    p.note="Red cancels training, but not this. The 15:00 daylight is the phase-advance signal, not cardio — skip it and you land tomorrow still night-shifted. Then run the Red card.";return p}
+  if(c==="R"&&t==="BRIDGE"){p.kind="z2";p.title="Outdoor walk, 20 min · shortened";p.vrt="R";
+    p.note="Shortened, not cancelled. Get the daylight and the movement, then run the Red card. NSDR 20 min instead of anything harder.";return p}
+  if(c==="R"){p.kind="red";p.title="Recovery only";p.vrt="R";
+    p.note="Open the Red card below. No strength, no Zone 2, and no optional overtime.";return p}
+
+  if(t==="DETAIL"){
+    var dc=detailCard(d);
+    if(dc.earlyFinish&&lift){var L1=nextLetter();p.kind="lift";p.letter=L1;
+      p.title=(c==="Y"?"Workout "+L1+" · Yellow version":"Workout "+L1);
+      p.note="Home by "+fmt(dc.home)+", so the mapped session survives. Seated substitutions where you can — you've been on your feet all day. No load increases today.";return p}
+    if(dc.earlyFinish&&z2){p.kind="z2";p.title="Zone 2 · 20–25 min";
+      p.note="Home by "+fmt(dc.home)+" and it was a mapped Zone 2 day. Bike over treadmill.";return p}
+    if(!dc.lateFinish&&z2&&c==="G"){p.kind="z2";p.title="Zone 2 · 20 min easy";
+      p.note="Only because you're Green, it was a mapped Zone 2 day, and you were home by "+fmt(dc.home)+".";return p}
+    p.kind="walk";p.title="Mobility + walk";
+    p.note="Strength cancelled, not moved. The A → B → C sequence waits for the next mapped opportunity.";return p}
+
+  if(t==="DRIFT"){p.kind="walk";p.title="Mobility + easy walk";
+    p.note="Nothing mapped. This day's only job is to sit 90 minutes later without adding a variable.";return p}
+  if(t==="DELAY"){p.kind="z2";p.title="Easy Zone 2"+(c==="Y"?" · cut ~40%":", 30 min");
+    p.note="No strength before a night block. Best full-recovery day of the cycle — use it for that.";return p}
+  if(t==="BRIDGE"){p.kind="z2";p.title="Outdoor Zone 2 walk, 30–40 min";
+    p.note="The only training today. Outdoors — the daylight is doing double duty.";return p}
+  if(t==="RESET"){p.kind="z2";p.title="Outdoor Zone 2 walk, 30–45 min";
+    p.note="Circadian medicine that happens to be cardio. Nothing harder today.";return p}
+
+  if(lift){var L=nextLetter(),st=setsFor();p.kind="lift";p.letter=L;
+    p.title=(c==="Y"?"Workout "+L+" · Yellow version":"Workout "+L);
+    p.note=(c==="Y"?"One work set of the first five exercises. RPE ceiling 7, no load increases, 30–40 min.":WK[L].focus+" · "+st.s+" · "+st.r);
+    return p}
+  if(z2){var b=Z2BAND[band()];p.kind="z2";p.title="Zone 2 · "+(c==="Y"?"cut ~40%":b.d);
+    p.note=(c==="Y"?"Hold the bottom of your band. Bike over treadmill.":b.f+" · target "+b.wk);return p}
+  p.kind="walk";p.title="Mobility + walk";p.note="No mapped session today. Mobility 8–10 min, easy walk, vestibular per colour.";
+  return p;
+}
+
+/* ---------- render helpers ---------- */
+function rows(l){return l.map(function(r){
+  return '<div class="row"><span class="t'+(/^[0-9]/.test(r[0])?'':' quiet')+'">'+r[0]+'</span><span class="d">'+r[1]+'</span></div>'}).join("")}
+function wrows(l){return l.map(function(r){
+  return '<div class="row"><span class="t wide quiet">'+r[0]+'</span><span class="d">'+r[1]+'</span></div>'}).join("")}
+function exList(L,col){return WK[L].ex.map(function(e){
+  var cut=(col==="Y"&&e[4]);
+  return '<div class="ex'+(cut?" cut":"")+'"><div class="n">'+e[0]+'<span>'+e[1]+'</span></div>'+
+    '<div class="m">'+(cut?"cut on a Yellow day":e[2])+'</div>'+(cut?"":'<div class="s">Swap · '+e[3]+'</div>')+'</div>'}).join("")}
+
+function drawBand(card){
+  var b=document.getElementById("band"),a=document.getElementById("axis");
+  b.innerHTML="";a.innerHTML="";
+  card.segs.forEach(function(s){
+    if(s[2]<=s[1])return;
+    var d=document.createElement("div");d.className="seg "+s[0];
+    d.style.left=(Math.max(0,s[1])/W*100)+"%";
+    d.style.width=(Math.max(0,Math.min(s[2],W)-Math.max(0,s[1]))/W*100)+"%";b.appendChild(d)});
+  [6,12,18,24,30].forEach(function(h){var m=(h-4)*60;
+    var t=document.createElement("div");t.className="tick";t.style.left=(m/W*100)+"%";b.appendChild(t);
+    var s=document.createElement("span");s.textContent=String(h%24).padStart(2,"0");s.style.left=(m/W*100)+"%";a.appendChild(s)});
+  var nw=new Date(),mins=nw.getHours()*60+nw.getMinutes()-240;if(mins<0)mins+=1440;
+  if(mins<=W){var n=document.createElement("div");n.className="now";n.style.left=(mins/W*100)+"%";b.appendChild(n)}
+}
+
+var CN={G:"Green",Y:"Yellow",R:"Red"};
+function renderToday(){
+  var d=today(),card=cardFor(d),raw=colourRaw(),col=colour(),p=plan(d,col);
+
+  document.body.className=PHASECLASS[card.phase];
+  document.getElementById("dtype").textContent=card.name;
+  document.getElementById("cyc").textContent="Rotation day "+pos(d)+"/28";
+  document.getElementById("title").innerHTML=card.title.replace(/^(\w+)/,'<span class="mark">$1</span>');
+  document.getElementById("sub").textContent=card.sub;
+  document.getElementById("stamp").textContent=d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+  document.querySelectorAll("#cpick button").forEach(function(b){b.setAttribute("aria-pressed",raw===b.dataset.c)});
+  document.getElementById("cnote").textContent=raw
+    ? "Set to "+CN[raw]+". Everything below has adjusted."
+    : "Not set — running as Yellow, the safe default.";
+  document.getElementById("navdot").className="dot "+(raw||"");
+
+  document.getElementById("h-sleep").textContent=card.sleep;
+  document.getElementById("h-sleepn").textContent=card.sleepn;
+  document.getElementById("h-nap").textContent=card.nap;
+  document.getElementById("h-napn").textContent=card.napn;
+
+  document.getElementById("h-train").className="hero "+(p.kind==="red"?"R":col);
+  document.getElementById("tr-v").textContent=p.title;
+  document.getElementById("tr-n").textContent=p.note;
+
+  var vd=VRT[p.vrt]||VRT.Y;
+  document.getElementById("h-vrt").className="hero "+p.vrt;
+  document.getElementById("vrt-v").textContent=vd.n+" · "+vd.t;
+  document.getElementById("vrt-n").textContent=(p.vrt==="G"?"Full sequence through real-world exposure.":p.vrt==="Y"?"Seated. Habituation and VOR ×2 come out.":"Seated gaze only, plus breathing. Never zero.");
+
+  document.getElementById("tr-detail").innerHTML =
+    p.kind==="lift" ? '<section><div class="shead">'+WK[p.letter].name+' <em>'+(col==="Y"?"Yellow version":setsFor().s)+'</em></div>'+exList(p.letter,col)+
+      '<div class="flag calm">Warm up 8 minutes first — see Train. Never to failure. Exhale on effort. If dizziness rises during standing work, take the seated substitution rather than abandoning the session.</div></section>'
+    : p.kind==="red" ? '<section><div class="shead">Red card</div>'+wrows(REDCARD)+'</section>' : "";
+
+  document.getElementById("today-flag").innerHTML='<div class="flag '+card.flag.k+'">'+card.flag.t+'</div>';
+  document.getElementById("seq").innerHTML=rows(card.seq);
+  drawBand(card);
+  document.getElementById("ovdate").textContent=d.toLocaleDateString(undefined,{day:"numeric",month:"short"});
+  renderOvs("ovs","ovtimes",d,function(){
+    document.getElementById("ovnote").textContent="Saved to "+iso(d)+". This date only — it won't repeat next rotation."});
+}
+
+function renderOvs(btnId,timeId,d,after){
+  var o=ovFor(d),cur=o?o.t:"";
+  document.getElementById(btnId).innerHTML=OVS.map(function(x){
+    return '<button class="ov" data-ov="'+x.id+'" aria-pressed="'+(cur===x.id)+'">'+x.lbl+'<small>'+x.note+'</small></button>'}).join("");
+  document.getElementById(btnId).querySelectorAll("[data-ov]").forEach(function(b){
+    b.onclick=function(){var v=b.getAttribute("data-ov");
+      if(!v)setOv(d,null);
+      else if(v==="det"){var t=detTimes(d);setOv(d,{t:"det",s:t.s,e:t.e})}
+      else setOv(d,{t:v});
+      renderAll();if(after)after()}});
+
+  var tw=document.getElementById(timeId);
+  if(!tw)return;
+  if(cur!=="det"){tw.innerHTML="";return}
+  var t=detTimes(d);
+  function opts(from,to,sel){var h="";
+    for(var m=from;m<=to;m+=30)h+='<option value="'+m+'"'+(m===sel?" selected":"")+'>'+fmt(m)+'</option>';
+    return h}
+  tw.innerHTML='<div class="times">'+
+    '<div><label>Start</label><select data-tk="s">'+opts(300,660,t.s)+'</select></div>'+
+    '<div><label>End</label><select data-tk="e">'+opts(780,1140,t.e)+'</select></div></div>'+
+    '<div class="flag calm" style="margin-top:12px">Wake '+fmt(t.s-90)+' · bed the night before '+fmt(bedBefore(t.s))+
+    ' · home about '+fmt(t.e+30)+'. Change either time and the whole card recalculates.</div>';
+  tw.querySelectorAll("[data-tk]").forEach(function(s){
+    s.onchange=function(){var ct=detTimes(d),v={t:"det",s:ct.s,e:ct.e};
+      v[s.getAttribute("data-tk")]=+s.value;
+      if(v.e<=v.s+120)v.e=v.s+120;
+      setOv(d,v);renderAll();if(after)after()}});
+}
+
+/* ---------- check ---------- */
+function renderCheck(){
+  var c=chk();
+  document.getElementById("wk").textContent="Week "+week();
+  document.getElementById("qs").innerHTML=QS.map(function(q){
+    return '<div class="q"><div class="qt">'+q.q+(q.sub?'<small>'+q.sub+'</small>':'')+'</div><div class="opts">'+
+      q.o.map(function(o){return '<button data-q="'+q.id+'" data-v="'+o[1]+'" data-w="'+o[1]+'" aria-pressed="'+(c.a[q.id]===o[1])+'">'+o[0]+'</button>'}).join("")+'</div></div>'}).join("");
+  document.querySelectorAll("[data-q]").forEach(function(b){
+    b.onclick=function(){var k=chk();k.a[b.getAttribute("data-q")]=b.getAttribute("data-v");saveChk(k);renderCheck()}});
+  var s=score(c.a),ans=Object.keys(c.a).length;
+  document.getElementById("tally").textContent=ans===0?"Nothing answered yet"
+    :s.hard?"Red trigger hit — you can stop answering":s.f+" flag"+(s.f===1?"":"s")+" · "+CN[s.c];
+  document.getElementById("apply").textContent=ans===0?"Answer at least one":"Set today to "+CN[s.c];
+  document.getElementById("apply").onclick=function(){if(!ans)return;
+    setColour(score(chk().a).c);renderAll();document.querySelector('nav button[data-v="today"]').click()};
+  document.getElementById("clearchk").onclick=function(){var k=chk();k.a={};saveChk(k);renderCheck()};
+
+  var L=jget("log",{}),out="",lbl=["S","M","T","W","T","F","S"],vals=[];
+  for(var i=6;i>=0;i--){var dd=addD(today(),-i),v=L[iso(dd)]||"";
+    if(v)vals.push(v);
+    out+='<div><b class="'+v+'"></b>'+lbl[dd.getDay()]+'</div>'}
+  document.getElementById("loghist").innerHTML=out;
+  var bad=vals.filter(function(v){return v!=="G"}).length;
+  document.getElementById("weekverdict").innerHTML=vals.length<3
+    ? '<div class="flag calm">Log a few more days and a weekly verdict appears here.</div>'
+    : bad>=3 ? '<div class="flag amber"><b>'+bad+' Yellow/Red days in the last seven.</b> That is a deload trigger. Seven to ten days at roughly half your normal work sets, RPE capped 6–7, no finishers, Zone 2 cut ~25%. Keep walking, mobility, breathing and tolerable vestibular work.</div>'
+    : '<div class="flag good">'+bad+' Yellow/Red day'+(bad===1?"":"s")+' in the last seven. No deload trigger. Stay the course, or add load if sleep averaged 7 h or more.</div>';
+}
+
+/* ---------- calendar ---------- */
+var SH={MID:"MID",FIRST:"1ST",DAY:"DAY",ALIGNED:"OFF",BRIDGE:"BRIDGE",RESET:"RESET",HOLD:"HOLD",
+ DELAY:"DELAY",DRIFT:"DRIFT",STEP1:"STEP 1",STEP2:"STEP 2",DETAIL:"DETAIL",DETAIL_RED:"DETAIL!"};
+var viewY,viewM,selKey=null;
+function initMonth(){var t=today();viewY=t.getFullYear();viewM=t.getMonth()}
+function renderCal(){
+  var first=new Date(viewY,viewM,1),lead=first.getDay(),
+      days=new Date(viewY,viewM+1,0).getDate(),tk=iso(today()),ovs=ovAll(),out="";
+  document.getElementById("mlabel").textContent=first.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+  document.getElementById("cyclabel").textContent="Rotation day "+pos(today())+"/28";
+  for(var i=0;i<lead;i++)out+='<button class="blank" disabled></button>';
+  for(var n=1;n<=days;n++){
+    var d=new Date(viewY,viewM,n),s=eff(d),t=dtype(d),k=iso(d);
+    var piv=["BRIDGE","RESET","DELAY","DRIFT","HOLD","STEP1","STEP2"].indexOf(t)>-1;
+    var lift=LIFTPOS.indexOf(pos(d))>-1&&["FIRST","MID","DAY","DETAIL_RED","DELAY","DRIFT","BRIDGE","RESET"].indexOf(t)===-1
+      &&!(t==="DETAIL"&&!detailCard(d).earlyFinish);
+    out+='<button data-k="'+k+'" class="'+s+(piv?" pivot":"")+(lift?" lift":"")+
+      (k===tk?" today":"")+(ovs[k]?" edited":"")+(k===selKey?" sel":"")+'">'+
+      '<span class="dn">'+n+'</span><span class="l">'+(SH[t]||"")+'</span></button>'}
+  var c=document.getElementById("cal");c.innerHTML=out;
+  c.querySelectorAll("[data-k]").forEach(function(b){
+    b.onclick=function(){peek(b.getAttribute("data-k"))}});
+}
+function peek(k){
+  selKey=k;
+  var p2=k.split("-"),d=new Date(+p2[0],+p2[1]-1,+p2[2]);
+  var card=cardFor(d),pl=plan(d,"G");
+  document.getElementById("peek").innerHTML=
+    '<div class="shead">'+d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"})+' <em>'+card.name+'</em></div>'+
+    '<div class="duo" style="margin-top:14px">'+
+    '<div class="hero"><div class="k">Sleep</div><div class="v" style="font-size:15px">'+card.win+'</div><div class="n">'+card.sleepn+' · nap: '+card.nap.toLowerCase()+'</div></div>'+
+    '<div class="hero"><div class="k">Training if Green</div><div class="v sm" style="font-size:13.5px">'+pl.title+'</div><div class="n">Yellow and Red adjust on the day</div></div></div>'+
+    '<div class="shead" style="margin-top:20px">Change this day</div><div class="grid6" id="peekovs"></div><div id="peektimes"></div>'+
+    '<div class="shead" style="margin-top:22px">The sequence</div>'+rows(card.seq)+
+    '<div class="flag '+card.flag.k+'">'+card.flag.t+'</div>';
+  renderOvs("peekovs","peektimes",d);
+  renderCal();
+  document.getElementById("peek").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ---------- train ---------- */
+function renderTrain(){
+  var L=nextLetter(),st=setsFor(),b=Z2BAND[band()];
+  document.getElementById("seqnote").textContent="Next up · "+L;
+  document.getElementById("wk2").textContent="Week "+week();
+  document.getElementById("z2wk").textContent="Week "+week();
+
+  document.getElementById("lifts").innerHTML=
+    '<details><summary><span class="nm">Warm-up · 8 minutes</span><span class="tm">before every session</span></summary><div class="pb">'+
+    wrows(WARMUP)+'<div class="flag calm"><b>Deliberately excluded:</b> fast head rotations, dynamic neck work, rapid directional drills. Those are provocation exercises — they belong in your vestibular session where exposure is graded, not before a heavy lift where they\'ll wreck the session.</div></div></details>'+
+    LETTERS.map(function(k){
+      return '<details'+(k===L?' open':'')+'><summary><span class="nm">'+WK[k].name+(k===L?' · next':'')+'</span><span class="tm">'+WK[k].focus+'</span></summary><div class="pb">'+
+        exList(k,"G")+'<div class="flag amber"><b>Yellow version.</b> Keep the warm-up. One work set of the first five exercises only. RPE ceiling 7. Skip arms, extra core and any finisher. 30–40 minutes total.</div></div></details>'}).join("");
+
+  document.getElementById("advance").onclick=function(){set("seqn",(+(get("seqn")||0))+1);renderAll()};
+  document.getElementById("rewind").onclick=function(){var v=+(get("seqn")||0);set("seqn",v>0?v-1:0);renderAll()};
+
+  document.getElementById("prog").innerHTML=wrows([
+    ["This week",st.s+" · "+st.r],
+    ["Mapped slots","Rotation days 3, 8, 12, 18, 23 and 27. Days 18 and 23 are Hold days — the one rested, no-shift-tonight slot inside a night phase."],
+    ["Method","Pick a load leaving the target reps in reserve at the low end of the range. Add reps across sessions holding the same RIR. When every work set hits the top of the range at target RIR, add load — 2.5–5 lb upper, 5–10 lb lower and machines — then drop to the lower half and build again."],
+    ["Never","Failure, forced reps, drop sets, rest-pause, burnouts or maximal grinders. Failure is the largest driver of autonomic recovery cost per unit of muscle preserved."],
+    ["Never","Breath-holding under load. Exhale on effort. Controlled reps, but don't hunt slow eccentrics."],
+    ["Rest","2–3 min on compounds, 60–90 s on isolation and core."],
+    ["Dizziness","If it rises during standing work, take the seated substitution rather than abandoning the session."]]);
+
+  document.getElementById("z2").innerHTML=wrows([
+    ["This week",b.d+" on mapped days · "+b.f+" · "+b.wk],
+    ["Mapped slots","Rotation days 4, 9, 14, 17, 22, 26 and 28. The Bridge, Bridge and Reset days are outdoor — the daylight is doing double duty."],
+    ["Modality","Incline treadmill first, 3.0–3.5 mph at 4–10% grade. Bike is an equal substitute and the better choice any day dizziness is elevated, since it removes the postural and visual-motion demand entirely. Elliptical third."],
+    ["Effort","RPE 3–4/10. Full sentences, nasal breathing. Inside your own H10 band — derived from the talk test, never from an age formula."],
+    ["Shape","5 easy minutes in, settle at the working pace, 3–5 easy minutes out."],
+    ["HR high?","If HR sits 8–10 bpm above band at your usual workload, lower the incline or resistance until you're back in band. Don't push to hit a duration."],
+    ["Stimulant","Adderall, short sleep and night blocks all raise HR at the same workload, commonly 5–12 bpm. Hold the feel, accept the higher number, and cut duration ~25%."],
+    ["Yellow","Cut duration ~40%, hold the bottom of the band, bike over treadmill."],
+    ["Walk instead","Any Red day, night-block day, late-finishing detail, or dizziness flare. A 20-minute flat walk is a complete substitute."],
+    ["Intervals","None for the first 12 weeks. Reassess at week 12, and only if you've been consistently Green."]]);
+
+  document.getElementById("vrtcards").innerHTML=["G","Y","R"].map(function(k){
+    return '<details'+(k===colour()?' open':'')+'><summary><span class="nm">'+VRT[k].n+'</span><span class="tm">'+VRT[k].t+'</span></summary><div class="pb">'+wrows(VRT[k].b)+'</div></details>'}).join("")+
+    '<div class="flag calm" style="margin-top:14px"><b>The exposure target.</b> Correct is a temporary rise of about 2–4 points that settles within 15–30 minutes. Still there an hour later means drop back one rung and hold a week. No symptom change at all for a week means you\'ve adapted — go up a rung. In a full flare, seated 5-minute version for 2–3 days, then rebuild. Don\'t stop.</div>'+
+    '<div class="flag amber">If a PPPD-experienced vestibular therapist gives you an individualised prescription, theirs replaces this. Getting that referral, plus CBT, is worth more than any refinement here.</div>';
+
+  document.getElementById("ladder").innerHTML=LADDER.map(function(t,i){
+    return '<div class="row"><span class="t">'+(i+1)+'</span><span class="d">'+t+'</span></div>'}).join("")+
+    '<div class="flag calm">Move up one rung when the current one produces no meaningful symptom change for a week. Add 30 seconds per block, or move a seated exercise to standing, before moving to a new environment.</div>';
+
+  document.getElementById("mob").innerHTML=
+    '<details><summary><span class="nm">Default sequence</span><span class="tm">8–10 min</span></summary><div class="pb">'+wrows(MOB)+
+    '<div class="flag calm">Slow, breath-linked, nasal breathing throughout. This is parasympathetic work as much as tissue work — rushing it forfeits half the benefit. Head neutral and still in every position. Stop before it becomes fatiguing.</div></div></details>'+
+    '<details><summary><span class="nm">Patrol version</span><span class="tm">3 min, at the car</span></summary><div class="pb">'+wrows(MOBCAR)+'</div></details>';
+
+  document.getElementById("walk").innerHTML=wrows(WALK)+
+    '<div class="flag calm">Steps are a floor, not a target. Chasing a number on a day you\'re already depleted converts a recovery day into a training day you didn\'t plan.</div>';
+  document.getElementById("deload").innerHTML=wrows(DELOAD);
+  document.getElementById("h10").innerHTML=wrows(H10);
+}
+
+function renderMore(){
+  document.getElementById("playbook").innerHTML=ORDER.map(function(k){var c=CARDS[k];
+    return '<details><summary><span class="nm">'+c.name+'</span><span class="tm">'+c.win+'</span></summary><div class="pb">'+
+      rows(c.seq)+'<div class="flag '+c.flag.k+'">'+c.flag.t+'</div></div></details>'}).join("")+
+    '<details><summary><span class="nm">Traffic detail</span><span class="tm">variable hours</span></summary><div class="pb">'+
+    wrows([["Wake","90 minutes before your start time. 07:00 start → 05:30 wake. 09:00 start → 07:30."],
+      ["Bed the night before","8 hours before that wake. This is the number that decides how the detail goes — set it the moment you know the start time."],
+      ["Bed that night","Driven by tomorrow's wake, held between 21:15 and 22:15 so a detail can't drag your clock later."],
+      ["Home by 15:30","The mapped session survives if you're Green. Seated substitutions, no load increases."],
+      ["Home 15:30–17:30","Zone 2 only, and only if Green and already a mapped Zone 2 day."],
+      ["Home after 17:30","Mobility and a walk. Nothing more."],
+      ["Always","Move every hour on post. 3-min patrol mobility twice. Full mobility at home — it matters more today, not less. Eat at maintenance, no deficit."]])+
+    '<div class="flag amber">Set the actual hours on the day itself, in Today or on the Schedule. Everything above recalculates from them.</div></div></details>';
+  document.getElementById("otfull").innerHTML=wrows(OT);
+  document.getElementById("naplaw").innerHTML=wrows(NAPLAW);
+  document.getElementById("light").innerHTML=wrows(LIGHT);
+  document.getElementById("caff").innerHTML=wrows(CAFF)+
+    '<div class="flag amber">Discuss with your prescriber: whether stimulant timing or dose is worth revisiting given the palpitations and low HRV; whether a second dose is workable on a night block at all. Nothing here changes a prescribed dose.</div>';
+  document.getElementById("supps").innerHTML=wrows(SUPPS)+
+    '<div class="flag calm">Scope: this is the self-directed layer only. Everything prescribed by your physician continues exactly as prescribed — this doesn\'t add to it, subtract from it, or reorder it.</div>';
+  document.getElementById("nutr").innerHTML=wrows(NUTR);
+  document.getElementById("cpap").innerHTML=wrows(CPAP);
+  document.getElementById("review").innerHTML=wrows(REVIEW);
+  document.getElementById("appts").innerHTML=APPTS.map(function(t,i){
+    return '<div class="row"><span class="t quiet">'+String(i+1).padStart(2,"0")+'</span><span class="d">'+t+'</span></div>'}).join("");
+
+  var ovs=ovAll(),keys=Object.keys(ovs).sort(),tk=iso(today());
+  var upcoming=keys.filter(function(k){return k>=tk}).slice(0,6);
+  document.getElementById("startctl").innerHTML=
+    '<div class="row"><span class="t wide quiet">Programme</span><span class="d">Started '+startDate()+' · currently week '+week()+
+      '<em>Drives the strength set scheme and the Zone 2 duration band.</em></span></div>'+
+    '<div class="row"><span class="t wide quiet">Sequence</span><span class="d">Next lift is Workout '+nextLetter()+'</span></div>'+
+    '<div class="row"><span class="t wide quiet">Anchor</span><span class="d">Rotation anchored to Monday 24 August 2026<em>Today is rotation day '+pos(today())+' of 28.</em></span></div>'+
+    '<div class="row"><span class="t wide quiet">Changes</span><span class="d">'+keys.length+' day'+(keys.length===1?"":"s")+' changed from the scheduled rotation'+
+      (upcoming.length?'<em>Upcoming: '+upcoming.map(function(k){
+        var o=ovs[k],l=OVS.filter(function(x){return x.id===o.t})[0];
+        return k+" — "+(l?l.lbl.toLowerCase():o.t)+(o.t==="det"?" "+fmt(o.s)+"–"+fmt(o.e):"")}).join(" · ")+'</em>':'')+'</span></div>'+
+    '<button class="bigbtn" id="reset-start">Restart the programme from today</button>'+
+    '<button class="bigbtn" id="clear-ov">Clear all schedule changes</button>';
+  document.getElementById("reset-start").onclick=function(){set("start",iso(today()));renderAll()};
+  document.getElementById("clear-ov").onclick=function(){jset("ovs2",{});selKey=null;
+    document.getElementById("peek").innerHTML="";renderAll()};
+}
+
+function renderStatic(){
+  document.getElementById("rescue").innerHTML=wrows(RESCUE);
+  document.getElementById("redcard").innerHTML=wrows(REDCARD);
+  document.getElementById("inertia").innerHTML=wrows(INERTIA);
+  document.getElementById("otquick").innerHTML=wrows(OT.slice(0,7))+
+    '<div class="flag calm">To log one: tap Traffic detail above and set the hours. The full contingency, including the modified Bridge, is under More → Overtime.</div>';
+}
+
+function renderAll(){renderToday();renderCheck();renderCal();renderTrain();renderMore();
+  if(selKey)peek(selKey)}
+
+document.querySelectorAll("#cpick button").forEach(function(b){
+  b.onclick=function(){var raw=colourRaw(),c=b.getAttribute("data-c");
+    if(raw===c){var k=chk();delete k.c;saveChk(k);var L=jget("log",{});delete L[iso(today())];jset("log",L)}
+    else setColour(c);
+    renderToday();renderCheck();renderTrain()}});
+document.getElementById("gochk").onclick=function(){document.querySelector('nav button[data-v="check"]').click()};
+document.getElementById("prevm").onclick=function(){viewM--;if(viewM<0){viewM=11;viewY--}renderCal()};
+document.getElementById("nextm").onclick=function(){viewM++;if(viewM>11){viewM=0;viewY++}renderCal()};
+document.getElementById("jumptoday").onclick=function(){initMonth();selKey=null;
+  document.getElementById("peek").innerHTML="";renderCal();window.scrollTo(0,0)};
+document.querySelectorAll("nav button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll("nav button").forEach(function(x){x.setAttribute("aria-current","false")});
+    b.setAttribute("aria-current","true");
+    document.querySelectorAll(".view").forEach(function(v){v.classList.remove("on")});
+    document.getElementById("v-"+b.getAttribute("data-v")).classList.add("on");window.scrollTo(0,0)}});
+
+initMonth();renderStatic();renderAll();
+document.addEventListener("visibilitychange",function(){if(!document.hidden){initMonth();renderToday();renderCheck();renderCal()}});
+</script>
+</body>
+</html>

@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0E1116">
+<title>Deal Desk — Auto Concierge Playbook</title>
+<style>
+:root{
+  --ink:#0E1116; --panel:#161B23; --panel2:#1C222C; --line:#2A323F;
+  --amber:#F2A33C; --green:#5CC08D; --red:#E4695F; --steel:#8FB3D9;
+  --tx:#E9ECF1; --mut:#98A2B2;
+  --display:"Avenir Next Condensed","Avenir Next",system-ui,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --pad:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink); color:var(--tx); font-family:var(--body);
+  font-size:16px; line-height:1.55; -webkit-text-size-adjust:100%;
+  padding-bottom:64px;
+}
+a{color:var(--steel)}
+/* ---------- header ---------- */
+header{
+  position:sticky; top:0; z-index:50; background:rgba(14,17,22,.94);
+  backdrop-filter:saturate(140%) blur(12px); border-bottom:1px solid var(--line);
+  padding-top:env(safe-area-inset-top);
+}
+.brand{display:flex;align-items:baseline;gap:8px;padding:10px var(--pad) 6px}
+.brand h1{
+  font-family:var(--display); font-size:20px; letter-spacing:.06em;
+  text-transform:uppercase; margin:0; font-weight:700;
+}
+.brand .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);align-self:center}
+.brand small{color:var(--mut);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-left:auto}
+.searchwrap{padding:0 var(--pad) 8px}
+.searchwrap input{
+  width:100%; background:var(--panel2); border:1px solid var(--line); color:var(--tx);
+  border-radius:10px; padding:10px 12px; font-size:15px; font-family:var(--body);
+}
+.searchwrap input::placeholder{color:var(--mut)}
+nav{display:flex;gap:6px;overflow-x:auto;padding:0 var(--pad) 10px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{
+  flex:0 0 auto; background:var(--panel2); color:var(--mut); border:1px solid var(--line);
+  border-radius:999px; padding:7px 13px; font-size:13px; font-family:var(--display);
+  letter-spacing:.07em; text-transform:uppercase; font-weight:600;
+}
+nav button[aria-current="true"]{background:var(--amber);color:#12161C;border-color:var(--amber)}
+/* ---------- sections ---------- */
+main{padding:16px var(--pad) 40px}
+section{display:none}
+section.on{display:block}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.18em; color:var(--amber);
+  text-transform:uppercase; margin-bottom:4px;
+}
+h2.title{
+  font-family:var(--display); font-size:27px; line-height:1.1; letter-spacing:.01em;
+  margin:0 0 6px; font-weight:700;
+}
+.lede{color:var(--mut);font-size:14.5px;margin:0 0 16px}
+h3{font-family:var(--display);font-size:18px;letter-spacing:.03em;margin:22px 0 8px;font-weight:700}
+p{margin:0 0 10px}
+ul,ol{margin:0 0 10px;padding-left:20px}
+li{margin:0 0 6px}
+strong{color:#fff}
+/* ---------- cards / accordions ---------- */
+details{
+  background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  margin:0 0 10px; overflow:hidden;
+}
+details[open]{border-color:#38424F}
+summary{
+  list-style:none; cursor:pointer; padding:13px 14px; display:flex; gap:10px; align-items:center;
+  font-family:var(--display); font-size:16.5px; font-weight:600; letter-spacing:.02em;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"+"; margin-left:auto; color:var(--amber); font-family:var(--mono); font-size:17px;
+}
+details[open] summary::after{content:"–"}
+.body{padding:0 14px 14px;font-size:15px}
+.note{background:var(--panel2);border-left:3px solid var(--amber);padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14.5px}
+.note.red{border-color:var(--red)}
+.note.green{border-color:var(--green)}
+.pill{
+  display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;padding:3px 7px;border-radius:5px;margin:0 6px 6px 0;
+}
+.pill.law{background:rgba(228,105,95,.16);color:#F3948C;border:1px solid rgba(228,105,95,.35)}
+.pill.prac{background:rgba(143,179,217,.14);color:var(--steel);border:1px solid rgba(143,179,217,.3)}
+.pill.best{background:rgba(92,192,141,.14);color:var(--green);border:1px solid rgba(92,192,141,.3)}
+.kv{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:7px 0;font-size:14.5px}
+.kv:last-child{border-bottom:0}
+.kv span:last-child{font-family:var(--mono);color:var(--mut);text-align:right;flex:0 0 auto;max-width:55%}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+.tbl th,.tbl td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+.tbl th{background:var(--panel2);font-family:var(--display);letter-spacing:.05em;text-transform:uppercase;font-size:11.5px;color:var(--mut)}
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* ---------- scripts ---------- */
+.script{
+  background:#11151C;border:1px solid var(--line);border-radius:10px;padding:12px;
+  font-size:14px;white-space:pre-wrap;font-family:var(--body);color:#DCE2EA;margin:8px 0 6px;
+}
+.copy{
+  background:transparent;border:1px solid var(--line);color:var(--amber);border-radius:8px;
+  padding:7px 12px;font-family:var(--display);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+.copy.done{color:var(--green);border-color:var(--green)}
+/* ---------- calculators ---------- */
+.calc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 14px}
+.calc h4{font-family:var(--display);font-size:17px;margin:0 0 10px;letter-spacing:.03em}
+.row{display:flex;gap:8px;margin-bottom:8px}
+.row>label{flex:1}
+label{display:block;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-family:var(--mono);margin-bottom:3px}
+input[type=number],input[type=text],select{
+  width:100%;background:#10141A;border:1px solid var(--line);color:var(--tx);
+  border-radius:9px;padding:10px;font-family:var(--mono);font-size:15px;
+}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.readout{
+  margin-top:12px;background:#10141A;border:1px solid #333C4A;border-radius:12px;padding:14px;
+}
+.big{display:flex;align-items:baseline;gap:8px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px}
+.big .num{font-family:var(--mono);font-size:32px;font-weight:600;color:var(--amber);letter-spacing:-.02em}
+.big .lbl{font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.line{display:flex;justify-content:space-between;font-family:var(--mono);font-size:13.5px;padding:4px 0;color:var(--mut)}
+.line b{color:var(--tx);font-weight:600}
+.flag{font-size:13.5px;margin-top:10px;padding:9px 11px;border-radius:8px}
+.flag.ok{background:rgba(92,192,141,.12);color:#8FD9B4}
+.flag.warn{background:rgba(242,163,60,.12);color:#F3C182}
+.flag.bad{background:rgba(228,105,95,.13);color:#F0968E}
+/* ---------- sign toggle ---------- */
+.signrow{display:flex;gap:6px}
+.signrow input{flex:1}
+.sign{
+  flex:0 0 46px;background:#10141A;border:1px solid var(--line);color:var(--amber);
+  border-radius:9px;font-family:var(--mono);font-size:17px;line-height:1;
+}
+.sign.neg{color:var(--red);border-color:rgba(228,105,95,.45)}
+.hint{font-size:12px;color:var(--mut);margin:-2px 0 8px}
+/* ---------- forms ---------- */
+.form{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 14px}
+.form h4{font-family:var(--display);font-size:17px;margin:0 0 4px;letter-spacing:.03em}
+.form .sub{font-size:13px;color:var(--mut);margin:0 0 12px}
+.form .grp{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);border-top:1px solid var(--line);padding-top:11px;margin:14px 0 9px}
+.form .grp:first-of-type{border-top:0;padding-top:0}
+textarea{
+  width:100%;background:#10141A;border:1px solid var(--line);color:var(--tx);
+  border-radius:9px;padding:10px;font-family:var(--body);font-size:15px;min-height:74px;resize:vertical;
+}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+.chk:last-of-type{border-bottom:0}
+.chk input{width:21px;height:21px;flex:0 0 auto;margin:1px 0 0;accent-color:var(--amber)}
+.doc{background:#11151C;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:13.5px;white-space:pre-wrap;max-height:340px;overflow:auto;color:#DCE2EA;margin:8px 0 6px}
+/* ---------- course ---------- */
+.lvl{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px}
+.lvl input{width:22px;height:22px;flex:0 0 auto;margin-top:2px;accent-color:var(--amber)}
+.lvl .n{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.1em}
+.lvl h5{margin:0;font-family:var(--display);font-size:16px;letter-spacing:.02em}
+.lvl p{margin:3px 0 0;font-size:13.5px;color:var(--mut)}
+.bar{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:6px 0 16px}
+.bar i{display:block;height:100%;background:var(--amber);width:0;transition:width .25s}
+.quiz{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.quiz p{font-size:14.5px;margin:0 0 8px}
+.quiz .ans{display:none;border-top:1px dashed var(--line);padding-top:9px;margin-top:9px;font-size:14px;color:#BFE6CF}
+.quiz.show .ans{display:block}
+.rev{background:transparent;border:1px solid var(--line);color:var(--steel);border-radius:8px;padding:6px 11px;font-family:var(--display);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+/* ---------- misc ---------- */
+.hidden{display:none !important}
+.hit{font-family:var(--mono);font-size:10.5px;color:var(--amber);letter-spacing:.12em;text-transform:uppercase;padding:0 14px}
+footer{color:var(--mut);font-size:12px;text-align:center;padding:24px var(--pad) 8px;border-top:1px solid var(--line);margin-top:24px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><span class="dot"></span><h1>Deal&nbsp;Desk</h1><small>Concierge OS</small></div>
+  <div class="searchwrap"><input id="q" type="search" placeholder="Search everything — MF markup, NJ law, scripts…" autocomplete="off"></div>
+  <nav id="nav"></nav>
+</header>
+
+<div class="hit hidden" id="hitcount"></div>
+
+<main id="main">
+
+<!-- ============ START ============ -->
+<section id="start" data-nav="Start">
+  <div class="eyebrow">File 01 / Orientation</div>
+  <h2 class="title">Your operating system, on one screen</h2>
+  <p class="lede">Everything from the master thread, organized so you can find it while standing in a dealership hallway. Tap a chapter above. Tap any card to open it.</p>
+
+  <details open><summary>The 60-second version of the recommendation</summary><div class="body">
+    <p>You are a full-time police officer with a rotating schedule and a family. That single fact eliminates most of the models in the thread.</p>
+    <div class="note green"><strong>Run Model A/B hybrid: a fee-paid car-buying advisor and concierge.</strong> Client pays you a flat fee. The dealership sells, finances, papers, and delivers the car. You never take title, never take possession, never touch client money for the vehicle, never sign as a party.</div>
+    <ul>
+      <li><strong>Why not licensed broker/wholesaler:</strong> premises, bond, plates, inspections, floorplan capital, inventory risk, and a paperwork load that eats the exact hours you're trying to protect.</li>
+      <li><strong>Why not dealer-paid-only:</strong> your leverage over the dealer collapses the moment your paycheck comes from them, and disclosure gets messy fast.</li>
+      <li><strong>The one open legal question:</strong> whether NJ treats what you're already doing as unlicensed dealer/broker activity. That's the first attorney call. See the Legal chapter.</li>
+    </ul>
+  </div></details>
+
+  <details><summary>How to use this file</summary><div class="body">
+    <ul>
+      <li><strong>Search bar</strong> looks inside every card in every chapter. Type "residual" or "Hovig-style ask" or "NJ bond."</li>
+      <li><strong>Legal tags</strong>: <span class="pill law">Law</span> means a rule. <span class="pill prac">Practice</span> means what the industry does anyway. <span class="pill best">Best practice</span> means what protects you.</li>
+      <li><strong>Tools</strong> chapter has live calculators. The lease calculator is the one you'll use weekly.</li>
+      <li><strong>Course</strong> chapter is the order to learn it in, with checkboxes and quizzes.</li>
+      <li>Save to your Home Screen: Share → Add to Home Screen. It opens like an app, works with no signal.</li>
+    </ul>
+    <div class="note">Checkbox progress resets when you close the file. Nothing here is stored or sent anywhere.</div>
+  </div></details>
+
+  <details><summary>The five numbers that decide every deal</summary><div class="body">
+    <div class="kv"><span>Selling price vs MSRP</span><span>the discount</span></div>
+    <div class="kv"><span>Money factor vs buy rate</span><span>the hidden markup</span></div>
+    <div class="kv"><span>Residual %</span><span>fixed, not negotiable</span></div>
+    <div class="kv"><span>Rebates actually applied</span><span>stack or don't</span></div>
+    <div class="kv"><span>Real trade number</span><span>ACV, not "allowance"</span></div>
+    <p style="margin-top:10px">Anything else on a worksheet is noise, fee padding, or a distraction from these five.</p>
+  </div></details>
+</section>
+
+<!-- ============ MONEY MAP ============ -->
+<section id="map" data-nav="Money Map">
+  <div class="eyebrow">File 02 / Ecosystem</div>
+  <h2 class="title">Where the money is actually made</h2>
+  <p class="lede">Factory → captive lender → dealer → you → client. Every arrow has a margin on it. Know whose margin you're asking for.</p>
+
+  <details open><summary>The chain, stage by stage</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>Stage</th><th>How they make money</th><th>Your leverage</th></tr>
+      <tr><td><b>Manufacturer</b></td><td>Wholesale price to dealer, options, parts, financing arm profit</td><td>None. But their incentives are your fuel.</td></tr>
+      <tr><td><b>Captive lender</b><br><small>LFS, MBFS, BMWFS…</small></td><td>Rent charge on leases, interest on loans, acquisition &amp; disposition fees, residual gains</td><td>Buy rate vs marked-up rate. MSDs. Subvention.</td></tr>
+      <tr><td><b>Dealer</b></td><td>Front gross, back gross, reserve, holdback, volume bonus, trade re-sale, service</td><td>Everything. Front gross is thin; the rest isn't.</td></tr>
+      <tr><td><b>You</b></td><td>Client fee, occasional dealer referral fee</td><td>Repeat volume + clean, pre-qualified deals.</td></tr>
+      <tr><td><b>Wholesaler</b></td><td>Spread between acquisition and auction/retail sale</td><td>Trade bids. Never your inventory.</td></tr>
+      <tr><td><b>Client</b></td><td>Pays for all of the above</td><td>They pay you to shrink the layers above them.</td></tr>
+    </table></div>
+  </div></details>
+
+  <details><summary>Front gross vs back gross — and why it matters to you</summary><div class="body">
+    <p><strong>Front gross</strong> = selling price minus dealer cost (invoice, less holdback and factory-to-dealer cash). On a competitive new car this is often a few hundred dollars. Sometimes negative on a volume-target car.</p>
+    <p><strong>Back gross</strong> = finance reserve, rate/MF markup, VSC, GAP, tire &amp; wheel, prepaid maintenance, appearance packages. Frequently <em>larger</em> than front gross.</p>
+    <div class="note">When you crush the front and leave the back alone, the deal still works for the store. When you crush both and demand a referral fee, you're the broker nobody returns calls to. Pick your battles deliberately.</div>
+    <p><strong>Holdback</strong>: typically ~1–3% of MSRP paid back to the dealer after the sale, brand-dependent. Not yours to ask for by name — but it's why a store can sell at or near invoice and still eat.</p>
+    <p><strong>Volume / stair-step</strong>: hit 40 units, every unit that month pays a bonus. This is why the last three days of the month move pricing more than any argument you'll ever make.</p>
+  </div></details>
+
+  <details><summary>Where dealers genuinely have no room</summary><div class="body">
+    <ul>
+      <li><strong>Residual value</strong> — set by the captive. Not a dealer lever.</li>
+      <li><strong>Base money factor</strong> — set by the captive. The dealer can only mark it up or not.</li>
+      <li><strong>Factory rebates</strong> — fixed amounts with fixed eligibility. Stacking rules are the captive's, not the store's.</li>
+      <li><strong>Acquisition fee</strong> — bank fee. Sometimes marked up; the base is fixed.</li>
+      <li><strong>Registration / title / state fees</strong> — pass-through.</li>
+    </ul>
+    <div class="note red">If a salesperson tells you they "can't move" on selling price but "got you a better rate," you're being moved from front gross to back gross. Same money, different pocket.</div>
+  </div></details>
+</section>
+
+<!-- ============ DEALERSHIP ============ -->
+<section id="store" data-nav="The Store">
+  <div class="eyebrow">File 03 / Dealership operations</div>
+  <h2 class="title">Who actually controls what</h2>
+  <p class="lede">Talking to the wrong person is the single biggest waste of your time in this business.</p>
+
+  <details open><summary>Org chart, plain English</summary><div class="body">
+    <div class="kv"><span><b>Dealer principal / owner</b></span><span>owns it, rarely in a deal</span></div>
+    <div class="kv"><span><b>Group execs / regional</b></span><span>policy, multi-store access</span></div>
+    <div class="kv"><span><b>GM</b></span><span>total store P&amp;L, approves exceptions</span></div>
+    <div class="kv"><span><b>GSM</b></span><span>the real decision maker on your deals</span></div>
+    <div class="kv"><span><b>New car mgr / desk mgr</b></span><span>prices the deal, structures it</span></div>
+    <div class="kv"><span><b>Used car mgr</b></span><span>owns trade ACV, appraisals</span></div>
+    <div class="kv"><span><b>Internet / BDC mgr</b></span><span>volume-hungry, fast quotes</span></div>
+    <div class="kv"><span><b>Fleet / commercial mgr</b></span><span>where broker pricing lives, if it exists</span></div>
+    <div class="kv"><span><b>F&amp;I manager</b></span><span>rate, reserve, backend products</span></div>
+    <div class="kv"><span><b>Salesperson</b></span><span>messenger, unless they're a 20-car guy</span></div>
+  </div></details>
+
+  <details><summary>Build relationships with — and skip</summary><div class="body">
+    <p><strong>Build with:</strong> GSM, new car manager, fleet/internet director, used car manager (for trades). One F&amp;I manager per store you trust for buy-rate honesty.</p>
+    <p><strong>Skip:</strong> floor salespeople you didn't hand-pick, BDC reps reading a script, anyone who won't put numbers in writing, any store that requires you to "come in" to get a quote.</p>
+    <div class="note green"><strong>The tell for a good partner:</strong> they send a lease worksheet or screenshot without being asked twice, and they know their base MF off the top of their head.</div>
+    <p>You already have this with Hovig at Prestige Lexus. That relationship is worth more than five new stores. Feed it.</p>
+  </div></details>
+
+  <details><summary>What each decision costs you to get</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>Decision</th><th>Who owns it</th></tr>
+      <tr><td>Selling price / discount</td><td>GSM or desk manager</td></tr>
+      <tr><td>Broker or fleet pricing</td><td>GSM, fleet director, sometimes group level</td></tr>
+      <tr><td>Trade value (ACV)</td><td>Used car manager</td></tr>
+      <tr><td>Rate participation / MF markup</td><td>F&amp;I manager, policy set by GSM</td></tr>
+      <tr><td>Dealer fees / doc fee waiver</td><td>GM (rarely waived, sometimes offset in price)</td></tr>
+      <tr><td>Dealer trade / locate</td><td>New car manager</td></tr>
+      <tr><td>Referral / bird dog payment</td><td>GM or GSM, and it varies by store and month</td></tr>
+    </table></div>
+  </div></details>
+</section>
+
+<!-- ============ LEASING ============ -->
+<section id="lease" data-nav="Leasing">
+  <div class="eyebrow">File 04 / Lease mechanics</div>
+  <h2 class="title">Calculate any lease yourself</h2>
+  <p class="lede">Four inputs and two lines of math get you within a few dollars of any worksheet in the country.</p>
+
+  <details open><summary>The formula — memorize this</summary><div class="body">
+    <p><strong>Depreciation</strong> = (Adjusted Cap Cost − Residual) ÷ Term</p>
+    <p><strong>Rent charge</strong> = (Adjusted Cap Cost + Residual) × Money Factor</p>
+    <p><strong>Base payment</strong> = Depreciation + Rent charge</p>
+    <p><strong>APR equivalent</strong> = Money Factor × 2400</p>
+    <div class="note">Rent charge uses cap <em>plus</em> residual because you're paying interest on the average balance across the term, not the declining balance. That's why paying cash down on a lease saves less than people expect.</div>
+    <p><strong>Total rent charge over the lease</strong> = (Cap + Residual) × MF × Term. That number is the single best way to show a client what a marked-up MF really cost them.</p>
+  </div></details>
+
+  <details><summary>Building the adjusted cap cost correctly</summary><div class="body">
+    <p>Start at the agreed <strong>selling price</strong>, then:</p>
+    <ul>
+      <li><b>Add</b> acquisition fee (if capitalized), doc fee, dealer-installed accessories, negative trade equity, capitalized taxes.</li>
+      <li><b>Subtract</b> cap cost reduction (cash down), positive trade equity, rebates and lease cash applied as cap reduction.</li>
+    </ul>
+    <p>Registration and title are usually paid at signing, not capitalized — but check the worksheet, because rolling them in is common and quietly raises the rent charge.</p>
+    <div class="note red"><strong>Watch the shell game:</strong> a "$5,000 discount" that reappears as a $1,200 doc/prep fee and a marked-up acquisition fee is a $3,800 discount.</div>
+  </div></details>
+
+  <details><summary>Residual value — what's fixed and what isn't</summary><div class="body">
+    <ul>
+      <li>Set by the captive per model/term/mileage, published in the regional bulletin (your Eastern Area Lexus sheets).</li>
+      <li>Applied to <strong>MSRP</strong>, not selling price. Higher MSRP with the same discount can actually help the payment.</li>
+      <li>Mileage adjustments: dropping from 12k to 10k typically adds ~1% residual; going to 15k typically costs ~2%. Brand-specific — read the bulletin.</li>
+      <li>Some captives residualize certain factory options separately. Rare, but it moves the number.</li>
+    </ul>
+    <div class="note">Residuals change with the model month. A deal quoted August 30 and delivered September 3 is a different deal. Always re-verify against the correct bulletin month.</div>
+  </div></details>
+
+  <details><summary>Money factor, markup, and how to catch it</summary><div class="body">
+    <p><strong>Buy rate / base MF</strong> is what the captive charges the dealer. Dealers may add <strong>rate participation</strong> — commonly capped by the captive around .00040 (roughly 0.96% APR), brand-dependent.</p>
+    <p><strong>How to catch it without accusing anyone:</strong> ask for base MF and marked-up MF as two separate numbers, in writing, before you talk price. Most managers will just tell you. Then run the markup through the Tools calculator to price it in dollars.</p>
+    <div class="note">On a $60k car, .00040 of markup over 36 months is roughly $1,400 of rent charge. That's the whole conversation, and it's often easier to win than another $1,000 of front gross.</div>
+    <p><strong>MSDs (multiple security deposits):</strong> some captives let you post refundable deposits to cut the MF — typically 7–9 deposits, each shaving roughly .00007–.00010. Fully refundable at lease end. Excellent for cash-heavy clients; verify availability and count on the current bulletin.</p>
+  </div></details>
+
+  <details><summary>Taxes — NJ and NY are not the same</summary><div class="body">
+    <p><span class="pill prac">Practice</span> Commonly applied treatment, verify per deal:</p>
+    <ul>
+      <li><strong>New Jersey:</strong> for leases longer than 6 months, sales tax is generally calculated on the total of the lease payments at inception and due up front — commonly capitalized into the payment.</li>
+      <li><strong>New York:</strong> tax on the total of payments plus any cap reduction, collected up front at signing; also commonly capitalized.</li>
+      <li><strong>Trade credit</strong> reduces the taxable amount in both states in most structures — one more reason to confirm trade handling before signing.</li>
+    </ul>
+    <div class="note red">Tax rules change and vary by structure. Confirm with the dealer's F&amp;I office and your accountant before you quote a client a number that depends on it.</div>
+  </div></details>
+
+  <details><summary>Reading a worksheet like a desk manager</summary><div class="body">
+    <ol>
+      <li>MSRP — matches the window sticker?</li>
+      <li>Selling price — what's the actual discount off MSRP, in dollars and %?</li>
+      <li>Rebates — listed individually? Do they match the program bulletin? Do they stack?</li>
+      <li>Adjusted cap — does it reconcile line by line? Any fee you didn't agree to?</li>
+      <li>Residual — % and dollars. Does % × MSRP equal the dollars shown?</li>
+      <li>MF — is it base or marked up? Ask.</li>
+      <li>Term and mileage — do they match the residual you were quoted?</li>
+      <li>Acquisition fee — base amount or padded?</li>
+      <li>Doc fee — NJ is unregulated and often $500–$900; NY caps it far lower.</li>
+      <li>Drive-off — first payment, DMV, upfront tax, cap reduction. Anything else needs a name.</li>
+    </ol>
+    <div class="note green">Then rebuild the payment yourself in the Tools chapter. If yours and theirs differ by more than a few dollars, one line is wrong — and it's usually the MF or a fee you weren't told about.</div>
+  </div></details>
+
+  <details><summary>Equity, payoffs, and third-party buyouts</summary><div class="body">
+    <p><strong>Equity</strong> = current value − payoff. Positive equity is a down payment. Negative equity gets rolled into cap cost and quietly inflates the rent charge for 36 months.</p>
+    <p>On negative equity, always show the client the two-line version: "your payment with the negative equity rolled in" vs "your payment if you write a check for it today." Same total cost, very different feel.</p>
+    <p><strong>Third-party lease buyouts</strong>: many captives restrict who may buy out a lease. Before you promise a client their equity, confirm the captive allows an outside dealer to purchase it. Policies shift.</p>
+    <p><strong>Pull-ahead programs</strong> waive remaining payments and are a real, dateable deadline you can use to create urgency honestly.</p>
+  </div></details>
+</section>
+
+<!-- ============ FINANCE ============ -->
+<section id="fin" data-nav="Finance">
+  <div class="eyebrow">File 05 / Retail financing</div>
+  <h2 class="title">Loans, reserve, and where it's marked up</h2>
+
+  <details open><summary>Buy rate vs contract rate</summary><div class="body">
+    <p>The lender approves at a <strong>buy rate</strong>. The dealer may contract the customer at a higher <strong>contract rate</strong> and keep the difference as <strong>reserve</strong>, usually capped (commonly 1–2 points, and often a flat dollar cap).</p>
+    <p>Ask the same way you do on a lease: "What's the buy rate on this approval, and what are you contracting at?"</p>
+    <div class="note">Reserve is legal and normal. It is also the fastest thousand dollars you can find for a client if the store is willing to move.</div>
+  </div></details>
+
+  <details><summary>Approvals, tiers, LTV, and advance</summary><div class="body">
+    <ul>
+      <li><strong>Tiers</strong> are score bands with different buy rates. Tier 1 at one captive isn't tier 1 at another.</li>
+      <li><strong>LTV / advance</strong> = how much the lender will loan against the vehicle's book value, often 110–140% depending on tier. This is what kills deals with big negative equity.</li>
+      <li><strong>Backend limits</strong>: the advance also caps how much VSC/GAP can be financed.</li>
+      <li><strong>Subvented APR</strong> is factory-funded and usually can't be combined with the biggest cash rebate. Run both and compare.</li>
+    </ul>
+  </div></details>
+
+  <details><summary>Can you get paid on financing?</summary><div class="body">
+    <p><span class="pill law">Law</span> Being compensated for arranging or referring consumer credit is a licensed activity in most states, and lenders generally pay dealers, not third parties.</p>
+    <div class="note red"><strong>Do not build a revenue line here.</strong> Referral compensation from lenders or brokering credit without licensure is exactly the kind of thing that ends a police career, not just a side business. If you ever want to pursue it, that's an attorney conversation first, not a handshake with an F&amp;I manager.</div>
+    <p>What's safe: help the client shop their own credit union pre-approval, and let the dealer try to beat it. You get paid your flat fee either way.</p>
+  </div></details>
+</section>
+
+<!-- ============ INCENTIVES ============ -->
+<section id="incent" data-nav="Incentives">
+  <div class="eyebrow">File 06 / Programs</div>
+  <h2 class="title">Rebates, loyalty, and what actually stacks</h2>
+
+  <details open><summary>The families of money</summary><div class="body">
+    <div class="kv"><span><b>Customer cash / lease cash</b></span><span>advertised, stackable-ish</span></div>
+    <div class="kv"><span><b>Loyalty / conquest</b></span><span>household proof required</span></div>
+    <div class="kv"><span><b>First responder / military / college</b></span><span>proof documents, often stack</span></div>
+    <div class="kv"><span><b>Affiliate / supplier / employee</b></span><span>sets price, often blocks other cash</span></div>
+    <div class="kv"><span><b>Subvented MF or APR</b></span><span>usually excludes big cash</span></div>
+    <div class="kv"><span><b>Dealer cash / factory-to-dealer</b></span><span>invisible, funds your discount</span></div>
+  </div></details>
+
+  <details><summary>The stacking question, asked correctly</summary><div class="body">
+    <p>Never ask "do these stack?" Ask for the program numbers:</p>
+    <div class="script">Can you confirm which of these are compatible on the same contract — [Program A], [Program B], and loyalty? And is the subvented MF available with the full lease cash, or only with reduced cash?</div>
+    <button class="copy">Copy</button>
+    <div class="note">For your Ram file: First Responder + Ram Loyalty are commonly compatible, but eligibility documentation and compatibility change monthly. Verify on the current program bulletin before you quote Chris anything.</div>
+  </div></details>
+
+  <details><summary>Timing beats negotiating</summary><div class="body">
+    <ul>
+      <li><strong>Month end</strong>: volume bonuses land. Last 2–3 days are real.</li>
+      <li><strong>Quarter end</strong> (Mar/Jun/Sep/Dec): stair-step targets stack on top of monthly.</li>
+      <li><strong>Program changeover</strong>: first days of a new month, before new bulletins are digested, are a bad time to expect aggressive numbers.</li>
+      <li><strong>Aged units</strong>: 90+ days on the lot cost the store floorplan interest every day. Ask for the aged list by name.</li>
+      <li><strong>Loaners/demos</strong>: mileage discount plus sometimes still eligible for new-car programs. Great value, verify residual treatment.</li>
+    </ul>
+  </div></details>
+</section>
+
+<!-- ============ BROKER PRICING ============ -->
+<section id="pricing" data-nav="Broker Pricing">
+  <div class="eyebrow">File 07 / Access</div>
+  <h2 class="title">How to get pricing retail can't</h2>
+  <p class="lede">Brokers don't get magic pricing. They get <em>fast, clean, repeatable</em> pricing because they cost the store almost nothing to sell to.</p>
+
+  <details open><summary>What you're actually selling the dealer</summary><div class="body">
+    <ul>
+      <li>A customer who is already decided on trim and color.</li>
+      <li>Credit pre-screened, trade documented, payoff in hand.</li>
+      <li>No test drive tour, no four-hour desk battle, no bad CSI survey.</li>
+      <li>Volume toward a stair-step target, on the days they need it.</li>
+    </ul>
+    <div class="note green">That's 30 minutes of a manager's time for a unit. Say it out loud when you introduce yourself — it's the entire pitch.</div>
+  </div></details>
+
+  <details><summary>Approaching a new store — the order</summary><div class="body">
+    <ol>
+      <li>Call the store, ask for the <strong>GSM or fleet/internet director</strong> by title, not by name.</li>
+      <li>Introduce with volume, not with a request for a discount.</li>
+      <li>Ask for their preferred format: "How do you want deals sent — text, email, spreadsheet?"</li>
+      <li>Send the first deal <em>fully built</em>: stock number, program month, structure, client status.</li>
+      <li>Close one deal at fair gross before you ever ask for aggressive pricing.</li>
+      <li>After delivery, send a short thank-you and the next opportunity in the same message.</li>
+    </ol>
+    <div class="note">Ask about a broker/fleet sheet on deal three, not deal one. Some groups have them; most just have a manager who decides case by case.</div>
+  </div></details>
+
+  <details><summary>Dealer groups: store, brand, or region?</summary><div class="body">
+    <p><strong>Start store by store.</strong> Group-level relationships come from store-level results, not the other way around. A GSM who likes you will introduce you sideways within the group faster than any cold email to a regional VP.</p>
+    <p>In NJ/NY/PA/CT you're working around large groups (multi-rooftop operators) plus strong single-point stores. Practical approach:</p>
+    <ul>
+      <li>One reliable contact per brand you actually sell — Lexus, Toyota, Ram/Jeep, Honda, BMW, Audi, Subaru.</li>
+      <li>Two backups per brand for inventory and dealer-trade coverage.</li>
+      <li>Track every contact in your dealer database with brand, title, mobile, best contact method, and last deal date.</li>
+    </ul>
+  </div></details>
+</section>
+
+<!-- ============ NEGOTIATION ============ -->
+<section id="nego" data-nav="Negotiation">
+  <div class="eyebrow">File 08 / Tactics</div>
+  <h2 class="title">Negotiation order of operations</h2>
+
+  <details open><summary>Negotiate in this sequence</summary><div class="body">
+    <ol>
+      <li><strong>Selling price</strong> first, in dollars off MSRP. Never in payment.</li>
+      <li><strong>Money factor</strong> — confirm base vs marked up.</li>
+      <li><strong>Rebates</strong> — confirm each one by program name.</li>
+      <li><strong>Fees</strong> — acquisition, doc, prep, accessories.</li>
+      <li><strong>Trade</strong> — only after price is locked.</li>
+      <li><strong>Payment</strong> — last. It's an output, not an input.</li>
+    </ol>
+    <div class="note red">The instant you lead with "I need $700 a month," you've handed the desk every variable at once and they'll solve it with term, mileage, or markup.</div>
+  </div></details>
+
+  <details><summary>When to disclose what</summary><div class="body">
+    <div class="kv"><span>Trade exists</span><span>disclose early, value late</span></div>
+    <div class="kv"><span>Payoff amount</span><span>only when appraising</span></div>
+    <div class="kv"><span>Payment target</span><span>as a walk-away line, not an opener</span></div>
+    <div class="kv"><span>Competing quote</span><span>only if real and specific</span></div>
+    <div class="kv"><span>Your fee</span><span>never inside dealer negotiation</span></div>
+    <p style="margin-top:8px">Disclose the trade exists early so nobody feels ambushed. Hold the value until price is locked so it can't be used to launder a weak discount.</p>
+  </div></details>
+
+  <details><summary>Structuring competitive bids without burning stores</summary><div class="body">
+    <p>Send the <em>same</em> spec to three stores with a clear deadline and a clear promise: "Best number wins the deal today, and I'll tell you honestly if you lost and by how much." Then actually do it.</p>
+    <div class="note green">Telling a losing manager the winning structure — without naming the store — is why the good ones call you first next month. This is your entire long game.</div>
+    <p><strong>Walk away when:</strong> the store won't put numbers in writing, the fee stack keeps growing, the car isn't actually in stock, or the discount only exists if you finance in-house at a marked-up rate.</p>
+    <p><strong>Take the deal when:</strong> you're within a few hundred dollars of your best realistic target and the car is physically on the ground. Chasing the last $300 has cost more deals than any dealer ever has.</p>
+  </div></details>
+
+  <details><summary>How much gross a store realistically needs</summary><div class="body">
+    <p>On a competitive volume car: a few hundred front plus whatever backend the client chooses is a survivable deal, especially at month end with a bonus in play. On allocation-constrained or high-demand units: near-MSRP is not the store being greedy, it's supply.</p>
+    <p>Know which one you're in before you decide the manager is being unreasonable. Ask: "What's your days' supply on this trim?"</p>
+  </div></details>
+</section>
+
+<!-- ============ LEGAL ============ -->
+<section id="legal" data-nav="NJ / NY Law">
+  <div class="eyebrow">File 09 / Compliance</div>
+  <h2 class="title">The legal boundary</h2>
+  <p class="lede">This is a research summary, not legal advice. Every item here needs confirmation from a licensed NJ/NY attorney and the MVC/DMV before you rely on it.</p>
+
+  <details open><summary>New Jersey — the question you have to answer first</summary><div class="body">
+    <p><span class="pill law">Law</span> NJ requires a motor vehicle dealer license (N.J.S.A. 39:10-19) to engage in the business of buying, selling, or dealing in motor vehicles. Licensing is administered by the NJ MVC Business Licensing Services Bureau, and licensure carries real infrastructure requirements: an established place of business with an office and display space, a permanent exterior sign, zoning and certificate of occupancy, a surety bond, garage liability insurance, fingerprinting, a site inspection, and a written exam.</p>
+    <div class="note red"><strong>The open question:</strong> secondary sources describe the NJ dealer license as reaching people who buy, sell, or lease vehicles on their own behalf <em>or on behalf of another entity</em>, with brokers referenced in that scope. NJ does not publish a separate consumer "auto broker" license the way some states do. Whether a fee-paid advisor who never takes title, never takes possession, never handles vehicle funds, and never signs the deal falls inside or outside that definition is exactly the question to bring to an attorney — with your actual contract and workflow in hand.</div>
+    <p><span class="pill best">Best practice</span> Until you have that answer in writing: keep the transaction 100% between client and dealer, take no vehicle deposits, hold no title, never advertise that you "sell" cars, and describe your service as consulting and negotiation on the client's behalf.</p>
+    <p><span class="pill law">Law</span> Separately, the NJ Consumer Fraud Act applies to your advertising and your representations to clients regardless of licensure. Don't promise savings you can't document.</p>
+  </div></details>
+
+  <details><summary>New York — Article 35-B, and it's specific</summary><div class="body">
+    <p><span class="pill law">Law</span> New York defines an <strong>Automobile Broker Business</strong> under General Business Law Article 35-B as any person who, for a fee or other consideration paid by a consumer, offers or provides a service of purchasing, arranging, assisting, or effecting the purchase of an automobile as agent, broker, or intermediary for a consumer.</p>
+    <ul>
+      <li><strong>No license is issued and no application is required.</strong> The requirement is a <strong>$100,000 surety bond filed with the NY Department of State</strong>.</li>
+      <li><strong>Exclusions:</strong> persons registered as dealers under Article 16 of the Vehicle &amp; Traffic Law, and any person who acts as agent, broker, or intermediary in the purchase of <strong>three or fewer</strong> automobiles in a calendar year.</li>
+      <li>Reference: dos.ny.gov → "Automobile Broker."</li>
+    </ul>
+    <div class="note"><strong>Practical read:</strong> if you take fees from NY consumers for more than three cars a year, plan on the $100k bond. If you stay under four NY deals annually, the exclusion appears to apply as written — but count carefully and confirm the current text, because that's a thin margin to run a business on.</div>
+    <p><span class="pill law">Law</span> Separately, NY requires a dealer license (VTL §415) for anyone in the business of buying/selling vehicles, and NYC adds a DCWP Secondhand Dealer license. Neither applies if you never take title — but they define the line you're staying on the right side of.</p>
+  </div></details>
+
+  <details><summary>The bright lines — do not cross these</summary><div class="body">
+    <ul>
+      <li><span class="pill law">Law</span> Don't take title to a client's vehicle, or hold vehicles for resale, without a dealer/wholesale license.</li>
+      <li><span class="pill law">Law</span> Don't take deposits toward the vehicle purchase price. Your fee is for your service, and it should be invoiced separately.</li>
+      <li><span class="pill law">Law</span> Don't sign purchase, lease, or registration documents as a party or as the client's signer.</li>
+      <li><span class="pill law">Law</span> Don't accept compensation for arranging financing.</li>
+      <li><span class="pill law">Law</span> Don't advertise vehicles for sale, prices, or payments as if you're a seller.</li>
+      <li><span class="pill law">Law</span> Don't handle plates, temp tags, or registration on a client's behalf as a business service.</li>
+    </ul>
+  </div></details>
+
+  <details><summary>Disclosure: dealer-side referral fees</summary><div class="body">
+    <p><span class="pill prac">Practice</span> Bird dog / referral payments from dealers to brokers are common and vary by store, deal, and month.</p>
+    <p><span class="pill best">Best practice</span> Put it in your client agreement in one plain sentence, before the deal starts:</p>
+    <div class="script">Some dealerships pay a referral fee on transactions I bring them. When I receive one, it is credited against your fee — it never increases what you pay for the vehicle. My compensation is the same either way.</div>
+    <button class="copy">Copy</button>
+    <div class="note green">This exact disclosure is also your best sales line. It converts your biggest perceived conflict into proof of transparency, and it matches how you already structure it.</div>
+  </div></details>
+
+  <details><summary>Your other job — the police officer question</summary><div class="body">
+    <p><span class="pill best">Best practice</span> Before any of the above matters, clear the outside-employment side:</p>
+    <ul>
+      <li>File the outside employment / secondary employment request your department requires, in writing, and keep the approval.</li>
+      <li>Never use your position, uniform, department email, vehicle, or database access in any part of this business.</li>
+      <li>Be careful marketing to fellow officers in a way that could read as trading on rank or authority.</li>
+      <li>Check your department's policy on accepting anything of value from businesses in your jurisdiction — dealer referral fees deserve a second look through that lens.</li>
+    </ul>
+    <div class="note red">A licensing misstep costs money. A conflict-of-interest or outside-employment misstep costs the career. Handle this one first.</div>
+  </div></details>
+</section>
+
+<!-- ============ MODEL & FEES ============ -->
+<section id="model" data-nav="Model &amp; Fees">
+  <div class="eyebrow">File 10 / Structure</div>
+  <h2 class="title">Business model and pricing</h2>
+
+  <details open><summary>The five models, compared honestly</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>Model</th><th>Startup / risk</th><th>Fit for you</th></tr>
+      <tr><td><b>A — Advisor</b><br><small>research, negotiate, evaluate</small></td><td>Near zero. Contract + insurance.</td><td><b>Strong.</b> Cleanest legal posture.</td></tr>
+      <tr><td><b>B — Concierge</b><br><small>source, negotiate, coordinate, arrange delivery</small></td><td>Low. Time is the cost.</td><td><b>Best fit.</b> What you already do.</td></tr>
+      <tr><td><b>C — Licensed broker</b></td><td>NY: $100k bond. NJ: full dealer infrastructure.</td><td>Only if volume demands it.</td></tr>
+      <tr><td><b>D — Hybrid w/ dealer fees</b></td><td>Low cost, high disclosure burden.</td><td>Fine <em>with</em> written disclosure + credit.</td></tr>
+      <tr><td><b>E — Wholesale + concierge</b></td><td>Premises, plates, floorplan, inventory risk.</td><td><b>No.</b> Wrong business for your hours.</td></tr>
+    </table></div>
+    <div class="note green"><strong>Recommendation: B, with D layered in and disclosed.</strong> Flat client fee, referral fee credited against it, no title, no possession, no financing compensation. Revisit only when you're consistently past ~8–10 deals a month.</div>
+  </div></details>
+
+  <details><summary>Fee structures — what to charge</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>Model</th><th>Verdict</th></tr>
+      <tr><td>Flat fee</td><td><b>Use this.</b> Easy to say, easy to defend, protects your time.</td></tr>
+      <tr><td>Tiered flat fee by price band</td><td><b>Use this too.</b> Luxury deals take more work; charge for it.</td></tr>
+      <tr><td>% of savings</td><td>Avoid. Invites arguments about the baseline.</td></tr>
+      <tr><td>% of vehicle price</td><td>Avoid. Reads like a commission, invites licensing questions.</td></tr>
+      <tr><td>Retainer + success fee</td><td>Useful for hard sourcing (rare trim, allocation cars).</td></tr>
+      <tr><td>Membership</td><td>No. Wrong purchase frequency.</td></tr>
+      <tr><td>Trade-only bid service</td><td>Small add-on fee. Real value, low effort.</td></tr>
+    </table></div>
+    <p><strong>Recommended price list — charge these numbers:</strong></p>
+    <div class="kv"><span><b>Under $40k MSRP</b><br><small>Corolla, Civic, CX-5, base trucks</small></span><span>$595</span></div>
+    <div class="kv"><span><b>$40k–$80k MSRP</b><br><small>RX, Grand Cherokee, X3, Laramie — your bread and butter</small></span><span>$895</span></div>
+    <div class="kv"><span><b>$80k+, allocation, or hard-to-find</b><br><small>LX, G-Wagon, spec-order, out-of-state sourcing</small></span><span>$1,495<br><small>+ $500 deposit, credited</small></span></div>
+    <div class="kv"><span><b>Deal review only</b><br><small>they found the car, you audit the worksheet, 24-hr turnaround</small></span><span>$149</span></div>
+    <div class="kv"><span><b>Trade-bid only</b><br><small>no purchase, you run the bid network</small></span><span>$199</span></div>
+    <div class="kv"><span><b>Rush — needed inside 72 hours</b></span><span>+$200</span></div>
+    <div class="kv"><span><b>Second vehicle, same household, same month</b></span><span>−$200</span></div>
+    <div class="kv"><span><b>Past client or their direct referral</b></span><span>−$100</span></div>
+    <div class="note green"><strong>Why $895 is the anchor.</strong> On a $60k car, a competent negotiation is worth $2,000–$5,000 against what the client would have done alone. $895 is comfortably under 20% of that — easy to justify, easy to say out loud, and it reads as a real professional fee rather than a favor. At 4 deals a month that's roughly $3,600 plus referral fees, on maybe 25 hours. That's the whole business case.</div>
+    <div class="note red"><strong>Don't go below $595.</strong> Under that, the deal has to close fast and clean to be worth a single evening away from your family, and a cheap fee attracts exactly the clients who take eleven hours. If someone balks at $895, offer the $149 deal review instead — never discount the full service.</div>
+    <div class="note">Credit any dealer referral fee against these numbers, as you already do. If the store pays $400 on an $895 deal, the client pays $495 and your net is unchanged. That's the "pays for itself" story, told with real math.</div>
+    <p>The <strong>$149 deal review</strong> is your defense against free-research mining. It turns "can you just look at this?" into either revenue or a polite no, and it converts to full-service work more often than you'd expect once they see what you catch.</p>
+  </div></details>
+
+  <details><summary>Fee message — the order that works</summary><div class="body">
+    <p>Flat fee → pays for itself → convenience → referral credit as the kicker. In that order, every time.</p>
+    <div class="script">It's a flat fee — same number whether you buy a Camry or an LX. In most cases the discount I negotiate covers it and then some, so it's effectively paying for itself. You never sit at a dealership doing the back-and-forth. And if the store pays me a referral fee on your deal, that comes straight off your bill.</div>
+    <button class="copy">Copy</button>
+    <div class="note red">Don't promise the fee is "always" covered. "In most cases" is true, defensible, and just as persuasive.</div>
+  </div></details>
+</section>
+
+<!-- ============ SCRIPTS ============ -->
+<section id="scripts" data-nav="Scripts">
+  <div class="eyebrow">File 11 / Communication</div>
+  <h2 class="title">Copy-and-send templates</h2>
+  <p class="lede">Dealer-facing: precise, industry vocabulary. Client-facing: warm, short, no mechanics.</p>
+
+  <h3>Dealer-facing</h3>
+
+  <details open><summary>New store introduction (GSM / fleet director)</summary><div class="body">
+    <div class="script">Hi [Name] — [Your name] with [Company]. I run an auto concierge service in North Jersey; I bring pre-decided clients directly to a manager instead of the floor.
+
+What that looks like on your end: trim and color already chosen, credit pre-screened, trade documented with payoff in hand, and no showroom time needed. I'm doing several units a month across brands and I'd like [Store] to be my [Brand] store.
+
+I'm not asking for anything on this first one — just tell me how you want deals sent and who I should be dealing with. What's your current [model] inventory look like?</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <details><summary>Lease pricing request (the one you'll use most)</summary><div class="body">
+    <div class="script">Hi [Name] — looking at stock #[####], [year model trim], MSRP $[____].
+
+Client is [term]/[miles] on [captive]. Can you send:
+• Selling price / discount off MSRP
+• Base MF and the MF you're writing at
+• Residual % for that term and mileage
+• Which programs you're applying by name
+• Acquisition fee and doc fee
+• Full drive-off breakdown
+
+Trade is a [year make model], [miles], payoff $[____] — happy to send photos and VIN once we're close on price. Ready to move today if the numbers work.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <details><summary>Asking for the buy rate / base MF without friction</summary><div class="body">
+    <div class="script">Quick one — is that the base MF for the month or are you writing with participation? Totally fine either way, I just want to structure the client's expectations correctly before I present it.</div>
+    <button class="copy">Copy</button>
+    <div class="note">"Totally fine either way" is doing real work here. It gives the manager an honest answer to give without a fight.</div>
+  </div></details>
+
+  <details><summary>Worksheet request</summary><div class="body">
+    <div class="script">Can you shoot me the lease worksheet or a screenshot of the desk? I like to reconcile the cap cost line by line before I put it in front of the client — saves us both a round trip.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <details><summary>Competitive counter (without being a jerk)</summary><div class="body">
+    <div class="script">I've got a structure at $[___]/mo on the same trim, [term]/[miles], $[___] out of pocket, with base MF. I'd rather write it with you.
+
+If you can get within [$X] of that I'll take it today and send you the credit app in the next hour. If you can't, no hard feelings — I'll tell you exactly where it landed so you know for next time.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <details><summary>Month-end nudge</summary><div class="body">
+    <div class="script">Where are you sitting for the month? I've got [#] clients I can move before the [date] if there's a number that helps you get there. Tell me which units you need gone and I'll work around your inventory instead of mine.</div>
+    <button class="copy">Copy</button>
+    <div class="note green">"I'll work around your inventory" is the single most effective sentence in this entire file.</div>
+  </div></details>
+
+  <details><summary>Dealer trade / locate request</summary><div class="body">
+    <div class="script">Nothing in your stock matches — any chance you can dealer trade for [color] on [trim]? Client is flexible on [feature] but firm on [feature]. If it's easier, tell me what you can get and I'll re-pitch the client on that spec.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <details><summary>Trade value negotiation (to the used car manager)</summary><div class="body">
+    <div class="script">Hi [Name] — [year make model trim], [miles], [color], clean Carfax, [#] owner, [notes]. Payoff is $[____].
+
+I have a number from [buyer type] at $[____]. I'd rather keep the whole deal in your building. What's your best ACV? Photos and VIN attached.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <h3>Client-facing</h3>
+
+  <details><summary>Intake kickoff</summary><div class="body">
+    <div class="script">Great — I'll get to work. Quick form so I have everything: [link]
+
+Once that's in I'll start pulling numbers and I'll come back to you with real options, not guesses. Usually a day or two.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <details><summary>Presenting options</summary><div class="body">
+    <div class="script">Got you two solid ones:
+
+1) [Color] [trim] — $[___]/mo, $[___] due at signing
+2) [Color] [trim] — $[___]/mo, $[___] due at signing
+
+Both are [term] months, [miles]/yr, tax included. Cars are on the ground now. Which one do you want me to lock?</div>
+    <button class="copy">Copy</button>
+    <div class="note">No money factor. No residual. No cap cost. Two numbers and a question.</div>
+  </div></details>
+
+  <details><summary>Car sold / need to pivot</summary><div class="body">
+    <div class="script">Heads up — the [color] went yesterday. Still have [alternatives], and [color] is expected [timeframe]. Want me to hold the same structure and wait, or grab one of the ones on the ground now?</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <details><summary>Warm follow-up on a quiet client</summary><div class="body">
+    <div class="script">Hey [Name] — checking in on the [vehicle]. No pressure at all, just don't want you sitting on old numbers if the program changes. Still interested or should I put this on the back burner?</div>
+    <button class="copy">Copy</button>
+    <div class="note">Giving them permission to say "not now" gets you a real answer instead of another week of silence.</div>
+  </div></details>
+
+  <details><summary>Delivery day + referral ask</summary><div class="body">
+    <div class="script">Congrats — enjoy it. Anything comes up with the car, call me before you call them.
+
+And if anyone you know is shopping, send them my way. Word of mouth is the whole business.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+</section>
+
+<!-- ============ SYSTEMS ============ -->
+<section id="systems" data-nav="Systems">
+  <div class="eyebrow">File 12 / Operations</div>
+  <h2 class="title">Intake, contract, CRM, dashboard</h2>
+  <p class="lede">Two of these forms the client fills out. Five are yours. Below them, how to actually track everything.</p>
+
+  <details open><summary>Which forms the client fills — and how to send them</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>Form</th><th>Who fills it</th><th>How to send</th></tr>
+      <tr><td>1. Client intake</td><td><b>Client</b></td><td>Google Form or Jotform link, texted</td></tr>
+      <tr><td>2. Service agreement</td><td><b>Client signs</b></td><td>E-signature link</td></tr>
+      <tr><td>3. Deal record</td><td>You</td><td>Internal — goes in the tracker</td></tr>
+      <tr><td>4. Dealer contact</td><td>You</td><td>Internal</td></tr>
+      <tr><td>5. Delivery checklist</td><td>You</td><td>Internal, morning of delivery</td></tr>
+      <tr><td>6. Referral log</td><td>You</td><td>Internal</td></tr>
+      <tr><td>7. Monthly dashboard</td><td>You</td><td>Internal, last day of month</td></tr>
+    </table></div>
+    <p><strong>The two client-facing ones need a real link.</strong> This file can't collect submissions — it lives on your phone. Set these up once:</p>
+    <ul>
+      <li><strong>Intake → Google Forms</strong> (free). Rebuild Form 1's fields there, turn on email notification, and set responses to feed a Google Sheet. Takes about 30 minutes once. Bookmark the short link and text it.</li>
+      <li><strong>Agreement → an e-signature tool.</strong> Paste the agreement text in as a reusable template with fields for name, date, and fee. Dropbox Sign, PandaDoc, and DocuSign all do this; pick on price. Send the agreement <em>with</em> the intake link, not after — signature first, work second.</li>
+      <li><strong>Payment</strong> — invoice by Zelle, Venmo Business, or a Stripe/Square link. Never take vehicle money, only your fee.</li>
+    </ul>
+    <div class="note green">The forms in this file stay useful either way: they're your reference for building the Google Form, and your fallback when a client would rather talk than type.</div>
+  </div></details>
+
+  <h3>Form 1 — Client intake</h3>
+  <div class="form">
+    <h4>Client Intake</h4>
+    <p class="sub">Fill it yourself on the phone call, or use it as the blueprint for your Google Form. Stops at credit band — never collects SSN, DOB, or license numbers.</p>
+
+    <div class="grp">Client</div>
+    <div class="row"><label>Full name<input type="text"></label><label>Date<input type="text" placeholder="mm/dd/yy"></label></div>
+    <div class="row"><label>Mobile<input type="tel" inputmode="tel"></label><label>Email<input type="email"></label></div>
+    <div class="row"><label>City / State<input type="text"></label><label>Best contact time<input type="text"></label></div>
+    <label>How they found me<input type="text" placeholder="referral name, IG, Google, repeat"></label>
+
+    <div class="grp">Vehicle wanted</div>
+    <div class="row"><label>Make<input type="text"></label><label>Model<input type="text"></label></div>
+    <div class="row"><label>Trim<input type="text"></label><label>New or used<input type="text"></label></div>
+    <div class="row"><label>Colors acceptable<input type="text"></label><label>Colors refused<input type="text"></label></div>
+    <label>Must-have options<textarea></textarea></label>
+    <label>Deal-breakers<textarea></textarea></label>
+    <div class="row"><label>Lease or finance<input type="text"></label><label>Term (mo)<input type="text"></label></div>
+    <div class="row"><label>Annual miles<input type="text"></label><label>Flexible on trim/color?<input type="text" placeholder="yes / no / somewhat"></label></div>
+    <div class="row"><label>Target payment<input type="text"></label><label>Target due at signing<input type="text"></label></div>
+
+    <div class="grp">Trade</div>
+    <div class="row"><label>Trade? <input type="text" placeholder="yes / no"></label><label>Year / Make / Model / Trim<input type="text"></label></div>
+    <div class="row"><label>VIN<input type="text"></label><label>Mileage<input type="text"></label></div>
+    <div class="row"><label>Lease or loan<input type="text"></label><label>Lender<input type="text"></label></div>
+    <div class="row"><label>Payoff<input type="text"></label><label>Payoff good through<input type="text"></label></div>
+    <div class="row"><label>Current payment<input type="text"></label><label>Months remaining<input type="text"></label></div>
+    <label>Condition notes — accidents, tires, brakes, keys, warning lights, smoker/pets<textarea></textarea></label>
+
+    <div class="grp">Financial</div>
+    <div class="row"><label>Credit band<input type="text" placeholder="excellent / good / fair / rebuilding"></label><label>Cash available<input type="text"></label></div>
+    <div class="row"><label>Co-signer<input type="text" placeholder="yes / no"></label><label>Employment stable 2+ yrs<input type="text" placeholder="yes / no"></label></div>
+    <label>Incentive eligibility — first responder, military, loyalty, conquest, college, affiliate<textarea></textarea></label>
+
+    <div class="grp">Timeline</div>
+    <div class="row"><label>Needed by<input type="text"></label><label>Current lease maturity<input type="text"></label></div>
+    <div class="row"><label>Registration state<input type="text"></label><label>Insurance carrier<input type="text"></label></div>
+
+    <div class="grp">Authorization</div>
+    <div class="chk"><input type="checkbox"><span>Authorizes me to contact dealerships and negotiate on their behalf.</span></div>
+    <div class="chk"><input type="checkbox"><span>Authorizes me to share trade details and photos with buyers for bids.</span></div>
+    <div class="chk"><input type="checkbox"><span>Understands I am not a dealer, lender, or seller and do not handle vehicle funds.</span></div>
+    <div class="chk"><input type="checkbox"><span>Received and signed the service agreement.</span></div>
+    <div class="row"><label>Signature (typed name)<input type="text"></label><label>Date<input type="text"></label></div>
+    <button class="copy formcopy">Copy filled form</button>
+  </div>
+
+  <h3>Form 1b — Text-message intake</h3>
+  <details open><summary>The short version to text a client</summary><div class="body">
+    <p>Half your clients won't open a form link. Text them this instead — it gets you 90% of what you need in one reply.</p>
+    <div class="script">Perfect, let's get started. Shoot these back whenever you get a minute:
+
+1. Full name + email
+2. What are you looking at — year, make, model, trim?
+3. Lease or finance?
+4. How many months, and how many miles a year?
+5. Colors you'd take, and any you won't
+6. Anything the car has to have, and any dealbreakers
+7. Payment you're aiming for, and how much you want out of pocket
+8. Trading anything in? If so: year/make/model, mileage, and who you make the payment to
+9. Roughly where's your credit — excellent, good, fair?
+10. When do you need it by?
+
+Any of these you're not sure about, just say so and we'll figure it out.</div>
+    <button class="copy">Copy</button>
+    <div class="note">No VIN, no payoff, no credit details in the first text. Ask for those once they're committed — asking too early makes people go quiet.</div>
+  </div></details>
+
+  <details><summary>Sending the agreement — what to say with it</summary><div class="body">
+    <div class="script">Sending over the agreement now — one page, takes a minute to sign electronically.
+
+Plain English version: flat fee of $[___], due when you take delivery. If we don't find you a car you want, you owe nothing. And if the dealership pays me a referral fee on your deal, it comes off your bill.
+
+Once that's back I'll start pulling numbers.</div>
+    <button class="copy">Copy</button>
+  </div></details>
+
+  <h3>Form 2 — Service agreement</h3>
+  <div class="form">
+    <h4>Auto Concierge Service Agreement</h4>
+    <p class="sub">Fill the four fields, copy the whole agreement, paste into your e-signature tool.</p>
+    <div class="row"><label>Client name<input type="text" id="ag_name" placeholder="Client name"></label><label>Date<input type="text" id="ag_date" placeholder="mm/dd/yy"></label></div>
+    <div class="row"><label>Flat fee $<input type="text" id="ag_fee" placeholder="895"></label><label>Deposit $ (if any)<input type="text" id="ag_dep" placeholder="0"></label></div>
+    <div class="doc" id="ag_doc"></div>
+    <button class="copy" data-src="ag_doc">Copy agreement</button>
+    <div class="note red"><strong>Attorney review required before first use.</strong> Flag these clauses specifically: scope of agency (§1), the no-licensable-activity language (§2), limitation of liability (§9), refund terms (§4), and the referral disclosure (§6). Ask directly whether §1–2 keep you outside NJ dealer/broker licensing.</div>
+  </div>
+
+  <h3>Form 3 — Deal record</h3>
+  <div class="form">
+    <h4>Deal Record</h4>
+    <p class="sub">One per deal. Copy it straight into a spreadsheet row or your notes app.</p>
+    <div class="grp">Identity</div>
+    <div class="row"><label>Client<input type="text"></label><label>Lead source<input type="text"></label></div>
+    <div class="row"><label>Status<input type="text" placeholder="Quotes received"></label><label>Next follow-up<input type="text"></label></div>
+    <div class="grp">Vehicle &amp; quote</div>
+    <div class="row"><label>Vehicle<input type="text"></label><label>Stock #<input type="text"></label></div>
+    <div class="row"><label>Dealer<input type="text"></label><label>Contact<input type="text"></label></div>
+    <div class="row"><label>MSRP<input type="text"></label><label>Selling price<input type="text"></label></div>
+    <div class="row"><label>Discount $ / %<input type="text"></label><label>Rebates applied<input type="text"></label></div>
+    <div class="row"><label>Residual %<input type="text"></label><label>Term / miles<input type="text"></label></div>
+    <div class="row"><label>Base MF<input type="text"></label><label>MF quoted<input type="text"></label></div>
+    <div class="row"><label>Payment<input type="text"></label><label>Due at signing<input type="text"></label></div>
+    <div class="grp">Trade</div>
+    <div class="row"><label>Trade vehicle<input type="text"></label><label>Best offer<input type="text"></label></div>
+    <div class="row"><label>Payoff<input type="text"></label><label>Equity<input type="text"></label></div>
+    <div class="grp">Money</div>
+    <div class="row"><label>Client fee<input type="text"></label><label>Referral fee received<input type="text"></label></div>
+    <div class="row"><label>Net to me<input type="text"></label><label>Hours spent<input type="text"></label></div>
+    <div class="row"><label>Delivery date<input type="text"></label><label>Referral asked?<input type="text"></label></div>
+    <label>Notes<textarea></textarea></label>
+    <button class="copy formcopy">Copy filled form</button>
+  </div>
+
+  <h3>Form 4 — Dealer contact card</h3>
+  <div class="form">
+    <h4>Dealer Contact</h4>
+    <p class="sub">One per person, not per store. Titles matter more than names.</p>
+    <div class="row"><label>Name<input type="text"></label><label>Title<input type="text" placeholder="GSM / fleet / used car mgr"></label></div>
+    <div class="row"><label>Store<input type="text"></label><label>Brand<input type="text"></label></div>
+    <div class="row"><label>Mobile<input type="text"></label><label>Email<input type="text"></label></div>
+    <div class="row"><label>Prefers<input type="text" placeholder="text / email / call"></label><label>Sends worksheets?<input type="text" placeholder="yes / no"></label></div>
+    <div class="row"><label>Gives base MF?<input type="text"></label><label>Pays referral?<input type="text" placeholder="varies / no / $___"></label></div>
+    <div class="row"><label>Deals done<input type="text"></label><label>Last deal date<input type="text"></label></div>
+    <label>Notes — what they need, when they're short, who they report to<textarea></textarea></label>
+    <button class="copy formcopy">Copy filled form</button>
+  </div>
+
+  <h3>Form 5 — Delivery day checklist</h3>
+  <div class="form">
+    <h4>Before the client signs</h4>
+    <p class="sub">Run this the morning of delivery. Every item on it has burned somebody.</p>
+    <div class="chk"><input type="checkbox"><span>Final numbers match the approved structure — payment, due at signing, term, miles.</span></div>
+    <div class="chk"><input type="checkbox"><span>Money factor on the contract is the one that was agreed to.</span></div>
+    <div class="chk"><input type="checkbox"><span>Every rebate on the worksheet is on the contract.</span></div>
+    <div class="chk"><input type="checkbox"><span>No fees appeared that weren't on the last worksheet.</span></div>
+    <div class="chk"><input type="checkbox"><span>No backend products added without the client knowingly buying them.</span></div>
+    <div class="chk"><input type="checkbox"><span>Trade payoff amount and good-through date still current.</span></div>
+    <div class="chk"><input type="checkbox"><span>VIN on the contract matches the car in the lot.</span></div>
+    <div class="chk"><input type="checkbox"><span>Insurance card issued for the new VIN.</span></div>
+    <div class="chk"><input type="checkbox"><span>Client knows their first payment date and where to pay.</span></div>
+    <div class="chk"><input type="checkbox"><span>Delivery photo taken, permission to post confirmed.</span></div>
+    <div class="chk"><input type="checkbox"><span>Google review link texted before they drive off.</span></div>
+    <div class="chk"><input type="checkbox"><span>Lease-end date entered in my calendar at month 30.</span></div>
+    <div class="chk"><input type="checkbox"><span>Invoice sent, referral credit applied if one was received.</span></div>
+  </div>
+
+  <h3>Form 6 — Referral log</h3>
+  <div class="form">
+    <h4>Referral Log</h4>
+    <div class="row"><label>Referred by<input type="text"></label><label>Their relationship<input type="text" placeholder="past client / realtor / PD"></label></div>
+    <div class="row"><label>New client<input type="text"></label><label>Date received<input type="text"></label></div>
+    <div class="row"><label>Closed?<input type="text" placeholder="yes / no / pending"></label><label>Delivery date<input type="text"></label></div>
+    <div class="row"><label>Reward owed<input type="text"></label><label>Reward paid<input type="text" placeholder="date"></label></div>
+    <label>Notes<textarea></textarea></label>
+    <button class="copy formcopy">Copy filled form</button>
+  </div>
+
+  <h3>Form 7 — Monthly dashboard</h3>
+  <div class="form">
+    <h4>Month in Review</h4>
+    <p class="sub">Fill six numbers on the last day of the month. The rest calculates itself.</p>
+    <div class="row"><label>New leads<input type="number" id="d_leads" value="10" inputmode="numeric"></label><label>Deals delivered<input type="number" id="d_del" value="4" inputmode="numeric"></label></div>
+    <div class="row"><label>Client fees collected<input type="number" id="d_fees" value="3580" inputmode="decimal"></label><label>Referral fees received<input type="number" id="d_ref" value="900" inputmode="decimal"></label></div>
+    <div class="row"><label>Referral credits given<input type="number" id="d_cred" value="600" inputmode="decimal"></label><label>Total hours worked<input type="number" id="d_hrs" value="26" step="0.5" inputmode="decimal"></label></div>
+    <div class="row"><label>Open deals carried forward<input type="number" id="d_open" value="3" inputmode="numeric"></label><label>Leads from referrals<input type="number" id="d_rlead" value="6" inputmode="numeric"></label></div>
+    <div class="readout">
+      <div class="big"><span class="num" id="d_rev">—</span><span class="lbl">net revenue</span></div>
+      <div class="line"><span>Close rate</span><b id="d_close">—</b></div>
+      <div class="line"><span>Average net per deal</span><b id="d_avg">—</b></div>
+      <div class="line"><span>Hours per deal</span><b id="d_hpd">—</b></div>
+      <div class="line"><span>Effective hourly</span><b id="d_hr">—</b></div>
+      <div class="line"><span>Referral share of leads</span><b id="d_rshare">—</b></div>
+      <div class="flag ok" id="d_flag">—</div>
+    </div>
+  </div>
+
+  <h3>Tracking clients, quotes, and deals</h3>
+
+  <details open><summary>The system, in one card</summary><div class="body">
+    <p>You have a tracker workbook — <b>deal-tracker.xlsx</b>. Put it in Google Drive and open it with Google Sheets. It syncs to your phone, works offline, and costs nothing.</p>
+    <p><strong>Everything ties together with a Deal ID.</strong> Every client gets one: D-001, D-002, D-003. That ID is the thread running through every tab.</p>
+    <div class="kv"><span><b>Deals</b></span><span>one row per client — the master record</span></div>
+    <div class="kv"><span><b>Quotes</b></span><span>one row per dealer quote, with live lease math</span></div>
+    <div class="kv"><span><b>Trade Bids</b></span><span>every offer on every trade</span></div>
+    <div class="kv"><span><b>Dealers</b></span><span>your contact database, rated 1–5</span></div>
+    <div class="kv"><span><b>Referrals</b></span><span>who sends you business, and whether you thanked them</span></div>
+    <div class="kv"><span><b>Dashboard</b></span><span>reads everything automatically, fill in nothing</span></div>
+    <div class="note green"><strong>Blue text = you type it. Black text = a formula.</strong> Row 4 on every tab is a filled-in example — delete it once you have real deals.</div>
+  </div></details>
+
+  <details><summary>What to log, and when</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>When</th><th>What you log</th><th>Where</th></tr>
+      <tr><td>Lead comes in</td><td>Name, phone, lead source, who referred them, status = New Lead</td><td>Deals</td></tr>
+      <tr><td>Intake back</td><td>Vehicle, term, miles, target payment, trade info, status = Intake Complete</td><td>Deals</td></tr>
+      <tr><td>Each dealer replies</td><td>A full quote row — MSRP, selling price, MF, residual, fees</td><td>Quotes</td></tr>
+      <tr><td>Trade bids come in</td><td>Buyer, offer, good-through date</td><td>Trade Bids</td></tr>
+      <tr><td>Client picks</td><td>Mark the winning quote, copy its numbers to the Deals row</td><td>Both</td></tr>
+      <tr><td>Delivery</td><td>Delivery date, hours spent, fee, referral fee received</td><td>Deals</td></tr>
+      <tr><td>New dealer contact</td><td>Name, title, store, whether they give base MF</td><td>Dealers</td></tr>
+      <tr><td>Last day of month</td><td>Nothing — just read the Dashboard</td><td>Dashboard</td></tr>
+    </table></div>
+  </div></details>
+
+  <details><summary>Why quotes get their own tab</summary><div class="body">
+    <p>Because the value you sell is <em>comparison</em>. Three quotes on three text threads is not a comparison — it's three arguments you'll half-remember next Tuesday.</p>
+    <p>Enter each quote as a row and the sheet computes adjusted cap cost, depreciation, rent charge, base payment, and APR from the dealer's own numbers. <strong>If your payment and their payment disagree, one line on their worksheet is wrong.</strong> That's the moment you earn the fee.</p>
+    <div class="note">It also builds a history. Six months in you'll know which store quotes base MF without being asked and which one always finds $600 of fees at signing. That's worth more than any single deal.</div>
+  </div></details>
+
+  <details><summary>The four habits that keep it alive</summary><div class="body">
+    <ol>
+      <li><strong>Update Status the same day it changes.</strong> A stale pipeline is worse than none — you'll trust it, and it'll be wrong.</li>
+      <li><strong>Never leave a Next Follow-Up date blank</strong> on an open deal. That column is your entire follow-up system.</li>
+      <li><strong>Log hours honestly</strong>, including the calls you take in the driveway. It's the only number that tells you which clients to stop taking.</li>
+      <li><strong>On delivery day</strong>, fill the delivery date and set a calendar reminder for month 30 of the lease. That's your repeat business, on autopilot.</li>
+    </ol>
+    <div class="note red">Don't buy CRM software. Not yet. A spreadsheet you actually update beats a $40/month CRM you abandon in March — and setup time is the one thing you can't spare.</div>
+  </div></details>
+
+  <details><summary>Keeping it secure</summary><div class="body">
+    <ul>
+      <li>Google Drive folder set to <strong>private</strong>, not "anyone with the link."</li>
+      <li>Two-factor on the Google account. Non-negotiable — this file has client phone numbers and payoff amounts in it.</li>
+      <li>Separate business account from your personal one.</li>
+      <li>Never store SSN, DOB, license numbers, or account numbers. If it's not in the tracker, it can't leak from the tracker.</li>
+      <li>Photos of worksheets and trades: keep them in a dated Drive folder per Deal ID, not scattered in your camera roll.</li>
+    </ul>
+  </div></details>
+
+  <h3>Reference</h3>
+
+  <details open><summary>Client intake form — the fields</summary><div class="body">
+    <p><strong>Client:</strong> name, mobile, email, city/state, best contact time, how they found you.</p>
+    <p><strong>Vehicle:</strong> make, model, trim, must-have options, acceptable colors, deal-breakers, new/used, lease or finance, term, annual miles, target payment, target due-at-signing, flexibility on trim/color.</p>
+    <p><strong>Trade:</strong> year/make/model/trim, VIN, mileage, condition notes, accidents, tires/brakes, keys, lease or loan, lender, payoff, payoff good-through date, current payment, months remaining.</p>
+    <p><strong>Financial:</strong> self-reported credit band (excellent / good / fair / rebuilding), cash available, co-signer yes/no, employment stability yes/no.</p>
+    <p><strong>Timeline:</strong> needed by, current lease maturity date, registration state, insurance carrier.</p>
+    <p><strong>Authorization:</strong> permission to contact dealers on their behalf, permission to share trade info, e-signature, date.</p>
+    <div class="note red"><strong>Do not collect:</strong> SSN, date of birth, driver's license number, bank or card numbers, full credit reports, pay stubs, or anything you'd have to secure like a lender would. The dealer collects those directly from the client. Your intake stops at "credit band" — that's all you need to structure a deal, and it keeps you out of data-breach territory entirely.</div>
+  </div></details>
+
+  <details><summary>Client agreement — clause checklist</summary><div class="body">
+    <ul>
+      <li>Scope: what you do, and explicitly what you don't (you're not the seller, lender, or dealer).</li>
+      <li>Fee amount, when it's earned, and when it's payable.</li>
+      <li>Refund policy — be specific about what happens if the client walks.</li>
+      <li>Client responsibilities: accurate info, timely responses, own credit application.</li>
+      <li>No guarantee of vehicle availability, pricing, incentives, or financing approval.</li>
+      <li>Trade values are estimates until a dealer physically appraises.</li>
+      <li>Dealer is solely responsible for the vehicle, paperwork, delivery, and warranty.</li>
+      <li>Limitation of liability, capped at the fee paid.</li>
+      <li>Referral fee disclosure and credit.</li>
+      <li>Communication authorization (call/text/email, and to contact dealers as agent for negotiation only).</li>
+      <li>Privacy: what you collect, how long you keep it, that you don't sell it.</li>
+      <li>Cancellation by either party.</li>
+      <li>E-signature validity, governing law, venue.</li>
+    </ul>
+    <div class="note red"><strong>Attorney review required</strong> on: scope of agency, limitation of liability, refund terms, referral-fee disclosure language, and whether the agreement itself implies licensable activity in NJ.</div>
+  </div></details>
+
+  <details><summary>Deal tracker — the columns</summary><div class="body">
+    <p>Client · lead source · phone · email · vehicle target · lease or finance · term · miles · dealers contacted · quote MSRP · selling price · discount $ · rebates applied · residual % · MF quoted · MF base · payment · due at signing · trade year/model · trade offers · payoff · equity · client fee · referral fee received · net to you · status · next follow-up date · delivery date · referral source · notes.</p>
+    <p><strong>Status values:</strong> New lead → Intake sent → Intake complete → Vehicle search → Pricing requested → Quotes received → Client reviewing → Credit submitted → Vehicle secured → Paperwork → Delivery scheduled → Delivered → Follow-up → Referral requested. Plus: Lost lead.</p>
+    <div class="note green">Start in a spreadsheet. One row per deal, one tab per year. Do not buy CRM software until you have more than 15 open deals at once — you won't, for a while, and the setup time is time you don't have.</div>
+  </div></details>
+
+  <details><summary>Dashboard — what to actually watch</summary><div class="body">
+    <div class="kv"><span>Open deals / pipeline value</span><span>weekly</span></div>
+    <div class="kv"><span>Delivered this month / YTD</span><span>monthly</span></div>
+    <div class="kv"><span>Average net per deal</span><span>monthly</span></div>
+    <div class="kv"><span>Close rate by lead source</span><span>quarterly</span></div>
+    <div class="kv"><span>Hours per deal</span><span>quarterly — the one nobody tracks</span></div>
+    <div class="kv"><span>Referral % of new leads</span><span>quarterly</span></div>
+    <div class="kv"><span>Deals per dealer partner</span><span>quarterly</span></div>
+    <div class="note"><strong>Hours per deal is your most important metric.</strong> Revenue per deal means nothing if a deal costs you eleven hours of family time. Track it for three months and you'll know exactly which clients and which brands to stop taking.</div>
+  </div></details>
+
+  <details><summary>What only you can do — and what shouldn't be you</summary><div class="body">
+    <p><strong>Only you:</strong> dealer relationships, negotiation, deal structuring, final recommendation, the delivery-day phone call.</p>
+    <p><strong>Templated:</strong> intake, quote requests, follow-ups, delivery instructions, review requests.</p>
+    <p><strong>Automated:</strong> intake form, e-signature, invoicing/payment, follow-up reminders, calendar booking.</p>
+    <p><strong>Eventually delegated:</strong> inventory searching, running quote requests to a checklist, data entry, social posting.</p>
+    <div class="note">Rule for a rotating schedule: batch dealer outreach into two fixed windows a day. Deals don't move faster because you checked your phone eleven times — they move at month end.</div>
+  </div></details>
+</section>
+
+<!-- ============ TRADE ============ -->
+<section id="trade" data-nav="Trade &amp; Wholesale">
+  <div class="eyebrow">File 13 / Used vehicles</div>
+  <h2 class="title">Valuing and moving trades</h2>
+
+  <details open><summary>How pros actually value a car</summary><div class="body">
+    <div class="kv"><span><b>MMR</b> (Manheim Market Report)</span><span>the wholesale truth</span></div>
+    <div class="kv"><span><b>Black Book</b></span><span>daily wholesale guide</span></div>
+    <div class="kv"><span><b>J.D. Power</b> (formerly NADA)</span><span>lender-facing values</span></div>
+    <div class="kv"><span><b>KBB</b></span><span>consumer-facing, usually optimistic</span></div>
+    <div class="kv"><span><b>Retail comps</b></span><span>what it's listed for nearby</span></div>
+    <div class="kv"><span><b>Market days supply</b></span><span>how fast it turns</span></div>
+    <p style="margin-top:8px"><strong>ACV</strong> (actual cash value) is what the store really thinks it's worth. "Trade allowance" is ACV plus whatever discount they moved from the front end. Always ask which one you're looking at.</p>
+  </div></details>
+
+  <details><summary>Why a wholesaler pays less than CarMax</summary><div class="body">
+    <p>A wholesaler has to buy it, transport it, recondition it, pay auction fees, and still make a spread — while carrying market risk for every day they own it. That's often $1,500–$3,000 of friction before profit.</p>
+    <p>CarMax and Carvana buy for their own retail shelves, not for auction. They skip the middle layer, they have national demand data, and they'll sometimes overpay on a unit they know turns fast in their system. That's not irrational — it's a different business model.</p>
+    <div class="note green">Which is why your trade play is bidding, not wholesaling: get 4–6 real offers, take the best, keep a small fee. Zero capital, zero risk.</div>
+  </div></details>
+
+  <details><summary>Standardized trade-bid sheet</summary><div class="body">
+    <div class="script">TRADE BID REQUEST
+
+Year / Make / Model / Trim:
+VIN:
+Mileage:
+Exterior / Interior:
+Options of note:
+Title status: clean / branded
+Carfax: [# owners], [accidents y/n], service history
+Tires: [%] | Brakes: [%]
+Keys: [#]
+Known issues:
+Warning lights: none / [list]
+Smoker / pets: no / yes
+Location: [town, NJ]
+Payoff: $[____] good through [date]
+
+Photos attached (exterior 4 corners, interior, dash w/ odometer + lights on, tires, any damage).
+
+Bid good through: [date]. Best number wins.</div>
+    <button class="copy">Copy</button>
+    <p><strong>Send to:</strong> your franchise used car managers, 2–3 independent dealers, a local wholesaler, CarMax and Carvana quotes, and an ACV/online bid if you have access.</p>
+  </div></details>
+
+  <details><summary>Should you become a wholesaler? No.</summary><div class="body">
+    <p>What it takes: dealer or wholesale license, qualifying business premises, bond, garage liability insurance, dealer plates, auction registrations, floorplan or cash, title handling, transport, arbitration exposure, and storage.</p>
+    <p><strong>A $40,000 car, honestly:</strong> buy at $40,000 → transport $300 → auction fees $500–$800 → recon $600–$1,500 → sells at $42,000 → roughly $0–$500 of profit, and that's if the market didn't move against you in the two weeks you owned it.</p>
+    <div class="note red"><strong>Verdict:</strong> wholesale is a full-time, capital-intensive, inventory-risk business. It is the opposite of what you're optimizing for. Build the bid network instead — same value to the client, none of the exposure.</div>
+  </div></details>
+</section>
+
+<!-- ============ GROWTH ============ -->
+<section id="growth" data-nav="Growth">
+  <div class="eyebrow">File 14 / Clients &amp; brand</div>
+  <h2 class="title">Where clients actually come from</h2>
+
+  <details open><summary>Channels ranked by real ROI for you</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>Channel</th><th>ROI</th><th>Why</th></tr>
+      <tr><td>Referrals from delivered clients</td><td><b>Highest</b></td><td>Free, pre-trusted, closes fastest</td></tr>
+      <tr><td>First responders &amp; their families</td><td><b>High</b></td><td>Your network, plus real incentive eligibility</td></tr>
+      <tr><td>Realtors / mortgage / insurance / accountants</td><td><b>High</b></td><td>They meet people at money moments</td></tr>
+      <tr><td>Local Facebook &amp; town groups</td><td>Medium</td><td>Free, slow, occasionally excellent</td></tr>
+      <tr><td>Instagram delivery posts</td><td>Medium</td><td>Proof, not prospecting</td></tr>
+      <tr><td>Google Business Profile + reviews</td><td>Medium</td><td>Captures people already searching</td></tr>
+      <tr><td>Paid ads</td><td><b>Low</b></td><td>Expensive, low intent, tire-kickers</td></tr>
+      <tr><td>SEO content</td><td><b>Low</b> (short term)</td><td>Months of work before anything</td></tr>
+    </table></div>
+    <div class="note green">Your first 50 clients come from referrals and professional cross-referrals. Do not spend a dollar on ads until those two are saturated.</div>
+  </div></details>
+
+  <details><summary>Referral program that doesn't get complicated</summary><div class="body">
+    <p>One rule, easy to say: <strong>refer someone who closes, get a set amount back — cash or credit toward your next deal.</strong> No tiers, no points, no expiration.</p>
+    <p>Ask twice: on delivery day, and 30 days later when they're still in love with the car. Never in between.</p>
+    <div class="note">For professional referral partners (realtors, insurance agents), check whether any compensation you pay them creates a licensing or disclosure issue in their field. Some can't accept referral fees at all.</div>
+  </div></details>
+
+  <details><summary>Positioning: what to call yourself</summary><div class="body">
+    <div class="scroller"><table class="tbl">
+      <tr><th>Label</th><th>Read</th></tr>
+      <tr><td>Auto broker</td><td>Understood instantly — but it's a regulated word in NY and a loaded one in NJ. Avoid it in marketing.</td></tr>
+      <tr><td><b>Auto concierge</b></td><td><b>Premium, service-forward, accurate to what you do.</b></td></tr>
+      <tr><td>Car buying service</td><td>Clear but commodity-flavored.</td></tr>
+      <tr><td>Vehicle acquisition service</td><td>Good for luxury, vague for everyone else.</td></tr>
+      <tr><td>Automotive consultant</td><td>Safest legally, weakest emotionally.</td></tr>
+    </table></div>
+    <div class="note green"><strong>Lead with concierge, describe yourself as consulting.</strong> "Auto concierge — I negotiate and source vehicles on your behalf." Premium in tone, defensible in substance, and it avoids the one regulated term.</div>
+  </div></details>
+
+  <details><summary>Proof beats promotion</summary><div class="body">
+    <ul>
+      <li>Photo of every delivery, with permission, same day.</li>
+      <li>One line of substance: trim, term, and what you saved them — not "another happy client."</li>
+      <li>Ask for a Google review at delivery, with the link ready in a text. Nobody looks it up later.</li>
+      <li>Reach back out at month 30 of a 36-month lease. That's your repeat-business alarm clock — put every client's date in your calendar the day they take delivery.</li>
+    </ul>
+  </div></details>
+</section>
+
+<!-- ============ TOOLS ============ -->
+<section id="tools" data-nav="Tools">
+  <div class="eyebrow">File 15 / Calculators</div>
+  <h2 class="title">Deal desk</h2>
+  <p class="lede">Run these before you answer a client. Numbers update as you type.</p>
+
+  <div class="calc">
+    <h4>Lease calculator</h4>
+    <div class="row">
+      <label>MSRP<input type="number" id="l_msrp" value="62000" inputmode="decimal"></label>
+      <label>Selling price<input type="number" id="l_sell" value="56644" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Residual %<input type="number" id="l_res" value="58" step="0.1" inputmode="decimal"></label>
+      <label>Money factor<input type="number" id="l_mf" value="0.00220" step="0.00001" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Term (mo)<input type="number" id="l_term" value="36" inputmode="numeric"></label>
+      <label>Rebates / lease cash<input type="number" id="l_reb" value="0" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Trade equity<span class="signrow"><button type="button" class="sign" data-for="l_eq">+</button><input type="number" id="l_eq" value="0" inputmode="decimal"></span></label>
+      <label>Cash down<input type="number" id="l_down" value="0" inputmode="decimal"></label>
+    </div>
+    <p class="hint">Negative equity? Tap <b>+</b> to flip it to <b>−</b>. The iPhone number pad has no minus key.</p>
+    <div class="row">
+      <label>Acquisition fee<input type="number" id="l_acq" value="1095" inputmode="decimal"></label>
+      <label>Doc + dealer fees<input type="number" id="l_doc" value="799" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Sales tax %<input type="number" id="l_tax" value="6.625" step="0.001" inputmode="decimal"></label>
+      <label>Tax method<select id="l_taxmode">
+        <option value="upfront_cap">Upfront on payments, capitalized</option>
+        <option value="monthly">Added monthly</option>
+        <option value="upfront_due">Upfront on payments, due at signing</option>
+        <option value="none">Exclude tax</option>
+      </select></label>
+    </div>
+    <div class="row">
+      <label>Cap the acq + doc fees?<select id="l_capfees">
+        <option value="1">Yes — roll into cap cost</option>
+        <option value="0">No — pay at signing</option>
+      </select></label>
+      <label>DMV / registration<input type="number" id="l_dmv" value="450" inputmode="decimal"></label>
+    </div>
+    <div class="readout">
+      <div class="big"><span class="num" id="l_pay">—</span><span class="lbl">per month</span></div>
+      <div class="line"><span>Due at signing</span><b id="l_das">—</b></div>
+      <div class="line"><span>Adjusted cap cost</span><b id="l_cap">—</b></div>
+      <div class="line"><span>Residual value</span><b id="l_resd">—</b></div>
+      <div class="line"><span>Depreciation / mo</span><b id="l_dep">—</b></div>
+      <div class="line"><span>Rent charge / mo</span><b id="l_rent">—</b></div>
+      <div class="line"><span>Total rent charge</span><b id="l_trent">—</b></div>
+      <div class="line"><span>Discount off MSRP</span><b id="l_disc">—</b></div>
+      <div class="line"><span>MF as APR</span><b id="l_apr">—</b></div>
+      <div class="line"><span>Total cost of lease</span><b id="l_total">—</b></div>
+      <div class="flag ok" id="l_flag">—</div>
+    </div>
+  </div>
+
+  <div class="calc">
+    <h4>Money factor markup detector</h4>
+    <div class="row">
+      <label>Base MF<input type="number" id="m_base" value="0.00180" step="0.00001" inputmode="decimal"></label>
+      <label>Quoted MF<input type="number" id="m_quote" value="0.00220" step="0.00001" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Adj. cap cost<input type="number" id="m_cap" value="58000" inputmode="decimal"></label>
+      <label>Residual $<input type="number" id="m_res" value="35960" inputmode="decimal"></label>
+    </div>
+    <div class="row"><label>Term<input type="number" id="m_term" value="36" inputmode="numeric"></label></div>
+    <div class="readout">
+      <div class="big"><span class="num" id="m_cost">—</span><span class="lbl">markup cost</span></div>
+      <div class="line"><span>Extra per month</span><b id="m_mo">—</b></div>
+      <div class="line"><span>Markup in MF</span><b id="m_diff">—</b></div>
+      <div class="line"><span>Markup as APR</span><b id="m_apr">—</b></div>
+      <div class="flag ok" id="m_flag">—</div>
+    </div>
+  </div>
+
+  <div class="calc">
+    <h4>Finance calculator</h4>
+    <div class="row">
+      <label>Amount financed<input type="number" id="f_amt" value="45000" inputmode="decimal"></label>
+      <label>APR %<input type="number" id="f_apr" value="5.9" step="0.01" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Term (mo)<input type="number" id="f_term" value="60" inputmode="numeric"></label>
+      <label>Buy rate % (optional)<input type="number" id="f_buy" value="4.9" step="0.01" inputmode="decimal"></label>
+    </div>
+    <div class="readout">
+      <div class="big"><span class="num" id="f_pay">—</span><span class="lbl">per month</span></div>
+      <div class="line"><span>Total interest</span><b id="f_int">—</b></div>
+      <div class="line"><span>Total of payments</span><b id="f_tot">—</b></div>
+      <div class="line"><span>Payment at buy rate</span><b id="f_bpay">—</b></div>
+      <div class="line"><span>Reserve cost to client</span><b id="f_res">—</b></div>
+    </div>
+  </div>
+
+  <div class="calc">
+    <h4>Trade equity</h4>
+    <div class="row">
+      <label>Best offer received<input type="number" id="t_val" value="28000" inputmode="decimal"></label>
+      <label>Payoff<input type="number" id="t_pay" value="31500" inputmode="decimal"></label>
+    </div>
+    <div class="readout">
+      <div class="big"><span class="num" id="t_eq">—</span><span class="lbl">equity</span></div>
+      <div class="line"><span>If rolled into a 36-mo lease</span><b id="t_roll">—</b></div>
+      <div class="flag warn" id="t_flag">—</div>
+    </div>
+  </div>
+
+  <div class="calc">
+    <h4>Deal comparison</h4>
+    <div class="row">
+      <label>Deal A payment<input type="number" id="c_a1" value="773" inputmode="decimal"></label>
+      <label>Deal A due at signing<input type="number" id="c_a2" value="3500" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Deal B payment<input type="number" id="c_b1" value="788" inputmode="decimal"></label>
+      <label>Deal B due at signing<input type="number" id="c_b2" value="2500" inputmode="decimal"></label>
+    </div>
+    <div class="row"><label>Term (mo)<input type="number" id="c_term" value="36" inputmode="numeric"></label></div>
+    <div class="readout">
+      <div class="line"><span>Deal A total cost</span><b id="c_at">—</b></div>
+      <div class="line"><span>Deal B total cost</span><b id="c_bt">—</b></div>
+      <div class="line"><span>Deal A effective / mo</span><b id="c_ae">—</b></div>
+      <div class="line"><span>Deal B effective / mo</span><b id="c_be">—</b></div>
+      <div class="flag ok" id="c_flag">—</div>
+    </div>
+  </div>
+
+  <div class="calc">
+    <h4>Your profit on the deal</h4>
+    <div class="row">
+      <label>Client fee<input type="number" id="p_fee" value="895" inputmode="decimal"></label>
+      <label>Referral fee received<input type="number" id="p_ref" value="300" inputmode="decimal"></label>
+    </div>
+    <div class="row">
+      <label>Credit referral to client?<select id="p_credit"><option value="1">Yes — credit it</option><option value="0">No</option></select></label>
+      <label>Hours spent<input type="number" id="p_hrs" value="4" step="0.5" inputmode="decimal"></label>
+    </div>
+    <div class="readout">
+      <div class="big"><span class="num" id="p_net">—</span><span class="lbl">net to you</span></div>
+      <div class="line"><span>Client actually pays</span><b id="p_pays">—</b></div>
+      <div class="line"><span>Effective hourly</span><b id="p_hr">—</b></div>
+      <div class="flag ok" id="p_flag">—</div>
+    </div>
+  </div>
+
+  <details><summary>Deal-desk checklist — run this on every worksheet</summary><div class="body">
+    <ol>
+      <li>What is the dealership doing structurally? (front vs back gross)</li>
+      <li>Do the numbers reconcile line by line?</li>
+      <li>Where are they making money?</li>
+      <li>What's negotiable here?</li>
+      <li>What isn't?</li>
+      <li>Do the incentives match the current bulletin?</li>
+      <li>Is the MF or APR marked up?</li>
+      <li>Is the trade number real ACV or a laundered discount?</li>
+      <li>Would a different term, mileage, or MSD structure beat this?</li>
+      <li>What exactly do I send back?</li>
+      <li>What do I tell the client — in two sentences, no mechanics?</li>
+      <li>Take it, or keep shopping?</li>
+    </ol>
+  </div></details>
+</section>
+
+<!-- ============ COURSE ============ -->
+<section id="course" data-nav="Course">
+  <div class="eyebrow">File 16 / Curriculum</div>
+  <h2 class="title">Learn it in this order</h2>
+  <p class="lede">Ten levels. Don't skip ahead — level 5 doesn't work without level 2.</p>
+  <div class="bar"><i id="prog"></i></div>
+  <div id="levels"></div>
+
+  <h3>Quiz yourself</h3>
+  <div class="quiz"><p><b>1.</b> MSRP $62,000, residual 58%, adjusted cap $56,000, MF .00215, 36 months. What's the base payment?</p><button class="rev">Show answer</button><div class="ans">Residual = $35,960. Depreciation = (56,000 − 35,960) ÷ 36 = $556.67. Rent = (56,000 + 35,960) × .00215 = $197.71. <b>Base payment ≈ $754.38</b> before tax.</div></div>
+  <div class="quiz"><p><b>2.</b> A manager says the MF is .00240 and the base is .00200. On a $58k cap and $36k residual over 36 months, what did that cost the client?</p><button class="rev">Show answer</button><div class="ans">(58,000 + 36,000) × .00040 = $37.60/mo × 36 = <b>$1,353.60</b>. That's usually a bigger win than another $1,000 off the price.</div></div>
+  <div class="quiz"><p><b>3.</b> Client wants to know why $3,000 down only dropped the payment $95. Explain it in one sentence.</p><button class="rev">Show answer</button><div class="ans">Cash down on a lease only reduces depreciation and a little rent charge — spread over 36 months, $3,000 is about $83 of depreciation plus a small rent savings. And if the car's totaled, that money is gone.</div></div>
+  <div class="quiz"><p><b>4.</b> A store offers a $6,000 "trade allowance" on a car worth $4,500 ACV. Where did the $1,500 come from?</p><button class="rev">Show answer</button><div class="ans">Out of the front end — they reduced the discount on the new car by $1,500 and moved it onto the trade line so the customer feels good about the trade. Always ask for price and trade as separate numbers.</div></div>
+  <div class="quiz"><p><b>5.</b> You're paid a $500 referral fee by a dealer on a client's deal. What must happen?</p><button class="rev">Show answer</button><div class="ans">It was disclosed in writing before the deal started, and it's credited against the client's fee. Never disclosed after, never kept quietly on top.</div></div>
+  <div class="quiz"><p><b>6.</b> Under NY GBL Article 35-B, what triggers the $100,000 bond, and what's the exclusion?</p><button class="rev">Show answer</button><div class="ans">Taking a fee from a consumer to purchase, arrange, assist, or effect the purchase of an automobile as their agent or intermediary triggers it. Excluded: registered dealers, and anyone doing three or fewer automobiles in a calendar year.</div></div>
+</section>
+
+</main>
+
+<footer>
+  Deal Desk — built from the Auto Concierge master thread.<br>
+  Legal sections are research summaries, not legal advice. Verify with NJ MVC, NY DOS/DMV, and a licensed attorney before relying on any of it.
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var sections = Array.prototype.slice.call(document.querySelectorAll('section'));
+  var nav = document.getElementById('nav');
+  var main = document.getElementById('main');
+
+  /* ---- nav ---- */
+  sections.forEach(function(s,i){
+    var b = document.createElement('button');
+    b.innerHTML = s.dataset.nav;
+    b.dataset.target = s.id;
+    if(i===0){ s.classList.add('on'); b.setAttribute('aria-current','true'); }
+    b.addEventListener('click', function(){ show(s.id); });
+    nav.appendChild(b);
+  });
+  function show(id){
+    document.getElementById('q').value = '';
+    clearSearch();
+    sections.forEach(function(s){ s.classList.toggle('on', s.id===id); });
+    Array.prototype.forEach.call(nav.children, function(b){
+      if(b.dataset.target===id){ b.setAttribute('aria-current','true'); b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'}); }
+      else b.removeAttribute('aria-current');
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  /* ---- search ---- */
+  var q = document.getElementById('q');
+  var hit = document.getElementById('hitcount');
+  var allDetails = Array.prototype.slice.call(document.querySelectorAll('details'));
+  var allCalcs = Array.prototype.slice.call(document.querySelectorAll('.calc, .quiz, .lvl, .form'));
+  function clearSearch(){
+    hit.classList.add('hidden');
+    allDetails.forEach(function(d){ d.classList.remove('hidden'); d.open=false; });
+    allCalcs.forEach(function(c){ c.classList.remove('hidden'); });
+    document.querySelectorAll('section h3, section .lede, section .eyebrow, section .title, section .bar').forEach(function(e){ e.classList.remove('hidden'); });
+  }
+  q.addEventListener('input', function(){
+    var v = q.value.trim().toLowerCase();
+    if(v.length < 2){
+      clearSearch();
+      var cur = document.querySelector('nav button[aria-current="true"]');
+      sections.forEach(function(s){ s.classList.toggle('on', cur && s.id===cur.dataset.target); });
+      return;
+    }
+    sections.forEach(function(s){ s.classList.add('on'); });
+    document.querySelectorAll('section h3, section .lede, section .eyebrow, section .title, section .bar').forEach(function(e){ e.classList.add('hidden'); });
+    var n = 0;
+    allDetails.forEach(function(d){
+      var m = d.textContent.toLowerCase().indexOf(v) > -1;
+      d.classList.toggle('hidden', !m); d.open = m; if(m) n++;
+    });
+    allCalcs.forEach(function(c){
+      var m = c.textContent.toLowerCase().indexOf(v) > -1;
+      c.classList.toggle('hidden', !m); if(m) n++;
+    });
+    hit.classList.remove('hidden');
+    hit.textContent = n + (n===1?' match':' matches');
+  });
+
+  /* ---- copy buttons ---- */
+  function formText(form){
+    var out = [], title = form.querySelector('h4');
+    if(title) out.push(title.textContent.toUpperCase(), '');
+    Array.prototype.forEach.call(form.children, walk);
+    function walk(el){
+      if(el.classList && el.classList.contains('grp')){ out.push('', '— ' + el.textContent + ' —'); return; }
+      if(el.classList && el.classList.contains('row')){ Array.prototype.forEach.call(el.children, walk); return; }
+      if(el.tagName === 'LABEL'){
+        var f = el.querySelector('input, textarea, select');
+        if(!f) return;
+        var name = (el.childNodes[0] && el.childNodes[0].textContent || '').trim();
+        out.push(name + ': ' + (f.value.trim() || '—'));
+        return;
+      }
+      if(el.classList && el.classList.contains('chk')){
+        var c = el.querySelector('input[type=checkbox]');
+        out.push('[' + (c && c.checked ? 'x' : ' ') + '] ' + el.querySelector('span').textContent);
+      }
+    }
+    return out.join('\n');
+  }
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var t;
+      if(btn.dataset.src){ t = document.getElementById(btn.dataset.src).textContent; }
+      else if(btn.classList.contains('formcopy')){ t = formText(btn.closest('.form')); }
+      else {
+        var pre = btn.previousElementSibling;
+        while(pre && !pre.classList.contains('script')) pre = pre.previousElementSibling;
+        if(!pre) return;
+        t = pre.textContent;
+      }
+      var label = btn.textContent;
+      var done = function(){ btn.textContent='Copied'; btn.classList.add('done'); setTimeout(function(){ btn.textContent=label; btn.classList.remove('done'); },1600); };
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done, fallback); }
+      else fallback();
+      function fallback(){
+        var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); done(); }catch(e){}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  /* ---- quiz ---- */
+  document.querySelectorAll('.rev').forEach(function(b){
+    b.addEventListener('click', function(){
+      var box = b.parentElement;
+      box.classList.toggle('show');
+      b.textContent = box.classList.contains('show') ? 'Hide answer' : 'Show answer';
+    });
+  });
+
+  /* ---- course levels ---- */
+  var LEVELS = [
+    ['Dealership basics','Org chart, who controls what, front vs back gross, holdback, volume bonuses.'],
+    ['Lease calculations','Depreciation, rent charge, cap cost, residual, MF. Build ten leases by hand.'],
+    ['Finance calculations','Buy rate, reserve, tiers, LTV, subvented APR vs cash rebate.'],
+    ['Incentives','Program families, stacking rules, reading a regional bulletin correctly.'],
+    ['Negotiation','Order of operations, disclosure timing, competitive bids, walk-away lines.'],
+    ['Dealer relationships','Who to court, how to introduce yourself, how to earn broker pricing.'],
+    ['Broker operations','Intake, agreement, deal tracker, follow-up cadence, delivery process.'],
+    ['NJ / NY compliance','Dealer licensing scope, NY Article 35-B, disclosure, outside employment.'],
+    ['Used vehicle valuation','MMR, Black Book, ACV vs allowance, running a trade-bid network.'],
+    ['Growth &amp; scaling','Referrals, professional partners, pricing tiers, hours per deal.']
+  ];
+  var wrap = document.getElementById('levels'), prog = document.getElementById('prog');
+  LEVELS.forEach(function(L,i){
+    var d = document.createElement('div'); d.className='lvl';
+    d.innerHTML = '<input type="checkbox" aria-label="Mark level '+(i+1)+' complete"><div><div class="n">LEVEL '+(i+1)+'</div><h5>'+L[0]+'</h5><p>'+L[1]+'</p></div>';
+    d.querySelector('input').addEventListener('change', upd);
+    wrap.appendChild(d);
+  });
+  function upd(){
+    var boxes = wrap.querySelectorAll('input');
+    var done = wrap.querySelectorAll('input:checked').length;
+    prog.style.width = (done/boxes.length*100)+'%';
+  }
+  upd();
+
+  /* ---- calculators ---- */
+  function n(id){ var v = parseFloat(document.getElementById(id).value); return isNaN(v)?0:v; }
+  function $(id){ return document.getElementById(id); }
+  function money(v){ return (v<0?'-$':'$') + Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function money0(v){ return (v<0?'-$':'$') + Math.abs(Math.round(v)).toLocaleString('en-US'); }
+
+  function lease(){
+    var msrp=n('l_msrp'), sell=n('l_sell'), resPct=n('l_res'), mf=n('l_mf'), term=n('l_term')||1,
+        reb=n('l_reb'), eq=n('l_eq'), down=n('l_down'), acq=n('l_acq'), doc=n('l_doc'),
+        taxR=n('l_tax')/100, dmv=n('l_dmv'),
+        capFees=$('l_capfees').value==='1', mode=$('l_taxmode').value;
+    var residual = msrp*resPct/100;
+    var cap = sell - reb - eq - down + (capFees ? acq+doc : 0);
+    var dep = (cap - residual)/term;
+    var rent = (cap + residual)*mf;
+    var base = dep + rent;
+    var pay = base, das = 0, capTax = 0;
+
+    if(mode==='monthly'){ pay = base*(1+taxR); }
+    else if(mode==='upfront_cap'){
+      capTax = base*term*taxR;
+      var cap2 = cap + capTax;
+      dep = (cap2 - residual)/term; rent = (cap2 + residual)*mf; pay = dep + rent; cap = cap2;
+    } else if(mode==='upfront_due'){ das += base*term*taxR; }
+
+    das += pay + dmv + (capFees ? 0 : acq+doc) + down;
+    var totalRent = (cap + residual)*mf*term;
+    var disc = msrp - sell;
+
+    $('l_pay').textContent = money0(pay);
+    $('l_das').textContent = money0(das);
+    $('l_cap').textContent = money0(cap);
+    $('l_resd').textContent = money0(residual);
+    $('l_dep').textContent = money(dep);
+    $('l_rent').textContent = money(rent);
+    $('l_trent').textContent = money0(totalRent);
+    $('l_disc').textContent = money0(disc) + '  (' + (msrp? (disc/msrp*100).toFixed(1):0) + '%)';
+    $('l_apr').textContent = (mf*2400).toFixed(2) + '%';
+    $('l_total').textContent = money0(pay*term + das - pay);
+
+    var f=$('l_flag'), pct = msrp? disc/msrp*100 : 0;
+    if(mf>0.0035){ f.className='flag bad'; f.textContent='MF looks high for a subvented program — ask for the base MF in writing.'; }
+    else if(pct<5){ f.className='flag warn'; f.textContent='Discount is under 5% off MSRP. Fine on an allocation car, thin on a volume car.'; }
+    else { f.className='flag ok'; f.textContent='Structure looks reasonable. Verify the residual and MF against this month\u2019s bulletin.'; }
+  }
+
+  function markup(){
+    var b=n('m_base'), qq=n('m_quote'), cap=n('m_cap'), res=n('m_res'), t=n('m_term')||1;
+    var d = qq-b, mo=(cap+res)*d, tot=mo*t;
+    $('m_cost').textContent = money0(tot);
+    $('m_mo').textContent = money(mo);
+    $('m_diff').textContent = d.toFixed(5);
+    $('m_apr').textContent = (d*2400).toFixed(2)+'%';
+    var f=$('m_flag');
+    if(d<=0){ f.className='flag ok'; f.textContent='No markup. That\u2019s the buy rate.'; }
+    else if(d<=0.0002){ f.className='flag warn'; f.textContent='Light markup. Often worth trading away for a better selling price.'; }
+    else { f.className='flag bad'; f.textContent='Full markup. Ask for buy rate before you concede anything on price.'; }
+  }
+
+  function finance(){
+    var amt=n('f_amt'), apr=n('f_apr')/100/12, t=n('f_term')||1, buy=n('f_buy')/100/12;
+    function pmt(r){ return r===0 ? amt/t : amt*r/(1-Math.pow(1+r,-t)); }
+    var p=pmt(apr), bp=pmt(buy);
+    $('f_pay').textContent = money0(p);
+    $('f_int').textContent = money0(p*t-amt);
+    $('f_tot').textContent = money0(p*t);
+    $('f_bpay').textContent = money0(bp);
+    $('f_res').textContent = money0((p-bp)*t);
+  }
+
+  function tradeEq(){
+    var v=n('t_val'), p=n('t_pay'), e=v-p;
+    $('t_eq').textContent = money0(e);
+    $('t_roll').textContent = (e<0? '+'+money(Math.abs(e)/36)+'/mo' : '-'+money(e/36)+'/mo') + ' (approx, before rent charge)';
+    var f=$('t_flag');
+    if(e<-3000){ f.className='flag bad'; f.textContent='Heavy negative equity. Show the client both versions: rolled in vs paid in cash.'; }
+    else if(e<0){ f.className='flag warn'; f.textContent='Negative equity. Check the lender\u2019s advance limit before promising a structure.'; }
+    else { f.className='flag ok'; f.textContent='Positive equity — use it as cap reduction or take the cash and keep it liquid.'; }
+  }
+
+  function compare(){
+    var t=n('c_term')||1;
+    var at=n('c_a1')*t+n('c_a2'), bt=n('c_b1')*t+n('c_b2');
+    $('c_at').textContent=money0(at); $('c_bt').textContent=money0(bt);
+    $('c_ae').textContent=money(at/t); $('c_be').textContent=money(bt/t);
+    var f=$('c_flag'), d=Math.abs(at-bt);
+    f.className='flag ok';
+    f.textContent = d<50 ? 'Effectively identical — pick on color, availability, or dealer.'
+      : (at<bt ? 'Deal A wins by '+money0(d)+' over the term.' : 'Deal B wins by '+money0(d)+' over the term.');
+  }
+
+  function profit(){
+    var fee=n('p_fee'), ref=n('p_ref'), credit=$('p_credit').value==='1', hrs=n('p_hrs');
+    var clientPays = credit ? Math.max(fee-ref,0) : fee;
+    var net = clientPays + ref;
+    $('p_net').textContent = money0(net);
+    $('p_pays').textContent = money0(clientPays);
+    $('p_hr').textContent = hrs>0 ? money0(net/hrs)+'/hr' : '—';
+    var f=$('p_flag'), h = hrs>0? net/hrs : 0;
+    if(hrs<=0){ f.className='flag warn'; f.textContent='Log your hours. It\u2019s the metric that tells you which deals to stop taking.'; }
+    else if(h<75){ f.className='flag bad'; f.textContent='Under $75/hr. Either the fee is too low or this deal type isn\u2019t worth your time.'; }
+    else if(h<150){ f.className='flag warn'; f.textContent='Acceptable. Watch whether this client type keeps running long.'; }
+    else { f.className='flag ok'; f.textContent='Strong. More of these.'; }
+  }
+
+  /* ---- sign toggle (iPhone number pad has no minus key) ---- */
+  document.querySelectorAll('.sign').forEach(function(btn){
+    var input = document.getElementById(btn.dataset.for);
+    function paint(){
+      var neg = parseFloat(input.value) < 0;
+      btn.textContent = neg ? '\u2212' : '+';
+      btn.classList.toggle('neg', neg);
+      btn.setAttribute('aria-label', neg ? 'Currently negative, tap to make positive' : 'Currently positive, tap to make negative');
+    }
+    btn.addEventListener('click', function(){
+      var v = parseFloat(input.value) || 0;
+      input.value = -v;
+      paint(); runAll();
+    });
+    input.addEventListener('input', paint);
+    paint();
+  });
+
+  /* ---- service agreement ---- */
+  function agreement(){
+    var name = ($('ag_name').value.trim() || '[CLIENT NAME]');
+    var date = ($('ag_date').value.trim() || '[DATE]');
+    var fee  = ($('ag_fee').value.trim()  || '[FEE]');
+    var dep  = ($('ag_dep').value.trim()  || '0');
+    var depLine = (parseFloat(dep) > 0)
+      ? 'A deposit of $' + dep + ' is due at signing and is credited in full against the Service Fee.'
+      : 'No deposit is required.';
+    $('ag_doc').textContent =
+'AUTO CONCIERGE SERVICE AGREEMENT\n\n' +
+'This Agreement is entered into on ' + date + ' between [COMPANY NAME] ("Consultant") and ' + name + ' ("Client").\n\n' +
+'1. SERVICES. Consultant will, at Client\u2019s direction and on Client\u2019s behalf: locate vehicles matching Client\u2019s stated preferences; solicit and compare pricing from licensed motor vehicle dealers; negotiate terms with those dealers; solicit trade-in bids; review dealer worksheets and quotes; and advise Client on the resulting options. Consultant acts solely as Client\u2019s consultant and negotiating representative.\n\n' +
+'2. WHAT CONSULTANT DOES NOT DO. Consultant is not a motor vehicle dealer, wholesaler, lender, or insurance producer. Consultant does not sell, lease, own, or take title to or possession of any vehicle; does not collect, hold, or transmit any funds for the purchase, lease, or registration of a vehicle; does not sign purchase, lease, financing, or registration documents on Client\u2019s behalf; does not arrange financing for compensation; and does not deliver vehicles or handle plates, titles, or registration. All such matters are conducted directly between Client and the selling dealer and its lender.\n\n' +
+'3. FEE. Client shall pay Consultant a flat Service Fee of $' + fee + '. ' + depLine + ' The Service Fee is earned when Client takes delivery of a vehicle sourced or negotiated by Consultant, and is payable on or before the delivery date. The Service Fee does not vary with the price of the vehicle, the dealer selected, or the financing chosen.\n\n' +
+'4. REFUNDS AND CANCELLATION. Either party may cancel this Agreement in writing at any time. If Client cancels before taking delivery, no Service Fee is owed and any deposit is refunded, less work already performed at Consultant\u2019s documented hourly rate up to the deposit amount. If Client takes delivery of a vehicle sourced or negotiated by Consultant, the Service Fee is earned in full.\n\n' +
+'5. CLIENT RESPONSIBILITIES. Client shall provide accurate and complete information, including trade-in condition, mileage, payoff, and credit history; respond to Consultant and dealers in a timely manner; complete Client\u2019s own credit application directly with the dealer or lender; and independently review all documents before signing them.\n\n' +
+'6. DEALER COMPENSATION DISCLOSURE. Some dealerships pay a referral fee on transactions Consultant brings to them. Where Consultant receives such a fee in connection with Client\u2019s transaction, that amount will be credited against the Service Fee. It never increases the price Client pays for the vehicle. Consultant\u2019s total compensation is the same whether or not a referral fee is received.\n\n' +
+'7. NO GUARANTEES. Vehicle availability, pricing, manufacturer incentives, residual values, money factors, interest rates, and trade-in values are set by third parties and change without notice. Trade-in figures are estimates until a dealer physically appraises the vehicle. Consultant does not guarantee financing approval, any particular payment, any particular savings, or the availability of any vehicle.\n\n' +
+'8. DEALER AND MANUFACTURER RESPONSIBILITY. The selling dealer is solely responsible for the vehicle, its condition, its disclosures, all transaction documents, delivery, registration, and all warranty obligations. Consultant makes no warranty of any kind regarding any vehicle.\n\n' +
+'9. LIMITATION OF LIABILITY. Consultant\u2019s total liability arising out of this Agreement shall not exceed the Service Fee actually paid by Client. Consultant is not liable for indirect, incidental, or consequential damages.\n\n' +
+'10. COMMUNICATION AUTHORIZATION. Client authorizes Consultant to contact dealers, and to share vehicle and trade-in information reasonably necessary to obtain quotes and bids, for the limited purpose of negotiating on Client\u2019s behalf. Client authorizes Consultant to communicate by call, text, and email.\n\n' +
+'11. PRIVACY. Consultant collects only the information needed to perform the Services. Consultant does not request or store Social Security numbers, dates of birth, driver\u2019s license numbers, or financial account numbers, and does not sell Client information to any third party.\n\n' +
+'12. ELECTRONIC SIGNATURE. The parties agree that electronic signatures are valid and binding.\n\n' +
+'13. GOVERNING LAW. This Agreement is governed by the laws of the State of [STATE], and venue lies in [COUNTY] County.\n\n' +
+'CLIENT: ' + name + '\nSignature: ___________________________  Date: ' + date + '\n\n' +
+'CONSULTANT: [YOUR NAME], [COMPANY NAME]\nSignature: ___________________________  Date: ' + date + '\n\n' +
+'[DRAFT — review by a licensed NJ/NY attorney before use.]';
+  }
+  ['ag_name','ag_date','ag_fee','ag_dep'].forEach(function(id){
+    var e = document.getElementById(id);
+    if(e) e.addEventListener('input', agreement);
+  });
+
+  /* ---- monthly dashboard ---- */
+  function dash(){
+    if(!$('d_leads')) return;
+    var leads=n('d_leads'), del=n('d_del'), fees=n('d_fees'), ref=n('d_ref'),
+        cred=n('d_cred'), hrs=n('d_hrs'), rlead=n('d_rlead');
+    var net = fees + ref - cred;
+    $('d_rev').textContent = money0(net);
+    $('d_close').textContent = leads>0 ? (del/leads*100).toFixed(0)+'%' : '—';
+    $('d_avg').textContent = del>0 ? money0(net/del) : '—';
+    $('d_hpd').textContent = del>0 ? (hrs/del).toFixed(1)+' hrs' : '—';
+    $('d_hr').textContent = hrs>0 ? money0(net/hrs)+'/hr' : '—';
+    $('d_rshare').textContent = leads>0 ? (rlead/leads*100).toFixed(0)+'%' : '—';
+    var f=$('d_flag'), hpd = del>0 ? hrs/del : 0, share = leads>0 ? rlead/leads : 0;
+    if(del===0){ f.className='flag warn'; f.textContent='No deliveries. Check where deals are stalling — pricing, follow-up, or client indecision.'; }
+    else if(hpd>8){ f.className='flag bad'; f.textContent='Over 8 hours per deal. Either raise the fee or tighten intake — this pace won\u2019t survive a rotating schedule.'; }
+    else if(share<0.4){ f.className='flag warn'; f.textContent='Under 40% of leads came from referrals. Ask every delivered client, twice.'; }
+    else { f.className='flag ok'; f.textContent='Healthy month. Referral flow and hours per deal are both where they should be.'; }
+  }
+
+  function runAll(){ lease(); markup(); finance(); tradeEq(); compare(); profit(); dash(); agreement(); }
+  document.querySelectorAll('.calc input, .calc select, .form input, .form select').forEach(function(el){
+    el.addEventListener('input', runAll); el.addEventListener('change', runAll);
+  });
+  runAll();
+})();
+</script>
+</body>
+</html>

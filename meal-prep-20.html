@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#16211B">
+<title>Sunday Prep — The 20</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECEFE8;--card:#F7F8F4;--ink:#16211B;--pine:#2E5545;--flame:#FF4D12;
+  --corn:#FFC53D;--haze:#D6DDCE;--muted:#5C6B60;
+  --disp:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  --body:'IBM Plex Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;overscroll-behavior-y:none}
+.wrap{max-width:560px;margin:0 auto;min-height:100vh;position:relative}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+:focus-visible{outline:3px solid var(--flame);outline-offset:2px;border-radius:4px}
+
+.top{position:sticky;top:0;z-index:30;background:var(--ink);color:var(--paper);padding:calc(env(safe-area-inset-top) + 14px) 18px 14px}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--disp);font-weight:800;font-size:22px;letter-spacing:-.02em;line-height:1}
+.brand span{color:var(--corn)}
+.sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FB3A4;margin-top:6px}
+.awake{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid #3D4F45;padding:8px 10px;border-radius:999px;color:#9FB3A4;white-space:nowrap}
+.awake[data-on="1"]{background:var(--corn);color:var(--ink);border-color:var(--corn)}
+.tabs{display:flex;gap:6px;padding:12px 14px 0}
+.tab{flex:1;padding:10px 4px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;border-radius:10px 10px 0 0;background:var(--haze);color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.pad{padding:16px 14px 40px}
+.lead{font-size:15px;color:var(--muted);margin:2px 4px 14px}
+
+.filters{display:flex;gap:7px;overflow-x:auto;padding:2px 4px 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 13px;border-radius:999px;background:var(--haze);color:var(--muted);white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--pine);color:#fff}
+
+.rcard{display:flex;width:100%;text-align:left;background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 0 rgba(22,33,27,.08)}
+.rcard:active{transform:scale(.988)}
+.rnum{flex:0 0 52px;background:var(--pine);color:var(--paper);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-size:15px}
+.rcard[data-e="1"] .rnum{background:var(--flame)}
+.rbody{padding:14px;flex:1;min-width:0}
+.rname{font-family:var(--disp);font-weight:700;font-size:19px;line-height:1.15;letter-spacing:-.015em;display:block}
+.rmeta{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:7px;display:block}
+.dot{opacity:.45;padding:0 5px}
+
+.back{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper);opacity:.85}
+.title{font-family:var(--disp);font-weight:800;font-size:29px;line-height:1.06;letter-spacing:-.03em;margin:14px 4px 6px}
+.blurb{color:var(--muted);margin:0 4px 16px;font-size:15px}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.fact{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;background:var(--haze);padding:7px 10px;border-radius:8px;color:var(--muted)}
+h2.sec{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 4px 12px;display:flex;align-items:center;gap:10px}
+h2.sec::after{content:"";flex:1;height:1px;background:var(--haze)}
+
+/* scaler */
+.scaler{background:var(--ink);color:var(--paper);border-radius:16px;padding:16px;margin-bottom:18px}
+.sc-lab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--corn);margin-bottom:12px}
+.sc-row{display:flex;align-items:center;gap:10px}
+.sc-btn{width:52px;height:56px;border-radius:12px;background:#2A3A32;font-size:26px;font-weight:600;line-height:1;color:var(--paper)}
+.sc-btn:active{background:var(--pine)}
+.sc-in{flex:1;text-align:center}
+.sc-in input{width:100%;background:none;border:0;color:var(--paper);font-family:var(--disp);font-weight:800;font-size:40px;text-align:center;letter-spacing:-.03em;padding:0}
+.sc-in input:focus{outline:none}
+.sc-unit{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FB3A4;margin-top:-4px}
+.presets{display:flex;gap:6px;margin-top:14px;overflow-x:auto;scrollbar-width:none}
+.presets::-webkit-scrollbar{display:none}
+.pre{flex:0 0 auto;font-family:var(--mono);font-size:12px;padding:8px 12px;border-radius:999px;background:#2A3A32;color:#C6D4CA}
+.pre[aria-pressed="true"]{background:var(--corn);color:var(--ink)}
+.readout{margin-top:14px;padding-top:14px;border-top:1px solid #2A3A32;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.ro-big{font-family:var(--disp);font-weight:800;font-size:26px;letter-spacing:-.02em;color:var(--corn)}
+.ro-sm{font-size:13px;color:#9FB3A4;line-height:1.4}
+.portsel{display:flex;gap:5px;margin-top:12px}
+.portsel button{flex:1;font-family:var(--mono);font-size:11px;padding:10px 4px;border-radius:9px;background:#2A3A32;color:#9FB3A4;letter-spacing:.04em}
+.portsel button[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+
+ul.ing{list-style:none;margin:0 0 8px;padding:0;background:var(--card);border-radius:12px;overflow:hidden}
+ul.ing li{border-bottom:1px solid var(--haze)}
+ul.ing li:last-child{border-bottom:0}
+ul.ing li.grp{padding:11px 14px 8px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:var(--haze)}
+.ing-btn{display:flex;width:100%;gap:12px;align-items:flex-start;padding:13px 14px;text-align:left;min-height:48px}
+.box{flex:0 0 22px;height:22px;border:2px solid var(--haze);border-radius:6px;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent}
+.ing-btn[data-on="1"] .box{background:var(--pine);border-color:var(--pine);color:#fff}
+.ing-btn[data-on="1"] .ing-txt{opacity:.4;text-decoration:line-through}
+.qty{font-family:var(--mono);font-weight:600}
+.note{color:var(--muted);font-size:14px}
+
+.cta{display:block;width:100%;background:var(--flame);color:#fff;font-family:var(--disp);font-weight:800;font-size:19px;padding:19px;border-radius:14px;margin:18px 0 26px;box-shadow:0 3px 0 #C13405}
+.cta:active{transform:translateY(2px);box-shadow:0 1px 0 #C13405}
+.panel{background:var(--card);border-radius:12px;padding:15px 16px;margin-bottom:20px;font-size:16px}
+.panel p{margin:0 0 10px}.panel p:last-child{margin:0}
+.panel.hot{background:#FFF3E8;border-left:4px solid var(--flame)}
+.panel.grid{background:#EDF2FA;border-left:4px solid #4A6FA5}
+.panel b{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:4px;color:var(--muted)}
+
+.cook{position:fixed;inset:0;z-index:60;background:var(--paper);display:flex;flex-direction:column;max-width:560px;margin:0 auto}
+.cook-top{background:var(--ink);color:var(--paper);padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;flex:0 0 auto}
+.cook-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cook-name{font-family:var(--disp);font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.close{font-size:22px;line-height:1;padding:4px 6px}
+.rail{display:flex;gap:3px;margin-top:12px}
+.seg{flex:1;height:7px;border-radius:99px;background:#3D4F45;padding:0;min-width:0}
+.seg[data-s="done"]{background:var(--corn)}
+.seg[data-s="now"]{background:var(--flame)}
+.stage{flex:1;overflow-y:auto;padding:24px 20px 20px;-webkit-overflow-scrolling:touch}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--flame);font-weight:600}
+.stitle{font-family:var(--disp);font-weight:800;font-size:30px;line-height:1.08;letter-spacing:-.03em;margin:10px 0 16px}
+.stext{font-size:19px;line-height:1.58}
+.amt{background:var(--corn);padding:1px 6px;border-radius:6px;font-family:var(--mono);font-weight:600;font-size:.88em;white-space:nowrap;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.watch{margin-top:18px;background:#FFF3E8;border-left:4px solid var(--flame);border-radius:0 10px 10px 0;padding:12px 14px;font-size:15px;color:#6B3418}
+.watch b{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:3px}
+.timer-btn{margin-top:20px;display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:14px 20px;border-radius:999px;font-family:var(--mono);font-weight:600;font-size:15px}
+.timer-btn:active{transform:scale(.97)}
+.fin{text-align:center}
+.fin .big{font-family:var(--disp);font-weight:800;font-size:33px;letter-spacing:-.03em;line-height:1.1;margin-bottom:8px}
+.ticker{position:absolute;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom) + 88px);background:var(--ink);color:var(--paper);border-radius:12px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:14px;box-shadow:0 6px 20px rgba(22,33,27,.25)}
+.ticker[hidden]{display:none}
+.t-lab{opacity:.7;font-size:11px;letter-spacing:.1em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-val{font-size:20px;font-weight:600}
+.ticker.ring{background:var(--flame)}
+.t-x{padding:4px 6px;font-size:16px;opacity:.75}
+.nav{flex:0 0 auto;display:flex;gap:10px;padding:12px 14px calc(env(safe-area-inset-bottom) + 14px);background:var(--paper);border-top:1px solid var(--haze)}
+.nav button{padding:18px 10px;border-radius:12px;font-family:var(--disp);font-weight:700;font-size:17px}
+.prev{flex:0 0 34%;background:var(--haze);color:var(--muted)}
+.next{flex:1;background:var(--pine);color:#fff;box-shadow:0 3px 0 #1D3A2E}
+.next:active{transform:translateY(2px);box-shadow:0 1px 0 #1D3A2E}
+.next.done{background:var(--flame);box-shadow:0 3px 0 #C13405}
+.step-list{list-style:none;padding:0;margin:0}
+.step-list li{display:flex;gap:13px;padding:14px 4px;border-bottom:1px solid var(--haze)}
+.step-list li:last-child{border-bottom:0}
+.step-list .n{font-family:var(--mono);font-weight:600;color:var(--flame);flex:0 0 26px}
+.pill-list{list-style:none;padding:0;margin:0 0 24px}
+.pill-list li{padding:11px 0;border-bottom:1px solid var(--haze);font-size:16px}
+.pill-list li:last-child{border-bottom:0}
+.pill-list b{font-family:var(--mono);font-size:12px;letter-spacing:.05em}
+.foot{font-size:13px;color:var(--muted);text-align:center;padding:22px 20px 40px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+"use strict";
+/* ============================================================
+   DATA. base = lb of the anchor protein. yld = cooked yield factor.
+   Step text tokens: {ingredient name} or {ingredient name|0.5} for a
+   portion of it. {batches} inserts the live batch count.
+   ============================================================ */
+var R=[
+{id:1,name:"Taco Ground Turkey Bowls",protein:"Ground turkey",tool:"Skillet",active:15,total:20,base:1.5,yld:.72,effort:1,tags:["one pan","rice"],
+ blurb:"The workhorse. Fastest bowl in the file and it holds up all week.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground turkey",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:2,u:"tbsp",n:"taco seasoning"},
+ {q:1,u:"tsp",n:"cumin"},
+ {q:.5,u:"tsp",n:"chili powder"},
+ {q:3,u:"tbsp",n:"water"},
+ {q:1,u:"tbsp",n:"avocado or olive oil"},
+ {q:3,u:"cup",n:"cilantro-lime rice",note:"about 1 1/2 pouches, prepared",g:"Base + veg"},
+ {q:1,u:"can",n:"black beans",note:"15 oz, drained and rinsed"},
+ {q:1,u:"can",n:"corn",note:"15 oz, drained"},
+ {q:3,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:1,u:"",n:"lime",note:"half juiced over the meat, half cut into wedges"},
+ {q:.5,u:"cup",n:"chunky salsa",note:"2 tbsp per bowl",g:"Side containers"},
+ {q:.5,u:"cup",n:"Mexican shredded cheese",note:"optional, 2 tbsp per bowl"}],
+ steps:[
+ {t:"Salt the turkey first",b:"Sprinkle {kosher salt} over the raw turkey and mix it in with your hands. Salting before it hits the pan seasons the meat all the way through instead of just coating the outside."},
+ {t:"Get the pan properly hot",b:"Add {avocado or olive oil} to a large skillet over medium-high and heat 2 minutes. The oil should shimmer and move like water before the turkey goes in.",m:2},
+ {t:"Brown the turkey",b:"Add the turkey and press it into a flat layer. Let it sit undisturbed 3 minutes to build color, then break it into crumbles and cook 4-5 minutes more.",m:7,st:1,w:"{batches} A crowded pan boils the meat gray. Turkey has almost no fat, so browning is the only flavor you get."},
+ {t:"Bloom the spices",b:"Add {taco seasoning}, {cumin} and {chili powder}. Stir 30 seconds in the hot pan so the spices toast instead of tasting dusty."},
+ {t:"Add water, make it a sauce",b:"Pour in {water} and stir about 1 minute. It turns the powder into a glaze that clings to every crumble. Cook until the turkey reads 165°F."},
+ {t:"Char the peppers and onions",b:"Push the turkey to one side. Add {frozen fire-roasted peppers and onions} to the open side and cook 5-7 minutes uncovered, stirring occasionally, until the water is gone and the edges brown.",m:6,st:1,w:"No lid. A lid steams them into limp strips."},
+ {t:"Hit it with lime",b:"Squeeze half the {lime} over the hot skillet and stir. Doing this while the pan is hot lets the juice soak in; save the wedges for eating time.",w:"This one step is the difference between a bowl that tastes fresh on Thursday and one that tastes flat."},
+ {t:"Rice, beans, corn",b:"Microwave {cilantro-lime rice}. Drain and rinse {black beans}, drain {corn}, and warm both 90 seconds."},
+ {t:"Cool, then pack",b:"Let everything stop steaming before you fill the containers. Salsa and cheese go in side containers, never mixed in."}],
+ portion:"Divide everything evenly among your containers: turkey, rice, beans, corn and peppers in the main container.",
+ side:"Salsa and cheese in side containers. Lime wedges in a small bag. All three go on after reheating.",
+ tips:"To lighten it, push more peppers and beans into the bowl and keep cheese at 2 tbsp. Salsa buys the most flavor per calorie of anything here.",
+ reheat:"Microwave 2 minutes, stir, then 30 seconds more. Salsa, cheese and a lime squeeze after heating.",
+ griddle:"Ideal griddle recipe. 400°F, spread the turkey thin, and cook the peppers alongside it on the same surface. No batching needed up to 4 lb."},
+
+{id:2,name:"Chicken Fajita Bowls",protein:"Chicken tenderloins",tool:"Air fryer",active:15,total:25,base:1.5,yld:.75,effort:1,tags:["air fryer","rice"],
+ blurb:"Air-fried tenderloins with blistered peppers. The high-protein default.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken tenderloins",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:1,u:"tsp",n:"chili powder"},
+ {q:1,u:"tsp",n:"cumin"},
+ {q:1,u:"tsp",n:"smoked paprika"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"oregano"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:3,u:"cup",n:"cilantro-lime rice",note:"prepared",g:"Base + veg"},
+ {q:1,u:"can",n:"black beans",note:"15 oz, drained and rinsed"},
+ {q:4,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:1,u:"",n:"lime",note:"half juiced, half in wedges"},
+ {q:.5,u:"cup",n:"chunky salsa",g:"Side containers"},
+ {q:.25,u:"cup",n:"Kraft chipotle aioli",note:"optional, 1 tbsp per bowl"}],
+ steps:[
+ {t:"Dry the chicken",b:"Pat the tenderloins completely dry with paper towels. Wet chicken steams in an air fryer and never browns."},
+ {t:"Mix the rub",b:"Stir {kosher salt}, {chili powder}, {cumin}, {smoked paprika}, {garlic powder} and {oregano} together in a small bowl, then toss the chicken with {avocado oil} and the rub until evenly coated.",w:"Mix the spices before they touch the chicken or you get salty pieces and bland pieces."},
+ {t:"Preheat",b:"Preheat the air fryer to 400°F for 3 minutes. A hot basket is what gives you browned edges instead of pale, rubbery chicken.",m:3},
+ {t:"Air fry",b:"Lay the tenderloins in a single layer with space between them. Cook 10-13 minutes, flipping halfway, and pull them at 165°F.",m:12,w:"{batches} Overlapping pieces trap steam. Two shorter batches beat one crowded one every time."},
+ {t:"Blister the peppers",b:"While the chicken cooks, heat a large skillet over medium-high. Add {frozen fire-roasted peppers and onions} and cook 7-9 minutes uncovered, stirring occasionally, until the water is gone and you see real char.",m:8,st:1},
+ {t:"Rice and beans",b:"Microwave {cilantro-lime rice}. Stir {black beans} into the peppers for the last 2 minutes to warm them."},
+ {t:"Rest, then slice",b:"Rest the chicken 5 minutes before slicing, then cut across the grain into strips. Cutting straight out of the basket dumps the juice on the board.",m:5},
+ {t:"Lime and cool",b:"Squeeze half the {lime} over the sliced chicken while it is warm. Let everything stop steaming before packing."}],
+ portion:"Divide the sliced chicken, rice, beans and peppers evenly among your containers.",
+ side:"Salsa and chipotle aioli in side containers. Lime wedges separate.",
+ tips:"Let salsa be the main sauce and treat the aioli as a 1 tbsp finisher. Tenderloins beat breasts here because they cook evenly without pounding.",
+ reheat:"Microwave 1 1/2 to 2 minutes. If the chicken looks dry, add a teaspoon of water to the rice and cover loosely.",
+ griddle:"Skip the air fryer if you want: griddle at 400°F, 3-4 minutes per side, with the peppers cooking beside them."},
+
+{id:3,name:"Elote Ground Chicken Bowls",protein:"Ground chicken",tool:"Skillet",active:15,total:22,base:1.5,yld:.72,effort:2,tags:["one pan","rice"],
+ blurb:"Toasted corn, smoky spice and a lime-mayo drizzle. Street corn as a bowl.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground chicken",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:2,u:"tsp",n:"chile lime seasoning"},
+ {q:1,u:"tsp",n:"smoked paprika"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"cumin"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:2,u:"can",n:"corn",note:"15 oz each, drained very well",g:"Base + veg"},
+ {q:3,u:"cup",n:"cilantro-lime or brown rice",note:"prepared"},
+ {q:1,u:"can",n:"black beans",note:"15 oz, drained and rinsed"},
+ {q:2,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:1,u:"",n:"lime"},
+ {q:.33,u:"cup",n:"avocado oil mayo",note:"thinned with lime juice",g:"Side containers"},
+ {q:.5,u:"cup",n:"Mexican shredded cheese",note:"or feta"}],
+ steps:[
+ {t:"Dry the corn",b:"Drain {corn} and pat it dry on a towel. Wet corn will never toast, and toasted corn is the entire point of this bowl.",w:"Two minutes with a towel here changes the whole dish."},
+ {t:"Toast the corn first",b:"Heat {avocado oil} in a large skillet over high. Add the corn in one layer and leave it alone 3-4 minutes until you see brown spots, then stir and give it 2 more. Scrape it into a bowl.",m:5,w:"Do the corn before the meat. Once chicken juices are in the pan, nothing will brown."},
+ {t:"Salt and brown the chicken",b:"Mix {kosher salt} into the ground chicken. Add it to the same skillet over medium-high, press flat, and let it sit 3 minutes before breaking it up. Cook 5-6 minutes total.",m:7,st:1,w:"{batches} Ground chicken throws off a lot of water. High heat and patience are the only fix."},
+ {t:"Season",b:"Add {chile lime seasoning}, {smoked paprika}, {garlic powder} and {cumin}. Stir 30 seconds. Cook until the chicken reads 165°F, then taste before adding salt since the blend is already salty."},
+ {t:"Return the corn",b:"Stir the toasted corn back in and cook 1 minute just to bring it back up to temperature."},
+ {t:"Peppers, rice, beans",b:"Cook {frozen fire-roasted peppers and onions} in the same pan 5-7 minutes uncovered once the chicken is out, then microwave {cilantro-lime or brown rice} and warm {black beans}.",m:6,st:1},
+ {t:"Make the elote drizzle",b:"Stir {avocado oil mayo} with the juice of half the {lime} and a pinch of chile lime seasoning until it pours off a spoon. This goes in a side container, not in the pan."},
+ {t:"Cool, then pack",b:"Squeeze the remaining lime over the hot chicken and corn, then let it stop steaming before you build the containers."}],
+ portion:"Divide the chicken-and-corn mixture, rice, beans and peppers evenly among your containers.",
+ side:"Elote drizzle and cheese in side containers. The drizzle keeps about 5 days.",
+ tips:"Feta instead of the shredded blend gets you closer to real elote. Two cans of corn look like a lot until they cook down.",
+ reheat:"Microwave 2 minutes. Drizzle and cheese after heating, never before.",
+ griddle:"The griddle is the best possible tool for the corn step. 425°F, spread it in one layer, leave it alone."},
+
+{id:4,name:"Bachan's BBQ Chicken & Broccoli",protein:"Chicken breast",tool:"Skillet + oven",active:15,total:25,base:1.5,yld:.75,effort:1,tags:["rice"],
+ blurb:"Sweet-savory glaze with roasted broccoli. Reheats better than anything else here.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken breast",note:"cut into 1-inch pieces",g:"Protein"},
+ {q:.75,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:.5,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:6,u:"cup",n:"frozen broccoli florets",note:"about 20 oz",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil",note:"for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:5,u:"tbsp",n:"Bachan's Japanese BBQ sauce",g:"Sauce"},
+ {q:2,u:"tsp",n:"jarred minced garlic"}],
+ steps:[
+ {t:"Roast the broccoli, do not steam it",b:"Heat the oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil} on a sheet pan, spread it out, and roast 20-24 minutes until the edges are browned and crisp.",m:22,w:"Roasting from frozen is a huge upgrade over the skillet. Do not thaw it first and do not crowd the pan."},
+ {t:"Cut evenly",b:"Cut the chicken into 1-inch pieces. Uneven pieces mean some are dry before others are safe."},
+ {t:"Season lightly",b:"Toss the chicken with {kosher salt}, {garlic powder} and {black pepper}. Go light on salt here because Bachan's brings plenty of its own."},
+ {t:"Sear undisturbed",b:"Heat {avocado oil} in a large skillet over medium-high. Add the chicken in one layer and do not touch it for 3 full minutes.",m:3,w:"{batches} That untouched sear is where the flavor comes from."},
+ {t:"Finish the chicken",b:"Stir and cook 4-5 minutes more until browned and the pieces read 165°F.",m:5,st:1},
+ {t:"Bloom the garlic",b:"Drop the heat to medium-low. Push the chicken aside, add {jarred minced garlic} to the bare pan and stir 30 seconds until it smells sweet.",m:1,w:"Medium-low only. Jarred garlic goes bitter fast on high heat."},
+ {t:"Glaze",b:"Add {Bachan's Japanese BBQ sauce} and toss 1 minute until the chicken is coated and glossy. Kill the heat as soon as it clings.",m:1},
+ {t:"Combine and cool",b:"Microwave {brown rice}. Fold the roasted broccoli into the skillet off the heat so it picks up glaze without going soft."}],
+ portion:"Divide rice into the containers first, then the glazed chicken and broccoli on top.",
+ side:"Nothing separate needed, which is part of why this one is so easy.",
+ tips:"The sauce is the only real sodium lever. Measure it. Roasted broccoli reheats far better than skillet broccoli because it starts out drier.",
+ reheat:"Microwave 1 1/2 to 2 minutes. Add a teaspoon of water to the rice first if it has dried out.",
+ griddle:"Griddle at 400°F gives you more sear surface than a skillet, but move the chicken to a bowl to toss with sauce since the griddle has no walls."},
+
+{id:5,name:"Soyaki Chicken Stir-Fry Bowls",protein:"Chicken breast",tool:"One skillet",active:15,total:20,base:1.5,yld:.75,effort:1,tags:["one pan","rice"],
+ blurb:"Protein and two vegetables in one pan. The lowest-effort full meal here.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken breast",note:"cut into 1-inch pieces",g:"Protein"},
+ {q:.75,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:.5,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:4,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:3,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:5,u:"tbsp",n:"Soyaki",g:"Sauce"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:1,u:"tsp",n:"sesame seeds",note:"optional"}],
+ steps:[
+ {t:"Season the chicken",b:"Toss the chicken pieces with {kosher salt}, {garlic powder} and {black pepper}. Keep the salt light since Soyaki is soy-based."},
+ {t:"Heat the pan hard",b:"Add {avocado oil} to a large skillet over medium-high and heat 2 minutes until it shimmers.",m:2},
+ {t:"Brown the chicken",b:"Add the chicken in one layer. Leave it 3 minutes, then stir and cook 4-5 minutes more until browned and nearly done.",m:7,st:1,w:"{batches} Stacked chicken releases water and steams. Two batches, or use the griddle."},
+ {t:"Vegetables in, lid off",b:"Add {frozen broccoli florets} and {frozen fire-roasted peppers and onions}. Cook 7-9 minutes uncovered, stirring, until the vegetables are hot and the pan is dry again.",m:8,st:1,w:"The pan will look watery at first. Keep the heat up and wait it out or the sauce turns to soup."},
+ {t:"Bloom the garlic",b:"Reduce to medium-low, clear a space, add {jarred minced garlic} and stir 30 seconds.",m:1},
+ {t:"Glaze",b:"Confirm the chicken is at 165°F, then add {Soyaki} and toss thoroughly for 1 minute. Sprinkle {sesame seeds} over the top.",m:1},
+ {t:"Rice and cool",b:"Microwave {brown rice}, divide it among the containers, and spoon the stir-fry over it once the steam settles."}],
+ portion:"Rice on the bottom, stir-fry over the top, divided evenly.",
+ side:"None needed.",
+ tips:"The easiest full meal in the rotation because everything shares one pan. Let the vegetables carry the volume and keep the sauce measured.",
+ reheat:"Microwave 2 minutes, stir, then 20-30 seconds more.",
+ griddle:"Great griddle candidate at 400°F. Cook chicken and vegetables side by side, then combine in a bowl with the sauce."},
+
+{id:6,name:"Sweet Chili Ground Turkey Bowls",protein:"Ground turkey",tool:"Skillet + oven",active:12,total:20,base:1.5,yld:.72,effort:1,tags:["rice"],
+ blurb:"Sweet, hot and salty in about twenty minutes. Weeknight-proof.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground turkey",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"onion powder"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:6,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil",note:"for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:5,u:"tbsp",n:"Trader Joe's Sweet Chili Sauce",g:"Sauce"},
+ {q:1,u:"tbsp",n:"soy sauce"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:1,u:"tsp",n:"Frank's RedHot",note:"optional, for real heat"}],
+ steps:[
+ {t:"Start the broccoli",b:"Heat the oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil} on a sheet pan and roast 20-24 minutes. Start this first; everything else finishes faster.",m:22},
+ {t:"Salt the turkey",b:"Mix {kosher salt}, {garlic powder}, {onion powder} and {black pepper} into the raw turkey with your hands."},
+ {t:"Brown it properly",b:"Heat {avocado oil} in a large skillet over medium-high. Add the turkey, press flat, and leave it 3 minutes before breaking it up. Cook 4-5 minutes more until it reads 165°F.",m:8,st:1,w:"{batches} This is the single step that decides whether the bowl tastes like anything."},
+ {t:"Bloom the garlic",b:"Reduce to medium-low. Push the turkey aside, add {jarred minced garlic} to the bare pan and stir 30 seconds.",m:1},
+ {t:"Sauce it",b:"Add {Trader Joe's Sweet Chili Sauce}, {soy sauce} and {Frank's RedHot}. Toss 1 minute until the turkey is lightly glazed.",m:1,w:"Sweet chili sauce is the added sugar in this bowl. Measure it. Glazed, not swimming."},
+ {t:"Combine",b:"Microwave {brown rice}. Fold the roasted broccoli into the skillet off the heat."},
+ {t:"Cool, then pack",b:"Let it stop steaming, then divide rice into the containers and spoon the turkey and broccoli over it."}],
+ portion:"Rice on the bottom, turkey and broccoli over the top so the glaze runs down through everything.",
+ side:"None needed. A little extra sweet chili on the side is nice if you like it sharper.",
+ tips:"Add Frank's if you want it to taste like more than sugar. The 1 tsp is barely detectable as heat but it sharpens everything.",
+ reheat:"Microwave 1 1/2 to 2 minutes. Stir after heating so the glaze redistributes.",
+ griddle:"400°F, spread thin, no batching. Sauce it in a bowl afterward."},
+
+{id:7,name:"General Tso Chicken & Broccoli",protein:"Chicken breast",tool:"Air fryer + oven",active:15,total:28,base:1.5,yld:.75,effort:2,tags:["air fryer","rice"],
+ blurb:"Takeout flavor without the breading, the deep fryer or the grease.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken breast",note:"cut bite-size",g:"Protein"},
+ {q:.75,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:.5,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:1,u:"tbsp",n:"cornstarch",note:"optional, for crisp edges"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:6,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil",note:"for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:5,u:"tbsp",n:"General Tsao Stir Fry Sauce",g:"Sauce"},
+ {q:2,u:"tsp",n:"jarred minced garlic"}],
+ steps:[
+ {t:"Roast the broccoli",b:"Oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil} on a sheet pan and roast 20-24 minutes until browned at the edges.",m:22},
+ {t:"Coat the chicken",b:"Toss the chicken with {kosher salt}, {garlic powder}, {black pepper}, {avocado oil} and {cornstarch}. The cornstarch is what gets you crisp edges without breading.",w:"Skip the cornstarch and you get a decent stir-fry. Use it and you get something close to takeout texture."},
+ {t:"Air fry",b:"Single layer at 400°F for 10-13 minutes, shaking halfway. Cook to 165°F, not to the clock.",m:12,w:"{batches} Piled chicken steams and the cornstarch turns gummy instead of crisp."},
+ {t:"Warm the sauce",b:"In a large skillet over medium-low, stir {jarred minced garlic} for 30 seconds, then add {General Tsao Stir Fry Sauce} and let it warm 1 minute until it loosens.",m:1},
+ {t:"Toss fast",b:"Add the air-fried chicken and roasted broccoli to the skillet. Toss 30-45 seconds and pull it off the heat immediately.",w:"Speed matters here. The longer crisp chicken sits in sauce over heat, the softer it gets."},
+ {t:"Rice and portion",b:"Microwave {brown rice} and divide it among the containers, then top with the chicken and broccoli."},
+ {t:"Cool, then close",b:"Leave the lids off until the steam stops so the coating does not go soggy."}],
+ portion:"Rice on the bottom, sauced chicken and broccoli evenly divided over it.",
+ side:"For maximum crispness, pack the sauce separately and toss at eating time. Worth it if you care about texture.",
+ tips:"Skipping the breading and deep frying is what makes this lighter than takeout. Measure the sauce; it is a glaze, not a pool.",
+ reheat:"Microwave 1 1/2 to 2 minutes, covered loosely. Add a teaspoon of water to the rice if needed.",
+ griddle:"Not the right tool for this one. The air fryer's circulating heat is what crisps the cornstarch."},
+
+{id:8,name:"Buffalo Chicken & Sweet Potato Bowls",protein:"Chicken tenderloins",tool:"Air fryer + oven",active:20,total:35,base:1.5,yld:.75,effort:2,tags:["air fryer","no rice"],
+ blurb:"No rice, no grain. Spicy chicken, caramelized sweet potato, roasted broccoli.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken tenderloins",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:1,u:"tsp",n:"smoked paprika"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:2,u:"tbsp",n:"avocado oil"},
+ {q:2.5,u:"lb",n:"sweet potatoes",note:"about 3 medium, in 3/4-inch cubes",g:"Base + veg"},
+ {q:6,u:"cup",n:"frozen broccoli florets"},
+ {q:.33,u:"cup",n:"Frank's RedHot",g:"Sauce"},
+ {q:1,u:"tbsp",n:"butter or olive oil",note:"melted into the Frank's"},
+ {q:.33,u:"cup",n:"ranch",note:"about 1 tbsp per bowl",g:"Side containers"}],
+ steps:[
+ {t:"Cube the sweet potatoes",b:"Scrub and cut {sweet potatoes} into 3/4-inch cubes. Same size matters more here than anywhere else; mixed sizes give you burnt corners and raw centers."},
+ {t:"Roast, do not air fry, at volume",b:"Oven to 425°F. Toss the cubes with half the {avocado oil|0.5}, {smoked paprika|0.5}, {garlic powder|0.5} and {kosher salt|0.4}. Spread on a sheet pan and roast 28-32 minutes, flipping once.",m:30,w:"A sheet pan holds far more than an air fryer basket. Piled sweet potato steams into mush; give every cube space."},
+ {t:"Broccoli on the same rack",b:"Toss {frozen broccoli florets} with the remaining {avocado oil|0.5} on a second sheet pan and roast alongside for the last 20-24 minutes.",m:22},
+ {t:"Season the chicken",b:"Toss the tenderloins with the remaining {smoked paprika|0.5}, {garlic powder|0.5}, {kosher salt|0.6} and {black pepper}."},
+ {t:"Air fry the chicken",b:"Single layer at 400°F for 10-13 minutes, flipping halfway, until 165°F.",m:12,w:"{batches}"},
+ {t:"Make the buffalo sauce",b:"Melt {butter or olive oil} and stir it into {Frank's RedHot}. The fat is what makes it cling instead of running straight to the bottom of the container.",w:"Straight Frank's slides off. Mixed with a little fat it coats, exactly like real wing sauce."},
+ {t:"Rest, slice, toss",b:"Rest the chicken 5 minutes, slice it, then toss with the buffalo sauce while still warm so it soaks in.",m:5},
+ {t:"Cool, then pack",b:"Let everything stop steaming before you build the containers."}],
+ portion:"Divide the buffalo chicken, sweet potato and broccoli evenly among your containers.",
+ side:"Ranch always in a side container, about 1 tbsp per bowl, added after reheating.",
+ tips:"The most filling low-sauce bowl in the file. Frank's does the flavor work so you need very little ranch.",
+ reheat:"Microwave 2 minutes. Ranch only after heating, never before.",
+ griddle:"Not needed here, but a griddle at 400°F will crisp the sweet potato cubes beautifully if your oven is busy."},
+
+{id:9,name:"Smoky Beef & Sweet Potato Bowls",protein:"Ground beef",tool:"Skillet + oven",active:20,total:35,base:1.5,yld:.70,effort:2,tags:["no rice"],
+ blurb:"Hearty beef balanced by sweet potato, black beans and charred peppers.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground beef",note:"85/15",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:1.5,u:"tsp",n:"smoked paprika"},
+ {q:1,u:"tsp",n:"cumin"},
+ {q:.5,u:"tsp",n:"chili powder"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"Goya Adobo",note:"go light, it is mostly salt"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:2.5,u:"lb",n:"sweet potatoes",note:"in 3/4-inch cubes",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil"},
+ {q:1,u:"can",n:"black beans",note:"15 oz, drained and rinsed"},
+ {q:4,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:1,u:"",n:"lime"},
+ {q:.5,u:"cup",n:"chunky salsa",g:"Side containers"},
+ {q:.5,u:"cup",n:"Mexican shredded cheese",note:"optional"}],
+ steps:[
+ {t:"Sweet potatoes first",b:"Oven to 425°F. Cut {sweet potatoes} into 3/4-inch cubes and toss with {olive oil}, half the {smoked paprika|0.5}, half the {garlic powder|0.5} and {kosher salt|0.4}. Roast 28-32 minutes, flipping once.",m:30,w:"These take the longest. Nothing else should be waiting on them."},
+ {t:"Brown the beef",b:"Heat a large skillet over medium-high. Add the beef with the remaining {kosher salt|0.6}, press flat, and leave it 3 minutes before breaking it up. Cook 5-6 minutes more to 160°F.",m:9,st:1,w:"{batches} Beef is 160°F, not the 165°F you use for poultry."},
+ {t:"Drain, but keep a tablespoon",b:"Tip off the rendered fat, leaving about a tablespoon in the pan. That reserved fat is what the garlic and spices need to bloom in."},
+ {t:"Bloom garlic and spices",b:"Drop to medium-low. Add {jarred minced garlic} and stir 30 seconds, then add {cumin}, {chili powder}, the remaining {smoked paprika|0.5}, remaining {garlic powder|0.5} and {Goya Adobo}. Stir another 30 seconds.",m:1,w:"Spices in hot fat taste roasted. Spices stirred into cold meat taste like dust."},
+ {t:"Beef out, peppers in",b:"Move the beef to a bowl. Add {frozen fire-roasted peppers and onions} to the same skillet and cook 6-8 minutes uncovered until charred at the edges.",m:7,st:1},
+ {t:"Warm the beans",b:"Stir {black beans} into the peppers for the last 2 minutes just to heat them through.",m:2},
+ {t:"Lime, then taste",b:"Squeeze the {lime} over the hot beef. Taste before adding any salt, because Adobo, cheese and salsa are all still coming."},
+ {t:"Cool, then pack",b:"Let everything stop steaming before you build the containers."}],
+ portion:"Divide beef, sweet potato, beans and peppers evenly among your containers.",
+ side:"Salsa and cheese in side containers, added after reheating.",
+ tips:"Draining the fat is the easiest way to lighten this. Beans and vegetables make it filling without a huge beef portion.",
+ reheat:"Microwave 2 to 2 1/2 minutes. Salsa and cheese after heating.",
+ griddle:"Griddle at 400°F handles 3 lb of beef in one pass, but you lose the rendered fat down the trough. Save a spoonful for the garlic step."},
+
+{id:10,name:"Honey Garlic Chicken & Broccoli",protein:"Chicken breast",tool:"Skillet + oven",active:15,total:25,base:1.5,yld:.75,effort:1,tags:["rice"],
+ blurb:"A three-ingredient glaze from things already in the pantry. Tastes like more work than it is.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken breast",note:"bite-size pieces",g:"Protein"},
+ {q:.75,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:6,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil",note:"for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:3,u:"tbsp",n:"soy sauce",g:"Glaze"},
+ {q:2,u:"tbsp",n:"Kirkland honey"},
+ {q:1,u:"tbsp",n:"jarred minced garlic"},
+ {q:1,u:"tbsp",n:"water"},
+ {q:1,u:"tsp",n:"Trader Joe's Sweet Chili Sauce",note:"optional, for heat"}],
+ steps:[
+ {t:"Roast the broccoli",b:"Oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil} on a sheet pan and roast 20-24 minutes.",m:22},
+ {t:"Mix the glaze first",b:"Stir {soy sauce}, {Kirkland honey}, {jarred minced garlic}, {water} and {Trader Joe's Sweet Chili Sauce} together in a cup until the honey dissolves. Set it aside.",w:"Mix it ahead. Honey dropped straight into a hot pan scorches before it can spread."},
+ {t:"Brown the chicken",b:"Heat {avocado oil} in a large skillet over medium-high. Add the chicken with {kosher salt} and {black pepper}, leave it 3 minutes, then stir and cook 4-5 minutes more.",m:7,st:1,w:"{batches}"},
+ {t:"Drop the heat before the glaze",b:"Confirm the chicken reads 165°F, then reduce to medium-low and wait 30 seconds for the pan to come down."},
+ {t:"Glaze",b:"Pour in the glaze and toss constantly 1-2 minutes until it thickens and coats the chicken.",m:2,w:"Kill the heat the second it clings. Overcooked honey glaze goes tight and sticky by day two."},
+ {t:"Fold in the broccoli",b:"Off the heat, fold the roasted broccoli through the glaze so it picks up flavor without softening."},
+ {t:"Rice and cool",b:"Microwave {brown rice}, divide it among the containers, and top with the chicken and broccoli once the steam settles."}],
+ portion:"Rice on the bottom, glazed chicken and broccoli over the top.",
+ side:"None needed.",
+ tips:"This glaze is concentrated, so it does not take much. Keep rice moderate and load the bowl with broccoli.",
+ reheat:"Microwave 1 1/2 to 2 minutes. Stir after heating to redistribute the glaze.",
+ griddle:"Griddle the chicken at 400°F, then glaze in a bowl or small pan. The glaze needs walls to reduce."},
+
+{id:11,name:"Bachan's Garlic Beef & Broccoli",protein:"Ground beef",tool:"Skillet + oven",active:15,total:25,base:1.5,yld:.70,effort:1,tags:["rice"],
+ blurb:"All the flavor of beef and broccoli at a fraction of the cost and effort.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground beef",note:"85/15",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:.5,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:6,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil",note:"for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:5,u:"tbsp",n:"Bachan's Japanese BBQ sauce",g:"Sauce"},
+ {q:1,u:"tbsp",n:"jarred minced garlic"},
+ {q:1,u:"tsp",n:"soy sauce",note:"optional, only if it needs it"},
+ {q:1,u:"tsp",n:"sesame seeds",note:"optional"}],
+ steps:[
+ {t:"Roast the broccoli",b:"Oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil} on a sheet pan and roast 20-24 minutes until browned at the edges.",m:22,w:"Roasted beats skillet-steamed here by a wide margin, and it frees your only pan for the beef."},
+ {t:"Brown the beef",b:"Heat a large skillet over medium-high. Add the beef with {kosher salt}, {garlic powder} and {black pepper}. Press flat, leave it 3 minutes, then break it up and cook 4-5 minutes more to 160°F.",m:8,st:1,w:"{batches} Ground beef is 160°F."},
+ {t:"Drain, keep a tablespoon",b:"Tip off the rendered fat but leave about a tablespoon behind. The garlic needs it."},
+ {t:"Bloom the garlic",b:"Reduce to medium-low. Add {jarred minced garlic} to the reserved fat and stir 30 seconds until it smells sweet rather than sharp.",m:1,w:"Medium-low, 30 seconds. Any hotter or longer and jarred garlic turns bitter."},
+ {t:"Sauce it",b:"Add {Bachan's Japanese BBQ sauce} and toss 1 minute until the beef is glossy. Taste before adding {soy sauce}; Bachan's is already salty.",m:1},
+ {t:"Fold in the broccoli",b:"Off the heat, fold the roasted broccoli through the beef and scatter {sesame seeds} over the top."},
+ {t:"Rice and cool",b:"Microwave {brown rice}, fluff it with a fork, divide it into the containers, then spoon the beef and broccoli over it."}],
+ portion:"Rice on the bottom, glazed beef and broccoli evenly divided over it.",
+ side:"None needed.",
+ tips:"Draining the fat and measuring the Bachan's are the two levers. Plenty of broccoli lets you keep the beef portion moderate and still eat big.",
+ reheat:"Microwave 1 1/2 to 2 minutes. Stir after heating so the sauce spreads through the rice.",
+ griddle:"Griddle at 400°F for the beef, but keep a spoonful of the drippings for the garlic step since the rest drains away."},
+
+{id:12,name:"Beef Burrito Skillet",protein:"Ground beef",tool:"One skillet",active:18,total:25,base:1.5,yld:.70,effort:1,tags:["one pan","rice"],
+ blurb:"Everything in a burrito except the tortilla. One pan, and it scales huge.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground beef",note:"85/15",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:2,u:"tbsp",n:"taco seasoning"},
+ {q:1,u:"tsp",n:"cumin"},
+ {q:1,u:"tsp",n:"smoked paprika"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:3,u:"tbsp",n:"water"},
+ {q:3,u:"cup",n:"cilantro-lime rice",note:"prepared",g:"Base + veg"},
+ {q:1,u:"can",n:"black beans",note:"15 oz, drained and rinsed"},
+ {q:1,u:"can",n:"corn",note:"15 oz, drained"},
+ {q:4,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:1,u:"",n:"lime"},
+ {q:.5,u:"cup",n:"chunky salsa",g:"Side containers"},
+ {q:.5,u:"cup",n:"Mexican shredded cheese",note:"optional"},
+ {q:.25,u:"cup",n:"Kraft chipotle aioli",note:"optional"}],
+ steps:[
+ {t:"Brown the beef",b:"Heat a large skillet over medium-high. Add the beef with {kosher salt}, press it flat, and leave it 3 minutes before breaking it up. Cook 5-6 minutes more until it reads 160°F.",m:9,st:1,w:"{batches} That undisturbed first 3 minutes is where the crust forms."},
+ {t:"Drain, keep a tablespoon",b:"Tip off the excess fat, leaving about a tablespoon in the pan for the garlic and spices."},
+ {t:"Bloom garlic, then spices",b:"Reduce to medium-low. Stir {jarred minced garlic} 30 seconds in the reserved fat, then add {taco seasoning}, {cumin} and {smoked paprika} and stir 30 seconds more.",m:1},
+ {t:"Water turns it into sauce",b:"Pour in {water} and stir about 1 minute. The powder turns into a glaze that coats every crumble instead of sitting on top."},
+ {t:"Peppers in",b:"Raise the heat back to medium-high. Add {frozen fire-roasted peppers and onions} and cook 6-8 minutes uncovered until hot and browning at the edges.",m:7,st:1},
+ {t:"Beans and corn",b:"Stir in {black beans} and {corn} for the final 2 minutes, just to heat them through.",m:2},
+ {t:"Lime, then taste",b:"Squeeze the {lime} over the skillet and stir. Taste before salting, since salsa, cheese and aioli all add sodium later."},
+ {t:"Rice and cool",b:"Microwave {cilantro-lime rice}. Let the skillet stop steaming, then divide rice and beef mixture among the containers."}],
+ portion:"Rice on the bottom, the whole skillet mixture over the top, divided evenly.",
+ side:"Salsa, cheese and chipotle aioli all in side containers, added after reheating.",
+ tips:"The beans, corn and peppers carry the volume so you do not need a big beef portion. Draining higher-fat beef is the simplest way to lighten it.",
+ reheat:"Microwave 2 to 2 1/2 minutes, stirring once. Toppings after heating.",
+ griddle:"The best griddle recipe in the file. 400°F, beef on one half, peppers on the other, and you can run 4 lb in a single pass."},
+
+{id:13,name:"Greek Chicken Bowls",protein:"Chicken breast",tool:"Air fryer + oven",active:18,total:30,base:1.5,yld:.75,effort:2,tags:["air fryer","rice"],
+ blurb:"Lemon, oregano and feta. The brightest bowl here and the best cold.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken breast",note:"1-inch pieces",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning + marinade"},
+ {q:2,u:"tsp",n:"oregano"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:3,u:"tbsp",n:"olive oil"},
+ {q:2,u:"",n:"lemons",note:"one juiced into the marinade, one in wedges"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared",g:"Base + veg"},
+ {q:4,u:"cup",n:"frozen broccoli florets"},
+ {q:2,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:.75,u:"cup",n:"feta",note:"crumbled, about 3 tbsp per bowl",g:"Side containers"},
+ {q:.5,u:"cup",n:"plain Greek yogurt",note:"optional, thinned with lemon into a quick tzatziki"}],
+ steps:[
+ {t:"Marinate for 15 minutes",b:"Toss the chicken with {olive oil}, the juice of one {lemons|0.5}, {jarred minced garlic}, {oregano}, {garlic powder}, {kosher salt} and {black pepper}. Let it sit 15 minutes while the oven heats.",m:15,w:"Do not go past 30 minutes. Lemon juice starts breaking the surface down and the texture turns chalky."},
+ {t:"Roast the vegetables",b:"Oven to 425°F. Spread {frozen broccoli florets} and {frozen fire-roasted peppers and onions} on a sheet pan and roast 22-25 minutes.",m:24},
+ {t:"Air fry the chicken",b:"Single layer at 400°F for 10-12 minutes, shaking halfway, until 165°F. The marinade gives you browned edges fast.",m:11,w:"{batches}"},
+ {t:"Lemon while hot",b:"Squeeze the second {lemons|0.5} over the chicken the moment it comes out. Hot chicken absorbs it; cold chicken just gets wet.",w:"Keep a few wedges back for eating time. That is what keeps day four tasting like day one."},
+ {t:"Rice",b:"Microwave {brown rice} and divide it among the containers."},
+ {t:"Make the tzatziki",b:"Stir {plain Greek yogurt} with a squeeze of lemon and a pinch of oregano until it is spoonable. This goes in a side container."},
+ {t:"Cool, then pack",b:"Let everything stop steaming, then layer rice, chicken and vegetables."}],
+ portion:"Rice on the bottom, chicken and roasted vegetables over the top.",
+ side:"Feta and tzatziki in side containers. Feta goes rubbery if it gets microwaved.",
+ tips:"This is the one bowl that is genuinely good cold, which makes it the best pick for a day with no microwave access.",
+ reheat:"Microwave 1 1/2 to 2 minutes, or eat it cold. Feta, tzatziki and a lemon wedge after.",
+ griddle:"Griddle at 400°F works well since the marinade gives you a strong sear. 3-4 minutes per side."},
+
+{id:14,name:"Cheeseburger Bowls",protein:"Ground beef",tool:"Skillet + oven",active:18,total:30,base:1.5,yld:.70,effort:2,tags:["no rice"],
+ blurb:"Burger flavor, no bun. Sounds like a gimmick, eats like the best thing here.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground beef",note:"85/15",g:"Protein"},
+ {q:1.25,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:1,u:"tsp",n:"onion powder"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"smoked paprika"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:2.5,u:"lb",n:"sweet potatoes",note:"cut into fry-shaped batons",g:"Base + veg"},
+ {q:2,u:"tbsp",n:"olive oil"},
+ {q:3,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:.75,u:"cup",n:"three-cheese blend",note:"about 3 tbsp per bowl",g:"Side containers"},
+ {q:.33,u:"cup",n:"avocado oil mayo",g:"Burger sauce"},
+ {q:2,u:"tbsp",n:"chunky salsa",note:"stands in for ketchup and relish"},
+ {q:1,u:"tsp",n:"Frank's RedHot"},
+ {q:1,u:"tsp",n:"balsamic vinegar",note:"adds the tang a burger needs"}],
+ steps:[
+ {t:"Cut sweet potato fries",b:"Cut {sweet potatoes} into batons about the thickness of your finger. Fry shapes crisp better than cubes and make the whole bowl read as a burger plate."},
+ {t:"Roast them",b:"Oven to 425°F. Toss with {olive oil} and {kosher salt|0.3}, spread on a sheet pan without crowding, and roast 28-32 minutes, flipping once.",m:30,w:"Crowding is the only way to ruin these. Use two pans if you scaled up."},
+ {t:"Mix the burger sauce",b:"Stir {avocado oil mayo}, {chunky salsa}, {Frank's RedHot} and {balsamic vinegar} together. Refrigerate it in a side container.",w:"The balsamic is doing the job pickles would. Do not skip it or the sauce tastes flat."},
+ {t:"Brown the beef hard",b:"Heat a large skillet over medium-high. Add the beef with the remaining {kosher salt|0.7}, {onion powder}, {garlic powder}, {smoked paprika} and {black pepper}. Press flat and leave it 4 minutes without touching it.",m:4,w:"{batches} Four minutes of contact is what builds the crust that makes this taste like a burger instead of taco meat."},
+ {t:"Break and finish",b:"Break the beef into crumbles and cook 4-5 minutes more to 160°F, then drain the excess fat.",m:5,st:1},
+ {t:"Griddled onions",b:"Add {frozen fire-roasted peppers and onions} to the same pan and cook 6-8 minutes uncovered until deeply browned and jammy.",m:7,st:1},
+ {t:"Cool, then pack",b:"Let it all stop steaming. Beef, sweet potato fries and onions in the main container."}],
+ portion:"Beef on one side, sweet potato fries on the other, onions over the beef.",
+ side:"Burger sauce and shredded cheese in side containers. Add both after reheating so the cheese melts on hot food.",
+ tips:"Shredded lettuce and diced tomato added at eating time turns this into something genuinely close to a burger. Neither survives storage, so keep them out of the prep.",
+ reheat:"Microwave 2 minutes. Cheese on immediately while hot, sauce after that.",
+ griddle:"Made for the griddle. 425°F, smash the beef flat and leave it, onions on the other half."},
+
+{id:15,name:"Balsamic Honey Chicken",protein:"Chicken breast",tool:"Skillet + oven",active:15,total:28,base:1.5,yld:.75,effort:1,tags:["rice"],
+ blurb:"Sweet, tangy and glossy. The most grown-up-tasting bowl in the rotation.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken breast",note:"1-inch pieces",g:"Protein"},
+ {q:.75,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:1,u:"tsp",n:"oregano"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:1,u:"tbsp",n:"olive oil"},
+ {q:6,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:.33,u:"cup",n:"balsamic vinegar",g:"Glaze"},
+ {q:2.5,u:"tbsp",n:"Kirkland honey"},
+ {q:1,u:"tbsp",n:"jarred minced garlic"},
+ {q:1,u:"tsp",n:"soy sauce",note:"for depth"}],
+ steps:[
+ {t:"Roast the broccoli",b:"Oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil for the broccoli} on a sheet pan and roast 20-24 minutes.",m:22},
+ {t:"Mix the glaze",b:"Stir {balsamic vinegar}, {Kirkland honey}, {jarred minced garlic} and {soy sauce} together in a cup and set it aside."},
+ {t:"Brown the chicken",b:"Heat {olive oil} in a large skillet over medium-high. Add the chicken with {kosher salt}, {oregano} and {black pepper}. Leave it 3 minutes, then stir and cook 4-5 minutes more to 165°F.",m:7,st:1,w:"{batches}"},
+ {t:"Reduce the glaze",b:"Move the chicken to a bowl. Pour the glaze into the empty pan over medium heat and let it bubble 2-3 minutes until it coats the back of a spoon.",m:3,w:"This is the step that makes the recipe. Raw balsamic is sharp; reduced balsamic is sweet and syrupy."},
+ {t:"Coat everything",b:"Return the chicken to the pan, add the roasted broccoli, and toss 30 seconds off the heat until glossy."},
+ {t:"Rice and cool",b:"Microwave {brown rice}, divide it among the containers, and top once the steam settles."}],
+ portion:"Rice on the bottom, glazed chicken and broccoli over the top.",
+ side:"None needed. A little crumbled feta on the side is excellent if you have it.",
+ tips:"Do not walk away during the reduction. It goes from syrup to burnt sugar in about 45 seconds.",
+ reheat:"Microwave 1 1/2 to 2 minutes. Stir after heating.",
+ griddle:"Griddle the chicken, but reduce the glaze in a small saucepan. A griddle cannot hold liquid."},
+
+{id:16,name:"Korean Beef Bowl",protein:"Ground beef",tool:"Skillet + oven",active:15,total:25,base:1.5,yld:.70,effort:1,tags:["rice"],
+ blurb:"Sweet, garlicky, faintly spicy. Fifteen minutes of active work for the best-tasting beef bowl here.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground beef",note:"85/15",g:"Protein"},
+ {q:.5,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:6,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil",note:"for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:.25,u:"cup",n:"soy sauce",g:"Sauce"},
+ {q:3,u:"tbsp",n:"Kirkland honey"},
+ {q:1,u:"tbsp",n:"jarred minced garlic"},
+ {q:2,u:"tbsp",n:"Bachan's Japanese BBQ sauce"},
+ {q:.5,u:"tsp",n:"crushed red pepper",note:"optional"},
+ {q:1,u:"tsp",n:"sesame seeds",note:"optional"}],
+ steps:[
+ {t:"Roast the broccoli",b:"Oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil} on a sheet pan and roast 20-24 minutes.",m:22},
+ {t:"Mix the sauce",b:"Stir {soy sauce}, {Kirkland honey}, {Bachan's Japanese BBQ sauce} and {crushed red pepper} together in a cup. Mixing ahead keeps the honey from scorching in the pan."},
+ {t:"Brown the beef",b:"Heat a large skillet over medium-high. Add the beef with {kosher salt} and {black pepper}, press flat, and leave it 3-4 minutes before breaking it up. Cook 4-5 minutes more to 160°F.",m:8,st:1,w:"{batches} Go light on the salt here. The sauce carries a quarter cup of soy sauce."},
+ {t:"Drain, keep a tablespoon",b:"Tip off the rendered fat, leaving about a tablespoon behind for the garlic."},
+ {t:"Bloom the garlic",b:"Reduce to medium-low. Add {jarred minced garlic} to the reserved fat and stir 30 seconds until fragrant.",m:1,w:"This 30 seconds is the difference between tasting garlic and tasting a jar."},
+ {t:"Reduce the sauce",b:"Pour the sauce in and simmer 2-3 minutes, stirring, until it thickens and coats the beef instead of pooling underneath.",m:3},
+ {t:"Finish",b:"Fold the roasted broccoli in off the heat and scatter {sesame seeds} over the top."},
+ {t:"Rice and cool",b:"Microwave {brown rice}, divide it into the containers, and spoon the beef and broccoli over it."}],
+ portion:"Rice on the bottom, beef and broccoli over the top so the sauce runs down into the rice.",
+ side:"None needed.",
+ tips:"Reducing the sauce for the full 2-3 minutes is what separates this from a soupy mess. Wait for it to gloss.",
+ reheat:"Microwave 2 minutes. Stir after heating.",
+ griddle:"Brown the beef on the griddle at 400°F, then reduce the sauce in a skillet and combine."},
+
+{id:17,name:"General Tsao Ground Chicken Bowls",protein:"Ground chicken",tool:"Skillet + oven",active:13,total:22,base:1.5,yld:.72,effort:1,tags:["rice"],
+ blurb:"General Tso flavor at half the effort. No cubing, no air fryer, no batching worries.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground chicken",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:6,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil",note:"for the broccoli"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:.33,u:"cup",n:"General Tsao Stir Fry Sauce",g:"Sauce"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:1,u:"tsp",n:"soy sauce",note:"optional"}],
+ steps:[
+ {t:"Roast the broccoli",b:"Oven to 425°F. Toss frozen {frozen broccoli florets} with {olive oil} on a sheet pan and roast 20-24 minutes.",m:22},
+ {t:"Salt the chicken",b:"Mix {kosher salt} and {black pepper} into the ground chicken with your hands before it hits the pan."},
+ {t:"Brown it dry",b:"Heat {avocado oil} in a large skillet over medium-high. Add the chicken, press flat, and leave it 3 minutes. Break it up and cook 4-5 minutes more until it reads 165°F and the pan looks dry.",m:8,st:1,w:"{batches} Ground chicken releases more water than any other meat here. Wait for the pan to go dry before the sauce goes in or you get soup."},
+ {t:"Bloom the garlic",b:"Reduce to medium-low. Push the chicken aside, add {jarred minced garlic} and stir 30 seconds.",m:1},
+ {t:"Sauce it",b:"Add {General Tsao Stir Fry Sauce} and toss 1 minute until the chicken is coated and glossy. Taste before adding {soy sauce}.",m:1},
+ {t:"Fold and cool",b:"Fold the roasted broccoli in off the heat. Microwave {brown rice} and divide it among the containers."}],
+ portion:"Rice on the bottom, sauced chicken and broccoli over the top.",
+ side:"None needed.",
+ tips:"This is the easiest version of the General Tso flavor. If you want the crisp-edged version, use the chicken breast recipe instead.",
+ reheat:"Microwave 1 1/2 to 2 minutes. Stir after heating.",
+ griddle:"400°F on the griddle, spread thin. Combine with sauce in a bowl afterward."},
+
+{id:18,name:"Chipotle Turkey Bowls",protein:"Ground turkey",tool:"Skillet",active:15,total:22,base:1.5,yld:.72,effort:1,tags:["one pan","rice"],
+ blurb:"Smoky, creamy and a little spicy. The aioli goes on the side and does a lot of work.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground turkey",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:1,u:"tbsp",n:"taco seasoning"},
+ {q:1.5,u:"tsp",n:"smoked paprika"},
+ {q:1,u:"tsp",n:"cumin"},
+ {q:.5,u:"tsp",n:"chili powder"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:3,u:"tbsp",n:"water"},
+ {q:1,u:"tbsp",n:"avocado oil"},
+ {q:3,u:"cup",n:"cilantro-lime rice",note:"prepared",g:"Base + veg"},
+ {q:1,u:"can",n:"black beans",note:"15 oz, drained and rinsed"},
+ {q:4,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:1,u:"",n:"lime"},
+ {q:.5,u:"cup",n:"Kraft chipotle aioli",note:"about 2 tbsp per bowl",g:"Side containers"},
+ {q:.5,u:"cup",n:"Mexican shredded cheese",note:"optional"}],
+ steps:[
+ {t:"Salt the turkey",b:"Work {kosher salt} into the raw turkey with your hands."},
+ {t:"Brown it",b:"Heat {avocado oil} in a large skillet over medium-high. Add the turkey, press flat, leave it 3 minutes, then break it up and cook 4-5 minutes more to 165°F.",m:8,st:1,w:"{batches} Turkey has no fat to work with, so the sear is the entire flavor base."},
+ {t:"Bloom garlic and spices",b:"Reduce to medium-low. Stir {jarred minced garlic} 30 seconds, then add {taco seasoning}, {smoked paprika}, {cumin} and {chili powder} and stir 30 seconds more.",m:1,w:"Smoked paprika is what makes this taste chipotle rather than generic taco. Let it toast."},
+ {t:"Water it into a glaze",b:"Add {water} and stir about 1 minute until the spices coat every crumble."},
+ {t:"Peppers in",b:"Raise the heat. Add {frozen fire-roasted peppers and onions} and cook 6-8 minutes uncovered until charred at the edges.",m:7,st:1},
+ {t:"Beans and lime",b:"Stir {black beans} in for the last 2 minutes, then squeeze the {lime} over the pan and stir.",m:2},
+ {t:"Rice and cool",b:"Microwave {cilantro-lime rice}. Let everything stop steaming before you build the containers."}],
+ portion:"Rice on the bottom, turkey, beans and peppers over the top.",
+ side:"Chipotle aioli in a side container, about 2 tbsp per bowl. Cheese separate too.",
+ tips:"The aioli is the calorie decision here. Two tablespoons is plenty when the meat is already smoky and spiced.",
+ reheat:"Microwave 2 minutes. Aioli and cheese after heating.",
+ griddle:"400°F, turkey on one side and peppers on the other. Handles 3 lb without batching."},
+
+{id:19,name:"Chile Lime Chicken & Sweet Potato",protein:"Chicken tenderloins",tool:"Air fryer + oven",active:18,total:35,base:1.5,yld:.75,effort:2,tags:["air fryer","no rice"],
+ blurb:"Bright, a little sweet, a little hot. The best no-rice bowl for hot weather.",
+ ing:[
+ {q:1.5,u:"lb",n:"chicken tenderloins",g:"Protein"},
+ {q:1,u:"tbsp",n:"chile lime seasoning",g:"Seasoning"},
+ {q:.75,u:"tsp",n:"kosher salt"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:.5,u:"tsp",n:"cumin"},
+ {q:2,u:"tbsp",n:"avocado oil"},
+ {q:2.5,u:"lb",n:"sweet potatoes",note:"3/4-inch cubes",g:"Base + veg"},
+ {q:1,u:"tbsp",n:"olive oil"},
+ {q:.5,u:"tsp",n:"smoked paprika"},
+ {q:6,u:"cup",n:"frozen broccoli florets"},
+ {q:2,u:"",n:"limes",note:"one juiced, one in wedges"},
+ {q:1,u:"tbsp",n:"Kirkland honey",g:"Finish"},
+ {q:.33,u:"cup",n:"chunky salsa",note:"optional",g:"Side containers"}],
+ steps:[
+ {t:"Roast the sweet potatoes",b:"Oven to 425°F. Toss {sweet potatoes} with {olive oil}, {smoked paprika} and {kosher salt|0.3}. Spread on a sheet pan and roast 28-32 minutes, flipping once.",m:30,w:"Give the cubes room. Crowded sweet potato steams and never caramelizes."},
+ {t:"Broccoli on a second pan",b:"Toss {frozen broccoli florets} with a little of the {avocado oil|0.3} and roast alongside for the last 20-24 minutes.",m:22},
+ {t:"Season the chicken",b:"Toss the tenderloins with the remaining {avocado oil|0.7}, {chile lime seasoning}, {garlic powder}, {cumin} and the remaining {kosher salt|0.7}."},
+ {t:"Air fry",b:"Single layer at 400°F for 10-13 minutes, flipping halfway, until 165°F.",m:12,w:"{batches}"},
+ {t:"Honey-lime finish",b:"Stir {Kirkland honey} with the juice of one {limes|0.5} until it loosens, then toss the hot chicken in it.",w:"Honey plus lime plus chile is the whole idea. The honey rounds off the salt in the seasoning blend."},
+ {t:"Cool, then pack",b:"Let everything stop steaming, then divide chicken, sweet potato and broccoli among the containers."}],
+ portion:"Divide chicken, sweet potato and broccoli evenly. No grain, so build the bowl bigger than usual.",
+ side:"Lime wedges and optional salsa in side containers.",
+ tips:"Squeeze a fresh lime wedge over the bowl at eating time. That is what keeps a no-grain bowl from tasting heavy by Thursday.",
+ reheat:"Microwave 2 minutes. Fresh lime after.",
+ griddle:"Griddle at 400°F crisps the sweet potato well if the oven is tied up."},
+
+{id:20,name:"Mediterranean Turkey Bowls",protein:"Ground turkey",tool:"Skillet + oven",active:15,total:25,base:1.5,yld:.72,effort:1,tags:["one pan","rice"],
+ blurb:"Lemon, oregano and feta over ground turkey. Light, fresh and almost no sauce.",
+ ing:[
+ {q:1.5,u:"lb",n:"ground turkey",g:"Protein"},
+ {q:1,u:"tsp",n:"kosher salt",g:"Seasoning"},
+ {q:2,u:"tsp",n:"oregano"},
+ {q:1,u:"tsp",n:"garlic powder"},
+ {q:1,u:"tsp",n:"onion powder"},
+ {q:.5,u:"tsp",n:"black pepper"},
+ {q:2,u:"tsp",n:"jarred minced garlic"},
+ {q:2,u:"tbsp",n:"olive oil"},
+ {q:4,u:"cup",n:"frozen broccoli florets",g:"Base + veg"},
+ {q:3,u:"cup",n:"frozen fire-roasted peppers and onions"},
+ {q:3,u:"cup",n:"brown rice",note:"prepared"},
+ {q:2,u:"",n:"lemons",note:"one juiced, one in wedges"},
+ {q:.75,u:"cup",n:"feta",note:"crumbled, about 3 tbsp per bowl",g:"Side containers"},
+ {q:.5,u:"cup",n:"plain Greek yogurt",note:"optional"}],
+ steps:[
+ {t:"Roast the vegetables",b:"Oven to 425°F. Spread {frozen broccoli florets} and {frozen fire-roasted peppers and onions} on a sheet pan with half the {olive oil|0.5} and roast 22-25 minutes.",m:24},
+ {t:"Season the turkey",b:"Mix {kosher salt}, {oregano}, {garlic powder}, {onion powder} and {black pepper} into the raw turkey."},
+ {t:"Brown it",b:"Heat the remaining {olive oil|0.5} in a large skillet over medium-high. Add the turkey, press flat, leave it 3 minutes, then break it up and cook 4-5 minutes more to 165°F.",m:8,st:1,w:"{batches}"},
+ {t:"Bloom the garlic",b:"Reduce to medium-low. Add {jarred minced garlic} and stir 30 seconds.",m:1},
+ {t:"Lemon while hot",b:"Squeeze the juice of one {lemons|0.5} over the skillet and stir. This is the only sauce in the bowl, so it has to go on while the pan is hot.",w:"Save the second lemon in wedges. A fresh squeeze at eating time is what makes this taste bright on day four."},
+ {t:"Combine and cool",b:"Fold the roasted vegetables into the turkey off the heat. Microwave {brown rice} and divide it among the containers."}],
+ portion:"Rice on the bottom, turkey and roasted vegetables over the top.",
+ side:"Feta and Greek yogurt in side containers. Feta turns rubbery in a microwave.",
+ tips:"The lowest-sauce bowl in the file, which makes it the leanest. The feta and lemon do all the work.",
+ reheat:"Microwave 1 1/2 to 2 minutes. Feta, yogurt and a lemon squeeze after.",
+ griddle:"400°F, turkey on one half and the frozen vegetables on the other."}
+];
+
+var PREP=[
+"Oven to 425°F first. It takes 12-15 minutes to come up to temperature and every sweet potato and broccoli step depends on it. Start it before you touch anything else.",
+"Sweet potatoes go in first. They need 28-32 minutes and nothing else should be waiting on them.",
+"Ground meat in the big skillet, chicken in the air fryer, both running while the oven works. Three heat sources at once is what gets you to 90 minutes instead of three hours.",
+"Broccoli and peppers ride the oven on a second sheet pan. Roasting from frozen at 425°F beats the skillet on flavor and it is completely hands-off.",
+"Microwave the rice pouches and drain the cans while everything else cooks. This is the only step that requires zero attention.",
+"Build containers only after the food stops steaming heavily. Sauces, dressings and cold toppings always go in side containers.",
+"Wash the skillet once, between the meat and the vegetables. Everything else can wait until the containers are closed."
+];
+var TEMPS=[["165°F","Chicken breast, tenderloins, ground chicken and ground turkey. Measure the thickest part."],
+["160°F","Ground beef. Lower than poultry, and overshooting it is why beef bowls go dry."],
+["425°F","Oven roasting for sweet potatoes, broccoli and peppers. Lower than that and they steam instead of browning."],
+["400°F","Air fryer for chicken. Preheat 3 minutes."]];
+var STORAGE=[["3-4 days","Refrigerate in shallow containers within two hours. Shallow matters: deep containers cool slowly in the middle."],
+["Freeze day 5 onward","Cool completely, freeze, thaw overnight in the fridge. Rice-based bowls freeze better than sweet potato ones."],
+["Sauces stay out","Every sauce, dressing and cold topping in its own container. This is the single biggest factor in whether day four tastes good."],
+["Citrus twice","Juice over hot food during cooking, wedges packed separately for eating time."],
+["Rice trick","Sprinkle 1-2 teaspoons of water over the rice before microwaving."]];
+var GRIDDLE=[["Browning meat","400°F. Spread thin, leave it alone 3-4 minutes, then break it up. Handles 3-4 lb in one pass with no batching."],
+["Vegetables","425°F for frozen peppers and onions. The flat surface evaporates water faster than any skillet."],
+["Sweet potatoes","400°F, single layer, flip every 5 minutes. A good backup when the oven is full."],
+["What it cannot do","Anything that needs to reduce or be tossed in sauce. No walls means liquid runs off. Griddle the food, then combine with sauce in a bowl."],
+["Preheat","Give it a full 8-10 minutes. Griddles read hot before the center actually is, and a cold middle gives you gray meat."],
+["Lost fat","Rendered beef fat drains into the trough. If a recipe blooms garlic in reserved fat, save a spoonful before it runs off."]];
+var WEEKS=[
+{n:"Week A",tag:"Balanced, one of each protein",items:[2,16,8]},
+{n:"Week B",tag:"Skillet only, fastest possible",items:[1,6,12]},
+{n:"Week C",tag:"Bright and light",items:[13,20,19]},
+{n:"Week D",tag:"Beef forward",items:[11,14,9]},
+{n:"Week E",tag:"Sweet and savory glazes",items:[4,10,15]},
+{n:"Week F",tag:"No rice at all",items:[8,14,19]}];
+
+/* ============================================================ STATE */
+var S={view:"list",tab:"recipes",filter:"all",id:null,lb:{},oz:6,checked:{},step:0};
+var timer=null,wakeLock=null,wakeOn=false;
+
+/* ============================================================ HELPERS */
+var FR={".25":"1/4",".33":"1/3",".5":"1/2",".66":"2/3",".67":"2/3",".75":"3/4",".13":"1/8",".38":"3/8",".63":"5/8",".88":"7/8",".2":"1/5",".4":"2/5",".6":"3/5",".8":"4/5",".17":"1/6",".83":"5/6"};
+function fmtQ(q){
+  if(q<=0) return "0";
+  if(q<.1) return (Math.round(q*100)/100).toString();
+  var whole=Math.floor(q+1e-9), rem=Math.round((q-whole)*100)/100;
+  if(rem<0.02) return String(whole);
+  if(rem>0.98) return String(whole+1);
+  var key=String(rem).replace(/^0/,"");
+  var f=FR[key];
+  if(!f){ var r8=Math.round(rem*8)/8; f=FR[String(r8).replace(/^0/,"")]; }
+  if(!f) return (Math.round(q*10)/10).toString();
+  return whole===0?f:whole+" "+f;
+}
+function unitOf(u,q){
+  if(!u) return "";
+  if(q>1&&(u==="cup"||u==="can"||u==="lb"?false:false)) return u;
+  if(q>1&&(u==="cup"||u==="can")) return u+"s";
+  return u;
+}
+function amtText(it,mult,frac){
+  var q=it.q*mult*(frac||1);
+  if(it.q==null) return it.n;
+  var u=unitOf(it.u,q);
+  return fmtQ(q)+(u?" "+u:"")+" "+it.n;
+}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function byId(i){for(var k=0;k<R.length;k++){if(R[k].id===i)return R[k]}return null}
+function pad(n){return n<10?"0"+n:""+n}
+function findIng(r,key){
+  var k=key.toLowerCase(),i,best=null;
+  for(i=0;i<r.ing.length;i++){ if(r.ing[i].n.toLowerCase()===k) return r.ing[i]; }
+  for(i=0;i<r.ing.length;i++){ if(r.ing[i].n.toLowerCase().indexOf(k)===0){best=r.ing[i];break;} }
+  if(best) return best;
+  for(i=0;i<r.ing.length;i++){ if(r.ing[i].n.toLowerCase().indexOf(k)>-1) return r.ing[i]; }
+  return null;
+}
+function getLb(r){ return S.lb[r.id]!=null?S.lb[r.id]:r.base; }
+function multOf(r){ return getLb(r)/r.base; }
+function containersOf(r){ return Math.max(1,Math.round(getLb(r)*16/S.oz)); }
+function batchText(r){
+  var lb=getLb(r), n=Math.ceil(lb/2);
+  if(n<=1) return "One batch is fine at this weight.";
+  return "At "+fmtQ(lb)+" lb, cook in "+n+" batches. ";
+}
+function fillTokens(r,txt){
+  var mult=multOf(r);
+  return esc(txt).replace(/\{([^}]+)\}/g,function(_,tok){
+    if(tok==="batches") return '<b class="amt">'+esc(batchText(r))+'</b>';
+    var parts=tok.split("|"), key=parts[0].trim(), frac=parts[1]?parseFloat(parts[1]):1;
+    var it=findIng(r,key);
+    if(!it) return esc(key);
+    return '<b class="amt">'+esc(amtText(it,mult,frac))+'</b>';
+  });
+}
+function timeOf(st,r){
+  if(!st.m) return 0;
+  if(!st.st) return st.m;
+  var m=multOf(r);
+  return Math.max(st.m,Math.round(st.m*(0.55+0.45*m)));
+}
+
+/* ============================================================ RENDER */
+function render(){
+  var a=document.getElementById("app");
+  if(S.view==="cook") a.innerHTML=viewCook();
+  else if(S.view==="recipe") a.innerHTML=viewRecipe();
+  else a.innerHTML=viewList();
+  if(S.view!=="cook") window.scrollTo(0,0);
+  paintTimer();
+}
+function header(){
+  return '<div class="top"><div class="top-row"><div>'+
+   '<div class="brand">SUNDAY <span>PREP</span></div>'+
+   '<div class="sub">20 bowls / scaled to your meat</div></div>'+
+   '<button class="awake" data-on="'+(wakeOn?1:0)+'" data-act="wake">'+(wakeOn?"Screen on":"Keep awake")+'</button></div></div>';
+}
+var FILTERS=[["all","All 20"],["Chicken breast","Chicken"],["Ground turkey","Turkey"],["Ground beef","Beef"],["Ground chicken","Gr. chicken"],["one pan","One pan"],["no rice","No rice"],["easiest","Easiest"]];
+function matches(r,f){
+  if(f==="all") return true;
+  if(f==="easiest") return r.effort===1;
+  if(f==="Chicken breast") return r.protein==="Chicken breast"||r.protein==="Chicken tenderloins";
+  if(f==="one pan"||f==="no rice") return r.tags.indexOf(f)>-1;
+  return r.protein===f;
+}
+function viewList(){
+  var h=header();
+  h+='<div class="tabs" role="tablist">'+tabBtn("recipes","Recipes")+tabBtn("plan","Prep plan")+tabBtn("weeks","Weeks")+'</div><div class="pad">';
+  if(S.tab==="recipes"){
+    h+='<p class="lead">Every recipe scales from the weight of meat you actually bought. Enter it once and the rest of the ingredients follow.</p>';
+    h+='<div class="filters">';
+    for(var f=0;f<FILTERS.length;f++) h+='<button class="chip" data-act="filter" data-f="'+esc(FILTERS[f][0])+'" aria-pressed="'+(S.filter===FILTERS[f][0])+'">'+FILTERS[f][1]+'</button>';
+    h+='</div>';
+    var shown=0;
+    for(var i=0;i<R.length;i++){
+      var r=R[i]; if(!matches(r,S.filter)) continue; shown++;
+      h+='<button class="rcard" data-act="open" data-id="'+r.id+'" data-e="'+(r.effort===1?1:0)+'">'+
+        '<span class="rnum">'+pad(r.id)+'</span><span class="rbody">'+
+        '<span class="rname">'+esc(r.name)+'</span>'+
+        '<span class="rmeta">'+esc(r.protein)+'<span class="dot">/</span>'+r.total+' min<span class="dot">/</span>'+esc(r.tool)+'</span></span></button>';
+    }
+    if(!shown) h+='<div class="panel"><p>Nothing matches that filter yet. Tap All 20 to reset.</p></div>';
+  } else if(S.tab==="plan"){
+    h+='<h2 class="sec">The 90-minute run</h2><ol class="step-list">';
+    for(var j=0;j<PREP.length;j++) h+='<li><span class="n">'+pad(j+1)+'</span><span>'+esc(PREP[j])+'</span></li>';
+    h+='</ol>';
+    h+='<h2 class="sec" style="margin-top:28px">Temperatures</h2><ul class="pill-list">';
+    for(var t=0;t<TEMPS.length;t++) h+='<li><b>'+esc(TEMPS[t][0])+'</b><br>'+esc(TEMPS[t][1])+'</li>';
+    h+='</ul><h2 class="sec">Using the griddle</h2><ul class="pill-list">';
+    for(var g=0;g<GRIDDLE.length;g++) h+='<li><b>'+esc(GRIDDLE[g][0])+'</b><br>'+esc(GRIDDLE[g][1])+'</li>';
+    h+='</ul><h2 class="sec">Storage</h2><ul class="pill-list">';
+    for(var s=0;s<STORAGE.length;s++) h+='<li><b>'+esc(STORAGE[s][0])+'</b><br>'+esc(STORAGE[s][1])+'</li>';
+    h+='</ul>';
+  } else {
+    h+='<p class="lead">Six combinations so you are not deciding from scratch. Pick one line, scale each recipe to the packs you bought, and cook all three in one session.</p>';
+    for(var w=0;w<WEEKS.length;w++){
+      var wk=WEEKS[w];
+      h+='<div class="panel"><b>'+esc(wk.n)+' &middot; '+esc(wk.tag)+'</b>';
+      for(var q2=0;q2<wk.items.length;q2++){ var rr=byId(wk.items[q2]);
+        h+='<p style="margin:6px 0 0"><button data-act="open" data-id="'+rr.id+'" style="text-align:left;text-decoration:underline;text-underline-offset:3px">'+esc(rr.name)+'</button></p>'; }
+      h+='</div>';
+    }
+  }
+  h+='<div class="foot">Cook times are ranges. Confirm doneness by internal temperature, not the clock.</div></div>';
+  return h;
+}
+function tabBtn(id,label){return '<button class="tab" role="tab" aria-selected="'+(S.tab===id)+'" data-act="tab" data-tab="'+id+'">'+label+'</button>';}
+
+function scalerHTML(r){
+  var lb=getLb(r);
+  var pres=[1,1.5,2,2.5,3,4];
+  var h='<div class="scaler"><div class="sc-lab">How much '+esc(r.ing[0].n)+' do you have?</div>'+
+   '<div class="sc-row"><button class="sc-btn" data-act="lb" data-d="-0.25" aria-label="Less">&minus;</button>'+
+   '<span class="sc-in"><input id="lbin" type="number" inputmode="decimal" step="0.25" min="0.5" max="8" value="'+lb+'"><div class="sc-unit">pounds, raw</div></span>'+
+   '<button class="sc-btn" data-act="lb" data-d="0.25" aria-label="More">+</button></div>'+
+   '<div class="presets">';
+  for(var i=0;i<pres.length;i++) h+='<button class="pre" data-act="setlb" data-v="'+pres[i]+'" aria-pressed="'+(Math.abs(lb-pres[i])<.01)+'">'+pres[i]+' lb</button>';
+  h+='</div><div class="portsel">'+
+   '<button data-act="oz" data-v="5" aria-pressed="'+(S.oz===5)+'">5 oz bowls</button>'+
+   '<button data-act="oz" data-v="6" aria-pressed="'+(S.oz===6)+'">6 oz bowls</button>'+
+   '<button data-act="oz" data-v="8" aria-pressed="'+(S.oz===8)+'">8 oz bowls</button></div>'+
+   '<div id="readout">'+readoutHTML(r)+'</div></div>';
+  return h;
+}
+function readoutHTML(r){
+  var lb=getLb(r), c=containersOf(r), cooked=Math.round(lb*16*r.yld/c*10)/10;
+  return '<div class="readout"><span class="ro-big">'+c+' bowl'+(c===1?"":"s")+'</span>'+
+   '<span class="ro-sm">'+S.oz+' oz raw per bowl, about '+cooked+' oz cooked protein each.<br>Everything below is scaled to '+fmtQ(lb)+' lb.</span></div>';
+}
+function ingHTML(r){
+  var mult=multOf(r),h="",lastG=null;
+  for(var i=0;i<r.ing.length;i++){
+    var it=r.ing[i];
+    if(it.g&&it.g!==lastG){ h+='<li class="grp">'+esc(it.g)+'</li>'; lastG=it.g; }
+    var on=S.checked[r.id+"-"+i]?1:0;
+    var q=it.q!=null?it.q*mult:null;
+    var qt=q!=null?fmtQ(q)+(unitOf(it.u,q)?" "+unitOf(it.u,q):""):"";
+    h+='<li><button class="ing-btn" data-on="'+on+'" data-act="check" data-i="'+i+'">'+
+     '<span class="box">&#10003;</span><span class="ing-txt">'+
+     (qt?'<span class="qty">'+esc(qt)+'</span> ':'')+esc(it.n)+
+     (it.note?'<br><span class="note">'+esc(it.note)+'</span>':'')+'</span></button></li>';
+  }
+  return h;
+}
+function viewRecipe(){
+  var r=byId(S.id);
+  var h='<div class="top"><button class="back" data-act="home">&larr; All recipes</button>'+
+   '<div class="sub" style="margin-top:10px">Recipe '+pad(r.id)+'</div></div><div class="pad">';
+  h+='<h1 class="title">'+esc(r.name)+'</h1><p class="blurb">'+esc(r.blurb)+'</p>';
+  h+='<div class="facts"><span class="fact">'+r.steps.length+' steps</span><span class="fact">'+r.active+' min active</span><span class="fact">'+r.total+' min total</span><span class="fact">'+esc(r.tool)+'</span></div>';
+  h+=scalerHTML(r);
+  h+='<h2 class="sec">Ingredients</h2><ul class="ing" id="inglist">'+ingHTML(r)+'</ul>';
+  h+='<button class="cta" data-act="cook">Start cooking &rarr;</button>';
+  h+='<h2 class="sec">Portion</h2><div class="panel"><p>'+esc(r.portion)+'</p><p style="color:var(--muted)">'+esc(r.side)+'</p></div>';
+  h+='<h2 class="sec">Notes</h2><div class="panel"><p>'+esc(r.tips)+'</p></div>';
+  h+='<div class="panel grid"><b>On the griddle</b><p>'+esc(r.griddle)+'</p></div>';
+  h+='<div class="panel hot"><b>Reheat</b><p>'+esc(r.reheat)+'</p></div>';
+  h+='</div>';
+  return h;
+}
+function viewCook(){
+  var r=byId(S.id),n=r.steps.length,done=S.step>=n;
+  var h='<div class="cook"><div class="cook-top"><div class="cook-head">'+
+   '<span class="cook-name">'+esc(r.name)+'</span>'+
+   '<span style="font-family:var(--mono);font-size:12px;opacity:.7;white-space:nowrap">'+fmtQ(getLb(r))+' lb / '+Math.min(S.step+1,n)+'-'+n+'</span>'+
+   '<button class="close" data-act="exit" aria-label="Close">&times;</button></div><div class="rail">';
+  for(var i=0;i<n;i++){
+    var st=S.step>i?"done":(S.step===i?"now":"todo");
+    h+='<button class="seg" data-s="'+st+'" data-act="jump" data-i="'+i+'" aria-label="Step '+(i+1)+'"></button>';
+  }
+  h+='</div></div><div class="stage">';
+  if(done){
+    h+='<div class="fin"><div class="big">Done.</div>'+
+     '<p class="stext" style="color:var(--muted)">'+containersOf(r)+' bowls. Let it stop steaming, then pack.</p></div>'+
+     '<div class="panel" style="margin-top:22px"><b>Each container</b><p>'+esc(r.portion)+'</p></div>'+
+     '<div class="panel hot"><b>Keep separate</b><p>'+esc(r.side)+'</p></div>'+
+     '<div class="panel"><b>Reheat</b><p>'+esc(r.reheat)+'</p></div>';
+  } else {
+    var s=r.steps[S.step], mm=timeOf(s,r);
+    h+='<div class="eyebrow">Step '+pad(S.step+1)+'</div><h2 class="stitle">'+esc(s.t)+'</h2>'+
+     '<p class="stext">'+fillTokens(r,s.b)+'</p>';
+    if(s.w) h+='<div class="watch"><b>Watch out</b>'+fillTokens(r,s.w)+'</div>';
+    if(mm) h+='<button class="timer-btn" data-act="timer" data-m="'+mm+'" data-lab="'+esc(s.t)+'">&#9201; Start '+mm+' min timer</button>';
+  }
+  h+='</div><div class="ticker" id="ticker" hidden><span class="t-lab" id="t-lab"></span><span class="t-val" id="t-val"></span><button class="t-x" data-act="stoptimer" aria-label="Stop">&times;</button></div>'+
+   '<div class="nav"><button class="prev" data-act="prev"'+(S.step===0?' disabled style="opacity:.45"':'')+'>Back</button>'+
+   (done?'<button class="next done" data-act="exit">Finish</button>':'<button class="next" data-act="next">'+(S.step===n-1?"Last step done":"Done, next")+'</button>')+
+   '</div></div>';
+  return h;
+}
+function refreshScale(){
+  var r=byId(S.id); if(!r) return;
+  var ro=document.getElementById("readout"); if(ro) ro.innerHTML=readoutHTML(r);
+  var il=document.getElementById("inglist"); if(il) il.innerHTML=ingHTML(r);
+  var pres=document.querySelectorAll(".pre");
+  for(var i=0;i<pres.length;i++) pres[i].setAttribute("aria-pressed",Math.abs(getLb(r)-parseFloat(pres[i].getAttribute("data-v")))<.01);
+}
+
+/* ============================================================ TIMER */
+function startTimer(min,label){
+  stopTimer(true);
+  timer={label:label,end:Date.now()+min*60000,ringing:false};
+  timer.iv=setInterval(tick,250); paintTimer();
+}
+function stopTimer(quiet){ if(timer){clearInterval(timer.iv);timer=null;} if(!quiet) paintTimer(); }
+function tick(){
+  if(!timer) return;
+  if(timer.end-Date.now()<=0&&!timer.ringing){
+    timer.ringing=true;
+    try{ if(navigator.vibrate) navigator.vibrate([260,120,260,120,400]); }catch(e){}
+    beep();
+  }
+  paintTimer();
+}
+function beep(){
+  try{
+    var C=window.AudioContext||window.webkitAudioContext; if(!C) return;
+    var ctx=new C(),o=ctx.createOscillator(),g=ctx.createGain();
+    o.type="sine";o.frequency.value=880;o.connect(g);g.connect(ctx.destination);
+    g.gain.setValueAtTime(.0001,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.25,ctx.currentTime+.02);
+    g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+1.1);
+    o.start();o.stop(ctx.currentTime+1.2);
+  }catch(e){}
+}
+function paintTimer(){
+  var el=document.getElementById("ticker"); if(!el) return;
+  if(!timer){el.hidden=true;return;}
+  el.hidden=false;
+  var left=Math.max(0,timer.end-Date.now());
+  document.getElementById("t-lab").textContent=timer.ringing?"Time is up":timer.label;
+  document.getElementById("t-val").textContent=Math.floor(left/60000)+":"+pad(Math.floor((left%60000)/1000));
+  el.className="ticker"+(timer.ringing?" ring":"");
+}
+/* ============================================================ WAKE */
+function toggleWake(){
+  if(wakeOn){wakeOn=false;if(wakeLock){try{wakeLock.release();}catch(e){}wakeLock=null;}render();return;}
+  if(!("wakeLock" in navigator)){alert("This browser will not hold the screen awake. Set Auto-Lock to Never in Settings, Display & Brightness while you cook.");return;}
+  navigator.wakeLock.request("screen").then(function(w){wakeLock=w;wakeOn=true;render();}).catch(function(){wakeOn=false;render();});
+}
+document.addEventListener("visibilitychange",function(){
+  if(wakeOn&&document.visibilityState==="visible"&&"wakeLock" in navigator)
+    navigator.wakeLock.request("screen").then(function(w){wakeLock=w;}).catch(function(){});
+});
+/* ============================================================ EVENTS */
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]"); if(!b) return;
+  var act=b.getAttribute("data-act"),r=byId(S.id);
+  if(act==="tab"){S.tab=b.getAttribute("data-tab");render();}
+  else if(act==="filter"){S.filter=b.getAttribute("data-f");render();}
+  else if(act==="open"){S.id=+b.getAttribute("data-id");S.view="recipe";S.step=0;render();}
+  else if(act==="home"){S.view="list";render();}
+  else if(act==="lb"){
+    var v=Math.round((getLb(r)+parseFloat(b.getAttribute("data-d")))*4)/4;
+    S.lb[r.id]=Math.min(8,Math.max(.5,v));
+    document.getElementById("lbin").value=S.lb[r.id];refreshScale();
+  }
+  else if(act==="setlb"){S.lb[r.id]=parseFloat(b.getAttribute("data-v"));document.getElementById("lbin").value=S.lb[r.id];refreshScale();}
+  else if(act==="oz"){S.oz=+b.getAttribute("data-v");
+    var os=document.querySelectorAll(".portsel button");
+    for(var i=0;i<os.length;i++) os[i].setAttribute("aria-pressed",+os[i].getAttribute("data-v")===S.oz);
+    refreshScale();}
+  else if(act==="check"){var k=S.id+"-"+b.getAttribute("data-i");S.checked[k]=!S.checked[k];b.setAttribute("data-on",S.checked[k]?1:0);}
+  else if(act==="cook"){S.view="cook";S.step=0;render();}
+  else if(act==="exit"){S.view="recipe";stopTimer(true);render();}
+  else if(act==="next"){S.step++;render();}
+  else if(act==="prev"){if(S.step>0){S.step--;render();}}
+  else if(act==="jump"){S.step=+b.getAttribute("data-i");render();}
+  else if(act==="timer"){startTimer(+b.getAttribute("data-m"),b.getAttribute("data-lab"));}
+  else if(act==="stoptimer"){stopTimer();}
+  else if(act==="wake"){toggleWake();}
+});
+document.addEventListener("input",function(e){
+  if(e.target.id!=="lbin") return;
+  var v=parseFloat(e.target.value);
+  if(isNaN(v)||v<=0) return;
+  S.lb[S.id]=Math.min(8,Math.max(.25,v));
+  refreshScale();
+});
+document.addEventListener("keydown",function(e){
+  if(S.view!=="cook") return;
+  if(e.key==="ArrowRight"){S.step++;render();}
+  if(e.key==="ArrowLeft"&&S.step>0){S.step--;render();}
+  if(e.key==="Escape"){S.view="recipe";render();}
+});
+render();
+</script>
+</body>
+</html>
