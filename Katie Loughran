@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Call prep for Katie's Kia Carnival Hybrid deal - questions, payment calculator, lease vs finance, trade value.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+html{color-scheme:light dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px system-ui,-apple-system,sans-serif;background:#F2F4F7}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Katie — Carnival Call Sheet</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --surface2:#E9EDF3; --sunk:#DFE5EC;
+  --ink:#0F1C2E; --muted:#56687F; --line:#D4DCE6;
+  --navy:#1B3A5C; --brass:#8A5D14; --good:#15705E; --warn:#A33B2A;
+  --goodbg:#E2F0EB; --warnbg:#F7E7E3; --brassbg:#F6EEDC;
+  --shadow:0 1px 2px rgba(15,28,46,.06),0 4px 14px rgba(15,28,46,.05);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C141F; --surface:#14202E; --surface2:#1C2A3A; --sunk:#0F1926;
+  --ink:#E6EDF5; --muted:#93A6BC; --line:#263647;
+  --navy:#6BA6DB; --brass:#D9A441; --good:#3FB89B; --warn:#E8876B;
+  --goodbg:#10312C; --warnbg:#33201B; --brassbg:#2C2415;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --bg:#0C141F; --surface:#14202E; --surface2:#1C2A3A; --sunk:#0F1926;
+  --ink:#E6EDF5; --muted:#93A6BC; --line:#263647;
+  --navy:#6BA6DB; --brass:#D9A441; --good:#3FB89B; --warn:#E8876B;
+  --goodbg:#10312C; --warnbg:#33201B; --brassbg:#2C2415;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+h1,h2,h3{font-family:Archivo,system-ui,sans-serif;text-wrap:balance;margin:0}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);
+  border-bottom:1px solid var(--line);margin-inline:-16px;padding:10px 16px 9px;
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+header.top .nm{font-family:Archivo;font-weight:700;font-size:15px;letter-spacing:-.01em}
+header.top .sub{font-size:11.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+.hero{padding-block:22px 6px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:600}
+.hero h1{font-size:27px;line-height:1.14;font-weight:700;margin-top:8px;letter-spacing:-.02em}
+.hero p{color:var(--muted);margin:10px 0 0;font-size:14.5px}
+
+section{margin-top:30px}
+h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;
+  padding-bottom:7px;border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;gap:8px;align-items:center}
+h2 .n{font-family:"IBM Plex Mono";color:var(--brass);font-size:11px}
+h3{font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em}
+p{margin:0 0 10px}
+.lede{color:var(--muted);font-size:14px}
+
+/* questions */
+.q{display:flex;gap:11px;padding:11px 13px;background:var(--surface);border:1px solid var(--line);
+  border-radius:9px;margin-bottom:8px;cursor:pointer;box-shadow:var(--shadow);align-items:flex-start}
+.q input{margin:2px 0 0;width:17px;height:17px;flex:none;accent-color:var(--navy);cursor:pointer}
+.q .qt{font-weight:600;font-size:14.5px;display:block}
+.q .qw{color:var(--muted);font-size:13px;display:block;margin-top:2px}
+.q.key{border-color:var(--brass);background:var(--brassbg)}
+.q.done .qt{text-decoration:line-through;opacity:.5}
+.q.done .qw{opacity:.5}
+.tagk{font-family:"IBM Plex Mono";font-size:9.5px;letter-spacing:.08em;color:var(--brass);
+  border:1px solid var(--brass);border-radius:3px;padding:1px 4px;vertical-align:1px;margin-left:6px}
+.q .row{display:flex;gap:11px;align-items:flex-start}
+.q textarea{width:100%;margin-top:9px;background:var(--sunk);color:var(--ink);
+  border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-family:"IBM Plex Sans";
+  font-size:14px;line-height:1.45;resize:none;overflow:hidden;min-height:38px}
+.q textarea::placeholder{color:var(--muted);opacity:.7}
+.q textarea:focus{outline:2px solid var(--brass);outline-offset:1px;border-color:var(--brass)}
+.qbar{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.qbar button{font-family:"IBM Plex Sans";font-size:13px;font-weight:600;padding:9px 15px;
+  border-radius:7px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);cursor:pointer}
+.qbar button:hover{border-color:var(--navy)}
+.qbar button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.qbar .st{font-size:12.5px;color:var(--muted)}
+
+/* calculator */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+.ctl{margin-bottom:15px}
+.ctl>label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;margin-bottom:7px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1 1 0;min-width:76px;font-family:"IBM Plex Sans";font-size:13.5px;font-weight:500;
+  padding:9px 6px;border-radius:7px;border:1px solid var(--line);background:var(--surface2);
+  color:var(--ink);cursor:pointer;transition:.12s}
+.seg button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--surface);font-weight:600}
+:root[data-theme="dark"] .seg button[aria-pressed="true"],
+:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0C141F}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .seg button[aria-pressed="true"]{color:#fff}}
+.seg button:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.slrow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.slrow .v{font-family:"IBM Plex Mono";font-weight:600;font-size:19px;color:var(--navy)}
+input[type=range]{width:100%;accent-color:var(--navy);height:26px}
+.ticks{display:flex;justify-content:space-between;font-family:"IBM Plex Mono";font-size:10.5px;color:var(--muted);margin-top:-2px}
+
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.o{background:var(--sunk);border:1px solid var(--line);border-radius:9px;padding:11px 9px;text-align:center}
+.o.win{border-color:var(--good);background:var(--goodbg)}
+.o .ol{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.o .ov{font-family:"IBM Plex Mono";font-size:21px;font-weight:600;margin-top:4px;letter-spacing:-.02em}
+.o .os{font-family:"IBM Plex Mono";font-size:10.5px;color:var(--muted);margin-top:3px}
+.note{margin-top:11px;font-size:12.5px;color:var(--muted);padding-top:10px;border-top:1px solid var(--line)}
+.flag{margin-top:10px;background:var(--warnbg);border:1px solid var(--warn);border-radius:8px;
+  padding:9px 11px;font-size:12.5px;color:var(--ink)}
+.flag b{color:var(--warn)}
+
+/* tables */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);
+  border-radius:10px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:9px 11px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:"IBM Plex Sans";font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;background:var(--surface2)}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono";font-variant-numeric:tabular-nums}
+td.pay{font-weight:600;color:var(--ink)}
+tr.hi td{background:var(--goodbg)}
+tr.hi td.pay{color:var(--good)}
+caption{caption-side:bottom;text-align:left;padding:9px 11px;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
+
+.cards{display:grid;gap:10px}
+@media(min-width:560px){.cards.two{grid-template-columns:1fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;box-shadow:var(--shadow)}
+.card.pick{border-color:var(--good);border-width:2px}
+.card .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  color:var(--good);display:block;margin-bottom:5px}
+.card .tag.alt{color:var(--brass)}
+.card .px{font-family:"IBM Plex Mono";font-size:13px;color:var(--muted);margin-bottom:9px}
+.card ul{margin:0;padding-left:17px;font-size:13.5px}
+.card li{margin-bottom:4px}
+.card li::marker{color:var(--muted)}
+
+dl.kv{margin:0;display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13.5px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;text-align:right;font-family:"IBM Plex Mono";font-variant-numeric:tabular-nums;font-weight:500}
+
+.say{background:var(--surface);border-left:3px solid var(--navy);border-radius:0 9px 9px 0;
+  padding:12px 14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.say .lbl{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:5px}
+.say p{margin:0;font-size:14.5px}
+.say p+p{margin-top:8px}
+.say.obj{border-left-color:var(--warn)}
+
+.bar{display:flex;height:9px;border-radius:5px;overflow:hidden;margin:12px 0 7px;background:var(--sunk)}
+.bar i{display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:9px;height:9px;border-radius:2px;flex:none}
+
+footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+footer p{margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="nm">Katie — Carnival Hybrid</span>
+  <span class="sub">Call sheet · Elite Auto</span>
+</header>
+
+<div class="wrap">
+
+<div class="hero">
+  <div class="eyebrow">Prep · 2026 Carnival Hybrid · NJ</div>
+  <h1>She already made your lease argument for you.</h1>
+  <p>Her form: <em>"I don't want a minivan forever, likely just the next few years while we have the two little ones in rear facing car seats."</em> That's a stated three-year horizon in her own words. The obstacle isn't Katie — it's her husband, who "hates doing leases." Everything below is built to get him to yes.</p>
+</div>
+
+<section>
+  <h2><span class="n">01</span> Ask these first</h2>
+  <p class="lede">The top three change which structure you quote. Type her answers straight in — they save on this device automatically.</p>
+  <div id="qs"></div>
+  <div class="qbar">
+    <button type="button" id="copyQ">Copy all answers</button>
+    <button type="button" id="clearQ">Clear</button>
+    <span class="st" id="qstat"></span>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">02</span> Payment calculator</h2>
+  <p class="lede">Live. Everything includes NJ tax (6.625%), doc fee, title/reg, and acquisition fee on the lease.</p>
+  <div class="calc">
+    <div class="ctl">
+      <label id="l-trim">Trim</label>
+      <div class="seg" role="group" aria-labelledby="l-trim" id="segTrim">
+        <button type="button" data-v="LXS" aria-pressed="true">LXS — base</button>
+        <button type="button" data-v="EX" aria-pressed="false">EX — mid</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label id="l-mi">Lease mileage / year</label>
+      <div class="seg" role="group" aria-labelledby="l-mi" id="segMi">
+        <button type="button" data-v="10000" aria-pressed="true">10,000</button>
+        <button type="button" data-v="15000" aria-pressed="false">15,000</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label id="l-tr">RAV4 trade</label>
+      <div class="seg" role="group" aria-labelledby="l-tr" id="segTr">
+        <button type="button" data-v="1" aria-pressed="true">Into the deal</button>
+        <button type="button" data-v="0" aria-pressed="false">Sell separately</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <div class="slrow">
+        <label for="down" style="margin:0">Cash down (beyond trade)</label>
+        <span class="v mono" id="downV">$3,000</span>
+      </div>
+      <input type="range" id="down" min="0" max="20000" step="500" value="3000">
+      <div class="ticks"><span>$0</span><span>$5k</span><span>$10k</span><span>$15k</span><span>$20k</span></div>
+    </div>
+    <div class="out">
+      <div class="o" id="oL"><span class="ol">Lease 36</span><div class="ov mono" id="vL">—</div><div class="os mono" id="sL">—</div></div>
+      <div class="o" id="oF48"><span class="ol">Finance 48</span><div class="ov mono" id="vF48">—</div><div class="os mono" id="sF48">—</div></div>
+      <div class="o" id="oF60"><span class="ol">Finance 60</span><div class="ov mono" id="vF60">—</div><div class="os mono" id="sF60">—</div></div>
+    </div>
+    <div class="note" id="cnote"></div>
+    <div class="flag" id="cflag" hidden></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">03</span> Lease — 36 months</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Trim / miles</th><th>$0 down</th><th>$3,000</th><th>$5,000</th><th>Residual</th></tr></thead>
+      <tbody id="tLease"></tbody>
+      <caption>Drive-off = cash down + first payment + title/reg. MF .00218 (≈5.23% APR equivalent). Lease cash $1,900 LXS / $1,960 EX applied. Excess miles $0.20.</caption>
+    </table>
+  </div>
+  <p class="lede" style="margin-top:11px">Her stated ceiling was $500 and her stated mileage 10,000. <strong>LXS at 10k with $3,000 down lands at $452</strong> — under budget with room. The 15k column is your hedge if question 2 comes back higher: it still prints $500 and kills all overage risk.</p>
+</section>
+
+<section>
+  <h2><span class="n">04</span> Finance — trade applied</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Trim / term</th><th>$5k</th><th>$10k</th><th>$15k</th><th>$20k</th></tr></thead>
+      <tbody id="tFin"></tbody>
+      <caption>Cash down is <em>in addition to</em> the $17,500 trade. NJ credits sales tax on the trade, so it's worth $18,659 effective. 1.9% is 48-month only and tier-1 only.</caption>
+    </table>
+  </div>
+  <div class="flag" style="border-color:var(--brass);background:var(--brassbg);margin-top:11px">
+    <b>Watch this gap.</b> Her form caps cash down at <strong>$5,000</strong>, not $20,000. The $10k–$20k columns only happen if she's willing to go past what she wrote. Question 1 exists to find out.
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">05</span> The RAV4</h2>
+  <div class="cards two">
+    <div class="card">
+      <h3>Expected trade value</h3>
+      <div class="px">2021 RAV4 XLE · 83,270 mi · no accidents</div>
+      <dl class="kv">
+        <dt>Dealer trade range</dt><dd>$16,500–$18,500</dd>
+        <dt>Working number</dt><dd>$17,500</dd>
+        <dt>NJ tax credit</dt><dd>+$1,159</dd>
+        <dt>Effective value</dt><dd>$18,659</dd>
+      </dl>
+      <p class="lede" style="margin:10px 0 0;font-size:13px">83k is roughly 23k over typical for a 2021, which is the main deduction. Scratches are a $200–400 recon hit, not material.</p>
+    </div>
+    <div class="card pick">
+      <span class="tag">Your answer to her question</span>
+      <h3>Trade it. Don't sell it.</h3>
+      <p style="font-size:13.5px;margin-bottom:8px">She asked directly whether to use CarMax/Carvana. The answer is arithmetic, not preference:</p>
+      <p style="font-size:13.5px;margin:0"><strong>CarMax has to beat the dealer by more than $1,159</strong> to be worth it, because that's the NJ sales-tax credit she forfeits by selling outside the deal. Get all three quotes, apply the spread, let the number decide.</p>
+      <p class="lede" style="margin:9px 0 0;font-size:13px">Her form says no outside offer yet — so you're setting the anchor, not chasing one.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">06</span> Which one actually costs less</h2>
+  <p class="lede">Over her stated three years, with the van's resale value as the only unknown. This is the slide her husband is going to build himself, so you should bring it first.</p>
+  <div class="card" style="margin-top:12px">
+    <dl class="kv">
+      <dt>Lease, 10k, $3k down — 3-year cost</dt><dd>$18,820</dd>
+      <dt>Finance 48 @1.9%, trade + $5k</dt><dd>$18,015</dd>
+      <dt>Finance 60 @4.99%, trade only</dt><dd>$20,056</dd>
+    </dl>
+    <div class="bar">
+      <i style="flex:25;background:var(--good)"></i><i style="flex:8;background:var(--brass)"></i><i style="flex:67;background:var(--sunk)"></i>
+    </div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--good)"></i>Lease wins below $25,000</span>
+      <span><i class="dot" style="background:var(--brass)"></i>Coin flip</span>
+    </div>
+    <p style="margin:13px 0 0;font-size:14px"><strong>Break-even resale is about $25,000.</strong> If the Carnival Hybrid is worth more than that at 36 months, financing wins by a few hundred dollars. If it's worth less, the lease wins. Against 60-month financing the lease wins outright at any realistic value.</p>
+    <p style="margin:9px 0 0;font-size:14px">Kia set the residual at <strong>$27,908 — 65% of MSRP.</strong> Minivans don't typically hold 65% at three years, and the 1.6T hybrid has thin resale history in this application. Kia is carrying roughly $2,000 of depreciation risk that she would otherwise own.</p>
+    <p style="margin:9px 0 0;font-size:14px;color:var(--muted)">Honest version to say out loud: <em>the lease is not cheaper, it's insurance.</em> On a three-year hold they're within a few hundred dollars, and the lease is the one where the downside isn't hers.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">07</span> Hybrid vs gas</h2>
+  <p class="lede">She asked for hybrid. The math backs her up, and not for the reason most people assume.</p>
+  <div class="scroll" style="margin-top:12px">
+    <table>
+      <thead><tr><th>LXS · $3,000 down</th><th>Hybrid</th><th>Gas V6</th><th>Delta</th></tr></thead>
+      <tbody>
+        <tr><td>MSRP</td><td class="num">$42,935</td><td class="num">$40,935</td><td class="num">+$2,000</td></tr>
+        <tr><td>Out-the-door</td><td class="num">$44,222</td><td class="num">$42,196</td><td class="num">+$2,026</td></tr>
+        <tr><td>Combined MPG</td><td class="num">32</td><td class="num">21</td><td class="num">+11</td></tr>
+        <tr><td>Residual @10k</td><td class="num">65%</td><td class="num">64%</td><td class="num">+1 pt</td></tr>
+        <tr class="hi"><td>Lease payment @10k</td><td class="num pay">$452</td><td class="num pay">$437</td><td class="num pay">+$15</td></tr>
+        <tr><td>Fuel cost @10k/yr</td><td class="num">$86/mo</td><td class="num">$131/mo</td><td class="num">−$45</td></tr>
+        <tr class="hi"><td><strong>Net monthly</strong></td><td class="num pay" colspan="2" style="text-align:right">Hybrid is $30/mo cheaper</td><td class="num pay">−$30</td></tr>
+      </tbody>
+      <caption>Fuel at $3.30/gal. At 15,000 mi/yr the hybrid's edge widens to about $53/mo.</caption>
+    </table>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <p style="margin:0;font-size:14.5px"><strong>On a lease the hybrid is effectively free — better than free.</strong> The $2,000 sticker premium barely reaches the payment because leasing only charges her for depreciation, and Kia gives the hybrid a higher residual. She pays $15 more a month and saves $45 in gas.</p>
+    <p style="margin:10px 0 0;font-size:14px;color:var(--muted)">The one caveat worth saying out loud: that edge is fuel-price dependent. Around $2.40/gal it washes out. It does not go negative in any realistic scenario.</p>
+  </div>
+  <div class="flag" style="border-color:var(--brass);background:var(--brassbg);margin-top:11px">
+    <b>The gas version is your only path to her $42,000 cap.</b> Gas LXS lands at $42,196 out the door — within a rounding error of her stated ceiling. So the real choice is: hold the $42,000 line and take gas, or move the line about $2,200 and take the hybrid she actually wants. Given the hybrid nets out cheaper monthly, recommend moving the line.
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">08</span> Buying it, and what it'll be worth</h2>
+  <p class="lede">Two separate questions: should she buy instead of lease, and should she buy the lease out at the end. The answers point in opposite directions, for the same reason.</p>
+
+  <div class="scroll" style="margin-top:12px">
+    <table>
+      <thead><tr><th>Path to owning it</th><th>Total cost</th><th>Time to own</th></tr></thead>
+      <tbody>
+        <tr class="hi"><td>Finance outright, 48mo @1.9%</td><td class="num pay">$45,959</td><td class="num">48 months</td></tr>
+        <tr><td>Lease 36, then buy cash</td><td class="num pay">$48,988</td><td class="num">36 months</td></tr>
+        <tr><td>Lease 36, then finance buyout</td><td class="num pay">$52,103</td><td class="num">72 months</td></tr>
+      </tbody>
+      <caption>No trade applied, so these compare cleanly. Buyout financing assumed at 6.49% — used rates, not the 1.9% new-car promo.</caption>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>If she wants to own it, buy it now — don't lease first</h3>
+    <p style="font-size:14px;margin-bottom:0">Leasing and then buying out costs about <strong>$3,000 more</strong> than just financing it, because she pays rent charge for three years and then borrows again at used-car rates. Keep the buyout as an <em>option</em>, never as a plan.</p>
+  </div>
+
+  <div class="card" style="margin-top:10px">
+    <h3>And she probably shouldn't exercise that option</h3>
+    <dl class="kv" style="margin-bottom:11px">
+      <dt>Lease buyout price</dt><dd>$27,908</dd>
+      <dt>Buyout + NJ tax &amp; fees</dt><dd>$30,183</dd>
+      <dt>Likely market value at 36mo</dt><dd>$25,800–$26,600</dd>
+      <dt>Gap</dt><dd style="color:var(--warn)">−$3,600 to −$4,400</dd>
+    </dl>
+    <p style="font-size:14px;margin:0"><strong>Here's the thing that ties this whole file together.</strong> Kia set the residual at 65%. Real three-year retention on a minivan runs closer to 60–62%, and KBB has this van at 49% by year five. That inflated residual is exactly <em>why the lease payment is low</em> — and exactly why buying it out at the end is a bad deal.</p>
+    <p style="font-size:14px;margin:10px 0 0">Same number, two conclusions: <strong>lease it because the residual is high, and walk away at 36 months for the same reason.</strong> If the market surprises to the upside, the option is sitting there. If it doesn't, it's Kia's problem.</p>
+  </div>
+
+  <div class="card" style="margin-top:10px">
+    <h3>Resale outlook if she buys</h3>
+    <dl class="kv">
+      <dt>3 years @ 62%</dt><dd>$26,620</dd>
+      <dt>3 years @ 60%</dt><dd>$25,761</dd>
+      <dt>5 years @ 49% (KBB)</dt><dd>$21,038</dd>
+      <dt>5-year depreciation</dt><dd>$21,779</dd>
+    </dl>
+    <p class="lede" style="margin:10px 0 0;font-size:13px">Minivan resale is steadier than most segments — the buyer pool is families, not enthusiasts, and it doesn't collapse on a model refresh. The open question is the 1.6T hybrid powertrain, which has limited resale history in this application. That uncertainty is the single best reason to let Kia hold the bag on a three-year hold.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">09</span> Trim — and the seating trap</h2>
+  <div class="cards two">
+    <div class="card">
+      <span class="tag alt">Base · her default</span>
+      <h3>Hybrid LXS</h3>
+      <div class="px">$42,935 MSRP · target $40,500</div>
+      <ul>
+        <li><strong>8-passenger Slide-Flex bench</strong> — middle seat slides fore/aft to open a path back</li>
+        <li>Heated front seats, SynTex upholstery</li>
+        <li>Blind-spot monitoring, full ADAS suite</li>
+        <li>17" wheels, tri-zone climate, power sliding doors</li>
+        <li>Best lease support: $1,900 lease cash, 65% residual</li>
+      </ul>
+    </div>
+    <div class="card pick">
+      <span class="tag">Recommend · mid</span>
+      <h3>Hybrid EX</h3>
+      <div class="px">$45,135 MSRP · target $42,600 · +$40/mo leased</div>
+      <ul>
+        <li><strong>Choice of 7-passenger captain's chairs</strong> — open walkway to row three</li>
+        <li>Dual 12.3" displays, navigation, wireless charging</li>
+        <li>Surround-view camera</li>
+        <li>Power driver's seat, smart power liftgate, 19" wheels</li>
+      </ul>
+    </div>
+  </div>
+  <div class="flag" style="margin-top:12px">
+    <b>This is the most important thing on the page.</b> Her exact requirement is two rear-facing seats with everyday access <em>plus</em> two older kids climbing into the back multiple times a week. With a second-row bench, once two car seats are installed those older kids have no clean path — the LXS Slide-Flex is a workaround, not a solution. <strong>Captain's chairs leave a permanent open walkway between the two car seats.</strong> On the Hybrid that means EX, roughly $40/month more on a lease. Raise this before she anchors on the base trim, and confirm the specific van's second-row config on the window sticker — EX is built both ways.
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">10</span> Talk track</h2>
+
+  <div class="say">
+    <span class="lbl">Open — acknowledge and reframe</span>
+    <p>"No apology needed, the timing is actually good. And you already told me the most important thing in your form: you don't want a minivan forever, just the next few years while the car seats are rear-facing. That one sentence decides most of this."</p>
+  </div>
+
+  <div class="say obj">
+    <span class="lbl">The husband — "leases are throwing money away"</span>
+    <p>"He's right for most people. The reason leases are usually bad is that you give up the car right when it gets cheap to own. But that logic assumes you want to keep it. You've told me you don't."</p>
+    <p>"Kia is willing to guarantee this van is worth $27,908 in three years — 65% of sticker. Minivans don't usually hold that, and the hybrid version doesn't have much of a track record yet. If they're wrong, that's Kia's loss. If you finance it, that's your loss."</p>
+    <p>"And you aren't locked out of owning it. At 36 months you can buy it for $27,908. If it holds up, buy it. If it doesn't, hand it back. You're paying about a hundred a month for the right to decide later."</p>
+  </div>
+
+  <div class="say">
+    <span class="lbl">When he asks which is cheaper — don't dodge it</span>
+    <p>"Over three years they're within a few hundred dollars. Financing wins slightly if the van holds its value, the lease wins if it doesn't. It's close to a coin flip on cost, so I'd decide it on risk — and on the fact that leasing leaves about $14,000 of your trade liquid instead of parked in a minivan."</p>
+  </div>
+
+  <div class="say">
+    <span class="lbl">Hybrid vs gas — if she second-guesses it</span>
+    <p>"Stay with the hybrid. On a lease it's $15 a month more than the V6 and saves about $45 a month in gas, so you're ahead roughly thirty dollars a month. The sticker premium doesn't really hit you on a lease because you're only paying for depreciation, and Kia gives the hybrid the better residual."</p>
+  </div>
+
+  <div class="say">
+    <span class="lbl">If they ask about buying it at lease end</span>
+    <p>"You'll have the option at $27,908, and I'd plan on not taking it. That number is set above where I expect the van to actually be worth — probably around $26,000. Which is good news, it's why your payment is low. But it means at the end you hand it back rather than buy it. If the market surprises us, the option's still there."</p>
+  </div>
+
+  <div class="say">
+    <span class="lbl">The $42,000 ceiling — reset it early</span>
+    <p>"One thing I want to flag from your form: the $42,000 all-in cap doesn't work on a hybrid. The cheapest hybrid Carnival is $42,935 before tax and fees — realistically about $44,200 out the door. The gas version fits under $42,000. So it's hybrid or that ceiling, not both."</p>
+  </div>
+
+  <div class="say">
+    <span class="lbl">Close</span>
+    <p>"Bridget and Brendan's deal went the same way, so you know how I work. Two things I need from you: your real annual mileage, and whether you want the captain's chairs. Then I'll go get real numbers from three stores."</p>
+    <p>"One timing note — the 1.9% financing and the $1,900 of lease support both expire September 30. That's twelve days. Nothing forces a decision tonight, but if we're going to move in the next few weeks it's worth knowing the calendar."</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Verify before you quote.</strong> Money factor and residuals are Northeast-region figures and reset monthly — confirm for her ZIP. Selling prices are realistic targets, not quotes. 1.9% is tier-1 only and she is <em>not</em> pre-approved, so her tier is unknown — that's question 6.</p>
+  <p>One housekeeping item: your dealer brief says <strong>Katie Loughran</strong>, the intake form says <strong>Katie Wolf</strong>. Fix before it goes to a store.</p>
+  <p>Prepared Sept 18, 2026 · Kyle Cullen · Elite Auto Concierge</p>
+</footer>
+</div>
+
+<script>
+var QUESTIONS=[
+ {k:1,key:true,t:"If you finance, do you want the full trade value going down on the purchase?",w:"Her form caps cash at $5,000 beyond the trade. This decides whether the $10k–$20k columns are real or theoretical — and whether she'd rather keep that equity liquid."},
+ {k:2,key:true,t:"How many miles a year do you actually drive?",w:"She wrote 10,000. Two older kids in activities usually says otherwise. At $0.20/mile, being wrong by 4k/year is $2,400 at turn-in — enough to erase the lease advantage."},
+ {k:3,key:true,t:"Do you need a walkway to the third row, or will a sliding bench do?",w:"Two rear-facing seats plus older kids in back multiple times a week. This is the trim decision — captain's chairs mean EX, not LXS."},
+ {k:4,t:"What specifically does your husband dislike about leasing?",w:"Get the actual objection. 'Nothing at the end' and 'mileage limits' need completely different answers."},
+ {k:5,t:"Three years — is that firm, or could it stretch to five?",w:"If five is realistic, financing wins clearly and you should say so. Don't sell a lease into a five-year hold."},
+ {k:6,t:"Have you pulled a credit app yet? Roughly what's your score?",w:"1.9% and the best money factor are tier-1 only. Every number on this page assumes tier 1."},
+ {k:7,t:"Has anyone quoted you on the RAV4 yet?",w:"Form says no. Confirm it — you're setting the anchor rather than beating one."},
+ {k:8,t:"Black, dark gray, or navy — which is the real must-have?",w:"Narrows the inventory search. Gray or black interior either way."},
+ {k:9,t:"Is anyone else in the decision besides you and your husband?",w:"Cheap question, saves a week."}
+];
+(function(){
+  var box=document.getElementById('qs'),saved={},stat=document.getElementById('qstat');
+  try{saved=JSON.parse(localStorage.getItem('katie-q')||'{}')}catch(e){saved={}}
+  function save(){try{localStorage.setItem('katie-q',JSON.stringify(saved))}catch(e){}}
+  function grow(ta){ta.style.height='auto';ta.style.height=Math.max(38,ta.scrollHeight)+'px'}
+  function count(){
+    var n=QUESTIONS.filter(function(q){return (saved['q'+q.k]||'').trim()}).length;
+    stat.textContent=n?n+' of '+QUESTIONS.length+' answered':'';
+  }
+  QUESTIONS.forEach(function(q){
+    var wrap=document.createElement('div');
+    wrap.className='q'+(q.key?' key':'');
+    var row=document.createElement('div'); row.className='row';
+    var cb=document.createElement('input');
+    cb.type='checkbox'; cb.id='qc'+q.k; cb.checked=!!(saved['q'+q.k]||'').trim();
+    cb.setAttribute('aria-label','Mark question '+q.k+' answered');
+    var d=document.createElement('div'); d.style.flex='1';
+    var lab=document.createElement('label'); lab.setAttribute('for','qa'+q.k);
+    lab.className='qt'; lab.textContent=q.t;
+    if(q.key){var b=document.createElement('span'); b.className='tagk'; b.textContent='KEY'; lab.appendChild(b);}
+    var w=document.createElement('span'); w.className='qw'; w.textContent=q.w;
+    d.appendChild(lab); d.appendChild(w);
+    row.appendChild(cb); row.appendChild(d);
+    var ta=document.createElement('textarea');
+    ta.id='qa'+q.k; ta.placeholder='Her answer…'; ta.value=saved['q'+q.k]||'';
+    ta.addEventListener('input',function(){
+      saved['q'+q.k]=ta.value; save(); grow(ta);
+      var has=!!ta.value.trim();
+      cb.checked=has; wrap.classList.toggle('done',has); count();
+    });
+    cb.addEventListener('change',function(){
+      wrap.classList.toggle('done',cb.checked);
+      if(cb.checked && !ta.value.trim()){ta.focus()}
+    });
+    wrap.classList.toggle('done',!!(saved['q'+q.k]||'').trim());
+    wrap.appendChild(row); wrap.appendChild(ta); box.appendChild(wrap);
+    requestAnimationFrame(function(){grow(ta)});
+  });
+  count();
+
+  document.getElementById('copyQ').addEventListener('click',function(){
+    var out='KATIE — CARNIVAL CALL NOTES\n'+new Date().toLocaleString('en-US')+'\n\n';
+    QUESTIONS.forEach(function(q){
+      out+='Q'+q.k+'. '+q.t+'\n   '+((saved['q'+q.k]||'').trim()||'—')+'\n\n';
+    });
+    var done=function(ok){
+      stat.textContent=ok?'Copied to clipboard':'Copy failed — select the text manually';
+      setTimeout(count,2600);
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(out).then(function(){done(true)},function(){done(false)});
+    }else{
+      var t=document.createElement('textarea');
+      t.value=out; t.style.position='fixed'; t.style.opacity='0';
+      document.body.appendChild(t); t.select();
+      var ok=false; try{ok=document.execCommand('copy')}catch(e){}
+      document.body.removeChild(t); done(ok);
+    }
+  });
+  document.getElementById('clearQ').addEventListener('click',function(){
+    if(!confirm('Clear all answers?'))return;
+    saved={}; save();
+    QUESTIONS.forEach(function(q){
+      var ta=document.getElementById('qa'+q.k), cb=document.getElementById('qc'+q.k);
+      ta.value=''; ta.style.height='38px'; cb.checked=false;
+      ta.closest('.q').classList.remove('done');
+    });
+    count();
+  });
+})();
+
+var TAX=.06625, DOC=599, REG=400, ACQ=650, MF=.00218, N=36, TRADE=17500;
+var T={
+  LXS:{msrp:42935,price:40500,rv:{10000:.65,15000:.61},cash:1900,name:'LXS'},
+  EX :{msrp:45135,price:42600,rv:{10000:.64,15000:.60},cash:1960,name:'EX'}
+};
+function money(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function lease(t,das,mi){
+  var d=T[t],res=d.msrp*d.rv[mi],p=500;
+  for(var i=0;i<300;i++){
+    var ccr=Math.max(das-p-REG,0),
+        tx=TAX*(p*N+ccr),
+        cap=d.price+DOC+ACQ+tx-d.cash-ccr;
+    p=(cap-res)/N+(cap+res)*MF;
+  }
+  return {pmt:p,res:res,ccr:Math.max(das-p-REG,0)};
+}
+function amort(P,apr,n){var r=apr/12;return r===0?P/n:P*r/(1-Math.pow(1+r,-n))}
+function finance(t,cash,apr,n,trade){
+  var d=T[t],taxable=d.price+DOC-trade,
+      otd=(d.price+DOC)+taxable*TAX+REG-trade,
+      P=Math.max(otd-cash,0);
+  return {pmt:amort(P,apr,n),P:P,otd:otd};
+}
+
+var S={trim:'LXS',mi:10000,trade:1,down:3000};
+function seg(id,key,cast){
+  document.getElementById(id).addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    S[key]=cast(b.dataset.v);
+    [].forEach.call(this.querySelectorAll('button'),function(x){
+      x.setAttribute('aria-pressed',String(x===b));
+    });
+    render();
+  });
+}
+seg('segTrim','trim',String); seg('segMi','mi',Number); seg('segTr','trade',Number);
+var dn=document.getElementById('down');
+dn.addEventListener('input',function(){S.down=+dn.value;render()});
+
+function render(){
+  document.getElementById('downV').textContent=money(S.down);
+  var tr=S.trade?TRADE:0;
+  var L=lease(S.trim,S.down,S.mi),
+      f48=finance(S.trim,S.down,.019,48,tr),
+      f60=finance(S.trim,S.down,.0499,60,tr);
+  document.getElementById('vL').textContent=money(L.pmt);
+  document.getElementById('sL').textContent=money(S.down+L.pmt+REG)+' drive-off';
+  document.getElementById('vF48').textContent=money(f48.pmt);
+  document.getElementById('sF48').textContent=money(f48.P)+' financed';
+  document.getElementById('vF60').textContent=money(f60.pmt);
+  document.getElementById('sF60').textContent=money(f60.P)+' financed';
+
+  var lo=Math.min(L.pmt,f48.pmt,f60.pmt);
+  [['oL',L.pmt],['oF48',f48.pmt],['oF60',f60.pmt]].forEach(function(a){
+    document.getElementById(a[0]).classList.toggle('win',a[1]===lo);
+  });
+
+  document.getElementById('cnote').innerHTML =
+    T[S.trim].name+' · residual at '+(S.mi/1000)+'k = <strong>'+money(L.res)+'</strong>'+
+    ' · finance out-the-door '+money(f48.otd+tr)+
+    (tr?' · trade applied ('+money(TRADE)+' + '+money(TRADE*TAX)+' tax credit)':' · trade sold separately');
+
+  var flag=document.getElementById('cflag'),msg='';
+  if(S.trade && L.ccr>5000)
+    msg='<b>Don\'t do this on the lease.</b> '+money(L.ccr)+' of cap reduction is unrecoverable if the van is totaled early. Cap lease money down near $3,000 and take the trade as cash.';
+  else if(!S.trade && S.down>5000)
+    msg='<b>Above her stated limit.</b> Her form caps cash down at $5,000. Confirm with question 1 before quoting this.';
+  else if(S.mi===15000 && L.pmt>560)
+    msg='<b>Over her $500 ceiling.</b> Drop to LXS or add cash down to get back under.';
+  flag.hidden=!msg; flag.innerHTML=msg;
+}
+
+(function(){
+  var rows='';
+  ['LXS','EX'].forEach(function(t){
+    [10000,15000].forEach(function(mi){
+      var a=lease(t,0,mi),b=lease(t,3000,mi),c=lease(t,5000,mi),
+          hi=(t==='LXS'&&mi===10000)?' class="hi"':'';
+      rows+='<tr'+hi+'><td>'+t+' · '+(mi/1000)+'k</td>'+
+        '<td class="num pay">'+money(a.pmt)+'</td>'+
+        '<td class="num pay">'+money(b.pmt)+'</td>'+
+        '<td class="num pay">'+money(c.pmt)+'</td>'+
+        '<td class="num">'+money(a.res)+'</td></tr>';
+    });
+  });
+  document.getElementById('tLease').innerHTML=rows;
+
+  var f='';
+  ['LXS','EX'].forEach(function(t){
+    [[48,.019],[60,.0499]].forEach(function(p){
+      var hi=(t==='LXS'&&p[0]===48)?' class="hi"':'';
+      f+='<tr'+hi+'><td>'+t+' · '+p[0]+'mo @'+(p[1]*100).toFixed(2)+'%</td>';
+      [5000,10000,15000,20000].forEach(function(d){
+        f+='<td class="num pay">'+money(finance(t,d,p[1],p[0],TRADE).pmt)+'</td>';
+      });
+      f+='</tr>';
+    });
+  });
+  document.getElementById('tFin').innerHTML=f;
+})();
+
+render();
+</script>
+
+</body>
+</html>
