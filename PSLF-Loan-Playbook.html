@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16233A">
+<title>Student Loan Playbook — Cullen</title>
+<style>
+  :root{
+    --ink:#16233A;
+    --ink-soft:#3E5068;
+    --paper:#EEF1F4;
+    --card:#FFFFFF;
+    --line:#CBD5DE;
+    --alert:#A81E28;
+    --alert-bg:#FBEBEC;
+    --go:#1B6355;
+    --go-bg:#E7F1EE;
+    --hold:#8A6410;
+    --hold-bg:#FAF1DC;
+    --k:#2B5C8A;
+    --a:#7A3F86;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-text-size-adjust:100%;
+    padding-bottom:64px;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 14px}
+
+  header{
+    background:var(--ink);color:#fff;
+    padding:22px 0 18px;
+    padding-top:calc(22px + env(safe-area-inset-top));
+  }
+  header h1{
+    margin:0;font-size:25px;line-height:1.15;letter-spacing:-0.02em;font-weight:700;
+  }
+  header p{margin:8px 0 0;color:#A9BCD2;font-size:13.5px;line-height:1.45}
+
+  nav{
+    position:sticky;top:0;z-index:20;
+    background:rgba(238,241,244,.94);
+    backdrop-filter:saturate(160%) blur(10px);
+    -webkit-backdrop-filter:saturate(160%) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding:9px 14px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+    padding:8px 13px;border-radius:999px;font-size:14px;font-weight:600;
+    cursor:pointer;font-family:inherit;white-space:nowrap;
+  }
+  .tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .tab:focus-visible{outline:2px solid var(--k);outline-offset:2px}
+
+  section[role=tabpanel]{padding-top:18px}
+  section[hidden]{display:none}
+
+  h2{font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--ink-soft);margin:26px 0 10px}
+  h2:first-child{margin-top:4px}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:15px 16px;margin:0 0 12px;
+  }
+  .card h3{margin:0 0 7px;font-size:17.5px;line-height:1.25;letter-spacing:-0.01em}
+  .card p{margin:0 0 10px}
+  .card p:last-child,.card ul:last-child{margin-bottom:0}
+  .card ul{margin:0 0 10px;padding-left:19px}
+  .card li{margin-bottom:6px}
+
+  .flag{border-left:5px solid var(--line)}
+  .flag-alert{border-left-color:var(--alert);background:var(--alert-bg)}
+  .flag-go{border-left-color:var(--go);background:var(--go-bg)}
+  .flag-hold{border-left-color:var(--hold);background:var(--hold-bg)}
+  .flag-k{border-left-color:var(--k)}
+  .flag-a{border-left-color:var(--a)}
+
+  .tagline{font-size:12.5px;font-weight:700;color:var(--ink-soft);margin:0 0 6px}
+  .flag-alert .tagline{color:var(--alert)}
+  .flag-go .tagline{color:var(--go)}
+  .flag-hold .tagline{color:var(--hold)}
+
+  .num{font-variant-numeric:tabular-nums}
+
+  .big{
+    display:flex;align-items:baseline;gap:9px;margin:12px 0 4px;
+  }
+  .big b{font-size:34px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
+  .big span{font-size:13.5px;color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;font-size:15px;margin:4px 0 10px}
+  th{text-align:left;font-size:12.5px;color:var(--ink-soft);font-weight:700;padding:0 0 7px;border-bottom:1px solid var(--line)}
+  td{padding:9px 0;border-bottom:1px solid #E6EBF0;vertical-align:top}
+  td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .win td{font-weight:700}
+  table.cols th:not(:first-child),table.cols td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;padding-left:8px}
+  .sub{color:var(--ink-soft);font-size:13.5px}
+
+  details{border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:10px;overflow:hidden}
+  details[open]{background:#fff}
+  summary{
+    padding:14px 16px;cursor:pointer;font-weight:650;font-size:16px;line-height:1.3;
+    list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--ink-soft);font-size:20px;font-weight:400;line-height:1}
+  details[open] summary::after{content:"–"}
+  details[open] summary{border-bottom:1px solid #E6EBF0}
+  .body{padding:13px 16px 15px}
+  .body p:first-child{margin-top:0}
+  .body p:last-child,.body ul:last-child{margin-bottom:0}
+
+  .step{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid #E6EBF0}
+  .step:last-child{border-bottom:none;padding-bottom:0}
+  .step .n{
+    flex:0 0 26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700;margin-top:1px;
+  }
+  .step .t{flex:1}
+  .step .t b{display:block;margin-bottom:3px;font-size:16px}
+  .step .t span{font-size:14.5px;color:var(--ink-soft);display:block}
+
+  label.check{
+    display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #E6EBF0;cursor:pointer;
+  }
+  label.check:first-child{padding-top:2px}
+  label.check:last-of-type{border-bottom:none;padding-bottom:2px}
+  label.check input{
+    flex:0 0 auto;width:21px;height:21px;margin:1px 0 0;accent-color:var(--go);
+  }
+  label.check span{flex:1;font-size:15.5px;line-height:1.4}
+  label.check input:checked + span{color:#8494A6;text-decoration:line-through}
+  .who{
+    display:inline-block;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:4px;
+    margin-right:6px;vertical-align:1px;
+  }
+  .who-k{background:#E4EDF6;color:var(--k)}
+  .who-a{background:#F2E7F4;color:var(--a)}
+  .who-b{background:#E6EBF0;color:var(--ink-soft)}
+
+  .calc label{display:block;font-size:13.5px;font-weight:650;color:var(--ink-soft);margin:12px 0 5px}
+  .calc input,.calc select{
+    width:100%;font-family:inherit;font-size:17px;padding:11px 12px;
+    border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);
+    font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none;min-height:46px;
+  }
+  .calc input:focus,.calc select:focus{outline:2px solid var(--k);outline-offset:1px;border-color:var(--k)}
+  .out{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid #E6EBF0}
+  .row:last-child{border-bottom:none}
+  .row span{font-size:15px;color:var(--ink-soft)}
+  .row b{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;text-align:right}
+  .note{font-size:13px;color:var(--ink-soft);margin-top:10px;line-height:1.45}
+
+  .ask{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+  .ask h3{margin:0 0 8px;font-size:16.5px}
+  .ask ol{margin:0;padding-left:19px}
+  .ask li{margin-bottom:7px;font-size:15px}
+
+  .quote{background:#F4F6F8;border:1px solid #E6EBF0;border-radius:8px;padding:10px 12px;font-size:14.5px;margin:0 0 10px}
+
+  footer{margin:30px 0 0;padding:16px 0 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+  a{color:var(--k)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Student loan playbook</h1>
+    <p>Kyle &amp; Alyssa. PSLF, IDR, and what to do next. Updated September 23, 2026.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="now">Do now</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="alyssa">Alyssa</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="kyle">Kyle</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="taxes">Taxes</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="buyback">Buyback</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="calc">Calculator</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="traps">Traps</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ DO NOW ============ -->
+<section role="tabpanel" id="now">
+
+  <div class="card flag flag-a">
+    <p class="tagline">Alyssa</p>
+    <h3>IBR application in review</h3>
+    <div class="big"><b>$309</b><span>per month, confirmed by the estimator</span></div>
+    <p>She's in processing forbearance while MOHELA reviews it. The first 60 days count toward PSLF. After that it turns into general forbearance, which doesn't. That's the exact trap that cost Kyle 14 months.</p>
+    <p><b>No decision by day 55</b> from the date on her confirmation? Call MOHELA and ask them to keep her in processing status.</p>
+  </div>
+
+  <div class="card flag flag-k">
+    <p class="tagline">Kyle</p>
+    <h3>83 payments in, not close to 120</h3>
+    <div class="big"><b>Sep 2029</b><span>payment 120 without buyback</span></div>
+    <p>The 16 forbearance months never counted. Your payment is moving from $583 to $795, which looks like the PAYE cap. Buyback of the lost months opens around <b>May 2028</b>. Filing before then gets denied.</p>
+  </div>
+
+  <h2>Now</h2>
+  <div class="card">
+    <label class="check"><input type="checkbox" data-ck="a-day55"><span><b class="who who-a">Alyssa</b>Put a day-55 reminder on the calendar, counted from her IDR submission date</span></label>
+    <label class="check"><input type="checkbox" data-ck="a-ecf"><span><b class="who who-a">Alyssa</b>Make sure her PSLF employment form is filed and signed (Dumont BOE, EIN 22-6001754)</span></label>
+    <label class="check"><input type="checkbox" data-ck="k-pay"><span><b class="who who-k">Kyle</b>Keep paying $583 until the bill actually changes to $795</span></label>
+    <label class="check"><input type="checkbox" data-ck="k-copy"><span><b class="who who-k">Kyle</b>Download your recertification copy and confirm it used AGI $202,413 and family size 3</span></label>
+    <label class="check"><input type="checkbox" data-ck="k-count"><span><b class="who who-k">Kyle</b>Confirm your tracker shows 83 qualifying payments through August 2026, including the COVID months and July–August 2026</span></label>
+  </div>
+
+  <h2>When Kyle's employment form clears</h2>
+  <div class="card">
+    <label class="check"><input type="checkbox" data-ck="k-which"><span><b class="who who-k">Kyle</b>See which of March 2025 – June 2026 still show ineligible</span></label>
+    <label class="check"><input type="checkbox" data-ck="k-recon"><span><b class="who who-k">Kyle</b>File <b>PSLF Reconsideration</b> (not buyback) for the March–May 2025 processing months if they still show ineligible</span></label>
+    <label class="check"><input type="checkbox" data-ck="a-ibr"><span><b class="who who-a">Alyssa</b>When her IBR is approved, confirm the plan shows IBR, not Standard or Tiered Standard</span></label>
+  </div>
+
+  <h2>Every month</h2>
+  <div class="card">
+    <ul>
+      <li><b>Kyle:</b> move about $470 into savings for the buyback. That reaches ~$9,300 by May 2028. You'll probably need less.</li>
+      <li><b>Both:</b> check your PSLF trackers. Every month from here on should show as qualifying.</li>
+    </ul>
+  </div>
+
+  <h2>Spring 2028</h2>
+  <div class="card">
+    <label class="check"><input type="checkbox" data-ck="k-ibr28"><span><b class="who who-k">Kyle</b>Confirm you're being moved to <b>IBR, not RAP</b>, before PAYE ends July 1, 2028</span></label>
+    <label class="check"><input type="checkbox" data-ck="k-bb"><span><b class="who who-k">Kyle</b>When your tracker hits 104 (~May 2028), file the buyback request, once</span></label>
+    <label class="check"><input type="checkbox" data-ck="k-noecf"><span><b class="who who-k">Kyle</b>After filing buyback, don't submit another PSLF form</span></label>
+  </div>
+
+  <h2>Before filing 2026 taxes</h2>
+  <div class="card">
+    <label class="check"><input type="checkbox" data-ck="b-tax"><span><b class="who who-b">Both</b>Ask Di Bianco to confirm joint still beats separate with real 2026 numbers</span></label>
+  </div>
+
+  <h2>Done</h2>
+  <div class="card">
+    <label class="check"><input type="checkbox" data-ck="d-a-idr" checked><span><b class="who who-a">Alyssa</b>IBR application submitted, $309 estimate</span></label>
+    <label class="check"><input type="checkbox" data-ck="d-k-ecf" checked><span><b class="who who-k">Kyle</b>PSLF employment form filed for March 2025 forward, now in review</span></label>
+    <label class="check"><input type="checkbox" data-ck="d-k-pay" checked><span><b class="who who-k">Kyle</b>Payments restarted July 2026, paid every month since</span></label>
+    <p class="note" id="ckNote">Your progress is saved on this device.</p>
+  </div>
+
+</section>
+
+<!-- ============ ALYSSA ============ -->
+<section role="tabpanel" id="alyssa" hidden>
+
+  <div class="card flag flag-go">
+    <p class="tagline">The plan</p>
+    <h3>New IBR, filing jointly: submitted</h3>
+    <div class="big"><b>$309</b><span>per month, confirmed by the estimator</span></div>
+    <p>Her payment is capped at the 10-year Standard amount on $29,931 at 4.44%. The formula on $202,413 of joint income would give about $359 for her share, so the cap is what she pays.</p>
+  </div>
+
+  <h2>What happens next</h2>
+  <div class="card">
+    <ul>
+      <li><b>Processing forbearance now.</b> No payment due. The first 60 days count toward PSLF.</li>
+      <li><b>Day 55:</b> no decision yet? Call MOHELA and ask to keep her in processing status. After 60 days it becomes general forbearance and stops counting.</li>
+      <li><b>No voluntary payments</b> during processing. The months count either way, so paying gains nothing.</li>
+      <li><b>After approval,</b> the first $309 bill arrives a few weeks later. Confirm her plan shows IBR, not Standard or Tiered Standard.</li>
+      <li><b>Every year</b> she recertifies. With IRS consent on, it can happen automatically, the way Kyle's just did.</li>
+    </ul>
+  </div>
+
+  <h2>Why IBR and not RAP</h2>
+  <div class="card">
+    <table>
+      <tr><th>Plan</th><th>Monthly</th></tr>
+      <tr class="win"><td>New IBR</td><td>$309</td></tr>
+      <tr><td>RAP</td><td>~$440</td></tr>
+    </table>
+    <p>RAP applies 10% to the full AGI with no poverty-line protection and <b>no standard-payment cap</b>. The household RAP figure lands near $1,637 after the $50 dependent credit, then splits by loan balance. Her 27% share is about $440.</p>
+    <p>RAP also stretches forgiveness to 30 years, which matters if she ever leaves public service.</p>
+  </div>
+
+  <h2>What was entered (reuse next year)</h2>
+  <div class="card">
+    <div class="step"><div class="n">1</div><div class="t"><b>Request type: Switch my current plan</b><span>SAVE no longer exists, so it's a switch, not a recalculation or recertification.</span></div></div>
+    <div class="step"><div class="n">2</div><div class="t"><b>Marital status: Married</b><span>Never "separated or unable to access spouse's income." It doesn't apply, and the form is signed under penalty of perjury.</span></div></div>
+    <div class="step"><div class="n">3</div><div class="t"><b>Tax filing status: Married filing jointly</b><span>How 2025 was filed. Joint AGI of $202,413 applies.</span></div></div>
+    <div class="step"><div class="n">4</div><div class="t"><b>Family size changed? No. Dependents: 1</b><span>Christian was already on the 2025 return. Total family size is 3.</span></div></div>
+    <div class="step"><div class="n">5</div><div class="t"><b>Spouse has federal loans: Yes</b><span>This triggers the split by loan balance. Answering no would raise her payment.</span></div></div>
+    <div class="step"><div class="n">6</div><div class="t"><b>Income: 202413, entered manually</b><span>The IRS tool was down. Uploaded page 1 of the 2025 Form 1040 as "Tax Return." No W-2s, no pay stubs. Those show gross pay and would give back her pension and health deductions.</span></div></div>
+    <div class="step"><div class="n">7</div><div class="t"><b>Plan: IBR by name</b><span>Not "lowest monthly payment." The estimator returned $309.</span></div></div>
+  </div>
+
+  <div class="card">
+    <h3>Her numbers, for reference</h3>
+    <table>
+      <tr><td>W-2 Box 1 wages</td><td>$43,086.80</td></tr>
+      <tr><td>Gross NJ wages</td><td>$47,994.36</td></tr>
+      <tr><td>414h pension (pretax)</td><td>$2,881.68</td></tr>
+      <tr><td>Section 125 health (pretax)</td><td>$2,025.88</td></tr>
+      <tr><td>Loan balance</td><td>$29,931.10</td></tr>
+      <tr><td>Weighted avg rate</td><td>4.44%</td></tr>
+      <tr><td>Payments left (assumed)</td><td>~6 years</td></tr>
+    </table>
+    <p class="note">Box 12 Code DD ($32,442.16) is the cost of health coverage. It is reporting only and is not income. Never enter it anywhere.</p>
+  </div>
+
+  <h2>District contacts</h2>
+  <div class="card">
+    <table>
+      <tr><td>Employer</td><td>Dumont Board of Education</td></tr>
+      <tr><td>EIN</td><td>22-6001754</td></tr>
+      <tr><td>Address</td><td>25 Depew St, Dumont NJ 07628</td></tr>
+      <tr><td>Main office</td><td>201-387-3080</td></tr>
+      <tr><td>Superintendent</td><td>Dr. Maria Poidomani<br>epoidomani@dumontnj.org</td></tr>
+      <tr><td>Business Administrator</td><td>Kevin Cartotto</td></tr>
+      <tr><td>Asst. to Superintendent</td><td>Linda Kazanecki<br>ekazanecki@dumontnj.org<br>201-387-3082</td></tr>
+    </table>
+    <p class="note">Hours per week: enter 40, full-time. Don't reduce for summer. An 8-month contract counts as a full year.</p>
+  </div>
+
+</section>
+
+<!-- ============ KYLE ============ -->
+<section role="tabpanel" id="kyle" hidden>
+
+  <div class="card flag flag-hold">
+    <p class="tagline">The correction</p>
+    <h3>You're at 83, not close to 120</h3>
+    <table>
+      <tr><td>Jun 2018 – Aug 2026 on the calendar</td><td>99</td></tr>
+      <tr><td>Lost to forbearance (Mar 2025 – Jun 2026)</td><td>−16</td></tr>
+      <tr class="win"><td>Qualifying through Aug 2026</td><td>83</td></tr>
+      <tr><td>With all 16 bought back</td><td>99</td></tr>
+      <tr><td>Needed</td><td>120</td></tr>
+    </table>
+    <p>Even a full buyback leaves you 21 short today. This assumes every month from June 2018 through February 2025 counted, including the 43 COVID-pause months. Your tracker should show 83, and 84 once September posts.</p>
+  </div>
+
+  <h2>Your timeline</h2>
+  <div class="card">
+    <table>
+      <tr><th>Period</th><th>Payment</th></tr>
+      <tr><td>Now until the new bill (~Nov 2026)</td><td>$583</td></tr>
+      <tr><td>Through June 2028 (PAYE)</td><td>$795</td></tr>
+      <tr><td>July 2028 – Sep 2029 (IBR, est.)</td><td>~$800</td></tr>
+      <tr class="win"><td>Payment 120, no buyback</td><td>~Sep 2029</td></tr>
+    </table>
+    <p>That's 36 payments after September, roughly <b>$28,000</b>. The balance forgiven at the end is roughly <b>$60,000 or more</b>, tax-free. PSLF is still clearly worth finishing. Don't prepay and don't refinance.</p>
+  </div>
+
+  <h2>Why $795 and not $925</h2>
+  <div class="card">
+    <p>PAYE caps your payment at the 10-year Standard amount on what you owed <b>when you entered PAYE</b>, not today. The $925 estimate used today's $82,123, which includes $9,209 of interest. $795 works back to roughly $73,000–76,000, right around your principal.</p>
+    <p>The formula on your 2025 joint income gives about $986 even after the split with Alyssa's balance, so the cap is what sets the payment. That makes <b>$795 your ceiling for the rest of PAYE</b>. Overtime, raises, and filing status can't push it higher.</p>
+    <p class="note">Check the downloaded application copy. If it shows an AGI lower than $202,413, then $795 came from the formula instead of the cap, and next year's recertification could go higher.</p>
+  </div>
+
+  <div class="card flag flag-hold">
+    <p class="tagline">Why it happened now instead of January</p>
+    <h3>Let it run</h3>
+    <p>It's labeled "Automatic Recertification," triggered by the IRS-data consent on your account. Created September 19, in review since September 21. The PSLF employment form itself doesn't change repayment plans.</p>
+    <p>Starting early costs about $212 on each of 2–3 bills, roughly $400–650. Not worth risking another stalled application to avoid. Keep paying $583 until your bill changes. If a forbearance shows up on your account during the review, call that day.</p>
+  </div>
+
+  <div class="card">
+    <h3>Your numbers</h3>
+    <table>
+      <tr><td>Qualifying payments (thru Aug 2026)</td><td>83</td></tr>
+      <tr><td>Employment months (thru Aug 2026)</td><td>99</td></tr>
+      <tr><td>Months showing ineligible</td><td>16</td></tr>
+      <tr><td>Principal balance</td><td>$72,913.73</td></tr>
+      <tr><td>Outstanding interest</td><td>$9,209.38</td></tr>
+      <tr><td>Total</td><td>$82,123.11</td></tr>
+      <tr><td>Interest rates</td><td>2.40 – 6.55%</td></tr>
+      <tr><td>Plan</td><td>PAYE</td></tr>
+      <tr><td>Payment</td><td>$583 → $795</td></tr>
+      <tr><td>Recertification</td><td>Automatic, in review</td></tr>
+    </table>
+  </div>
+
+  <h2>The PAYE deadline now reaches you</h2>
+  <div class="card flag flag-alert">
+    <p class="tagline">July 1, 2028</p>
+    <h3>You must land on IBR, not RAP</h3>
+    <p>PAYE ends July 1, 2028. You'll be at about 105 payments with 15 to go, and you'll be moved to IBR or RAP.</p>
+    <table>
+      <tr><th>Plan</th><th>Est. monthly</th></tr>
+      <tr class="win"><td>IBR (capped)</td><td>~$800</td></tr>
+      <tr><td>RAP (no cap)</td><td>~$1,200+</td></tr>
+    </table>
+    <p>IBR's cap is recalculated on your balance when you enter it. Payments go to the $9,209 of outstanding interest first, so by mid-2028 most of it should be paid down and the cap should land close to $795.</p>
+    <ul>
+      <li>In spring 2028, check which plan you're being moved to. If it says RAP, request IBR.</li>
+      <li>Don't switch early. On today's higher balance, IBR's cap would likely come in above $795.</li>
+      <li>Watch for a processing forbearance during the switch. Same 60-day rule.</li>
+    </ul>
+  </div>
+
+  <h2>The 16-month gap</h2>
+  <div class="card flag flag-alert">
+    <p class="tagline">March 2025 – June 2026</p>
+    <h3>What actually happened</h3>
+    <p>You applied for a different IDR plan in March or April 2025 and got the standard 60-day processing pause. Then a letter said recalculations weren't being processed, and your account rolled into forbearance during the SAVE litigation and stayed there.</p>
+    <p>You made no payments in that window, so no money was wasted. Payments during administrative forbearance wouldn't have earned credit anyway.</p>
+  </div>
+
+  <div class="card">
+    <h3>How those 16 months split</h3>
+    <table>
+      <tr><th>Period</th><th>Should count?</th></tr>
+      <tr><td>Mar – May 2025<br><span class="sub">IDR processing forbearance, first 60 days</span></td><td>Yes</td></tr>
+      <tr><td>~Jun 2025 – Jun 2026<br><span class="sub">General forbearance</span></td><td>No</td></tr>
+    </table>
+    <p>All 16 show ineligible today. The first stretch should count for free once corrected. The rest only comes back through buyback.</p>
+    <div class="big"><b>~2–3</b><span>months to fix by reconsideration</span></div>
+    <div class="big"><b>~13–14</b><span>months for buyback in 2028</span></div>
+  </div>
+
+  <h2>The free fix: reconsideration</h2>
+  <div class="card flag flag-go">
+    <p class="tagline">After your employment form processes</p>
+    <h3>File PSLF Reconsideration for March–May 2025</h3>
+    <p>Your April 2025 month listed two reasons: the forbearance, and "no employment data exists." The employment form now in review fixes the second.</p>
+    <p>If those months still show "forbearance on due date" afterward, file a PSLF Reconsideration request at studentaid.gov saying they were an IDR processing forbearance while your application was pending. That's a qualifying type. Reconsideration has <b>no</b> 120-month requirement, so it can go in right away.</p>
+    <p>If approved: your count rises to 85–86, payment 120 moves up 2–3 months, and the future buyback bill drops by about $1,200–1,750.</p>
+  </div>
+
+  <h2>Your two clocks</h2>
+  <div class="card">
+    <ul>
+      <li><b>Employment months:</b> 99 through Aug 2026. Reaches 120 in May 2028.</li>
+      <li><b>Qualifying payments:</b> 83 through Aug 2026. Reaches 104 in May 2028.</li>
+    </ul>
+    <p>Buyback needs 120 months of employment <b>and</b> enough lost months to finish you at 120. Since 104 + 16 = 120, both tests pass in the same month: <b>May 2028</b>.</p>
+  </div>
+
+  <h2>COVID months</h2>
+  <div class="card">
+    <p>The March 2020 – September 2023 payment pause counted toward PSLF automatically, as $0 qualifying payments, for Direct Loan borrowers working full time for a qualifying employer. No application, no payment, nothing to buy back.</p>
+    <p><b>The catch:</b> it only shows up if your certified employment covers that period. If those 43 months aren't on your count, that's an employment certification gap. Fix it with a PSLF form covering 2020–2023.</p>
+  </div>
+
+</section>
+
+<!-- ============ TAXES ============ -->
+<section role="tabpanel" id="taxes" hidden>
+
+  <div class="card flag flag-go">
+    <p class="tagline">Decision</p>
+    <h3>Keep filing jointly</h3>
+    <p>Filing separately would lower Alyssa's payment to about $5/month. It still loses, because of how lopsided your incomes are. Kyle is capped at $795 either way.</p>
+  </div>
+
+  <h2>The math</h2>
+  <div class="card">
+    <table>
+      <tr><th>Separate filing</th><th>Per year</th></tr>
+      <tr><td>Saves on her payments</td><td>+$3,650</td></tr>
+      <tr><td>Costs in federal tax</td><td>−$3,850</td></tr>
+      <tr><td>Costs in NJ tax (est.)</td><td>−$650 to $1,650</td></tr>
+      <tr class="win"><td>Net</td><td>−$850 to −$1,850</td></tr>
+    </table>
+  </div>
+
+  <details>
+    <summary>Why separate filing costs so much</summary>
+    <div class="body">
+      <p><b>Uneven split, about $3,100.</b> Separate brackets are exactly half of joint brackets, so an even 50/50 split would be neutral. Yours is roughly 79/21. That pushes about $42,000 of Kyle's income from the 22% bracket into 24%.</p>
+      <p><b>Lost overtime deduction, about $754.</b> The $3,427 no-tax-on-overtime deduction on Schedule 1-A requires filing jointly. Filing separately forfeits it entirely.</p>
+      <p>Also lost: the student loan interest deduction, and the capital loss limit drops from $3,000 to $1,500 each.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Why her payment barely moves the needle</summary>
+    <div class="body">
+      <p>Her IBR payment is already capped at her 10-year Standard amount of $309. It never reaches the $1,345 household figure the joint income would otherwise produce.</p>
+      <p>Worth seeing plainly: at $309 across 72 payments she'd pay about $22,000 against a $29,931 balance. Her PSLF benefit is real but modest. Not worth contorting the tax return for.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>What separate filing would produce</summary>
+    <div class="body">
+      <table>
+        <tr><th></th><th>Est. AGI</th></tr>
+        <tr><td>Kyle</td><td>~$160,800</td></tr>
+        <tr><td>Alyssa</td><td>~$41,600</td></tr>
+      </table>
+      <p>Hers sits only about $613 above the $40,980 protected threshold, so her IBR payment would be roughly $5/month. Kyle's would compute near $1,000 and still cap at $795, the same as filing jointly.</p>
+    </div>
+  </details>
+
+  <div class="ask">
+    <h3>Before you file 2026</h3>
+    <p style="margin:0 0 8px;font-size:15px">Have Di Bianco run both scenarios with real 2026 numbers. The NJ side is my estimate. The gap isn't close, but confirm it.</p>
+  </div>
+
+</section>
+
+<!-- ============ BUYBACK ============ -->
+<section role="tabpanel" id="buyback" hidden>
+
+  <div class="card">
+    <h3>What buyback actually does</h3>
+    <p>Months in forbearance count toward nothing. Buyback lets you pay for them so they count as qualifying payments.</p>
+    <p>It never takes you past 120. It fills the holes so you <b>reach</b> 120 sooner.</p>
+    <p>The price is the smaller of your IDR bill right before or right after the gap, whenever you file. For Kyle that's about <b>$583 a month</b>, locked in. Every month bought instead of paid at ~$795 saves about $212 and moves forgiveness up a month.</p>
+  </div>
+
+  <h2>Two eligibility tests</h2>
+  <div class="card">
+    <ul>
+      <li><b>120 months of qualifying employment,</b> already certified. Not 120 payments.</li>
+      <li><b>The bought months must finish you at 120.</b> You can't use it to shrink a gap you'd still have to finish by paying.</li>
+    </ul>
+    <p>Kyle today: 83 + 16 = 99. Fails both. Filing now gets denied.</p>
+  </div>
+
+  <h2>Timing</h2>
+  <div class="card">
+    <p>There's no official processing time and no status page. The Department said in April 2026 it had no estimate to give.</p>
+    <div class="big"><b>1–2 yrs</b><span>typical wait reported in 2026</span></div>
+    <p>About 88,000 requests were pending on April 30, 2026, an estimated 18,000–19,000 of them duplicates now being removed. April was the first month decisions outpaced new requests, and 96% of decisions were approvals. Readers of one outlet report 20–24 month waits.</p>
+  </div>
+
+  <div class="card flag flag-hold">
+    <p class="tagline">Kyle</p>
+    <h3>File in May 2028, not now</h3>
+    <p>That's when your tracker reaches 104 and your employment reaches 120. You keep paying while it's pending, and each payment is one fewer month to buy.</p>
+    <table class="cols">
+      <tr><th>Decision takes</th><th>Buy</th><th>Saves</th><th>Forgiven</th></tr>
+      <tr><td>6 months</td><td>10</td><td>~$2,100</td><td>~Nov 2028</td></tr>
+      <tr><td>12 months</td><td>4</td><td>~$850</td><td>~May 2029</td></tr>
+      <tr><td>16+ months</td><td>0</td><td>$0</td><td>Sep 2029</td></tr>
+    </table>
+    <p>Buying all 16 would cost about <b>$9,300</b>. The queue will likely eat some of that. File anyway: it costs nothing to ask and the price is locked. Try other wait times on the Calculator tab.</p>
+  </div>
+
+  <div class="card flag flag-a">
+    <p class="tagline">Alyssa</p>
+    <h3>Useful for her too, later</h3>
+    <p>Her SAVE forbearance months, from mid-2024 until her IBR takes effect, don't count. Once her employment reaches 120 months and those months would finish her at 120, buyback can recover them.</p>
+    <p>Since March 2026, SAVE-forbearance months can't be priced with the SAVE formula. Her price should land near her $309 IBR payment per month. Nothing to do now except certify her employment every year.</p>
+  </div>
+
+  <h2>Paying for it</h2>
+  <div class="card">
+    <p>The full amount must reach the servicer within <b>90 days of the date on the agreement</b>, not the date you open it. Sources disagree on whether you can split it into several payments or must pay once through the link in the offer email. Have the full amount ready before it arrives.</p>
+    <table>
+      <tr><th>Source of funds</th><th>Use?</th></tr>
+      <tr class="win"><td>Cash savings</td><td>First</td></tr>
+      <tr><td>Brokerage</td><td>Backup</td></tr>
+      <tr><td>457(b)</td><td>No</td></tr>
+    </table>
+    <p><b>Cash:</b> about $470 a month from October 2026 reaches ~$9,300 by May 2028.</p>
+    <p><b>Brokerage:</b> fine as a backup. Selling may create taxable gains, so sell what's least appreciated.</p>
+    <p><b>457(b):</b> while you're still employed, withdrawals are limited to unforeseeable emergencies (a loan payment isn't one), small inactive balances, or age 59½. A plan loan, if offered, means repaying with after-tax money and can come due if you leave. Not worth it for a few thousand dollars.</p>
+  </div>
+
+  <div class="card flag flag-alert">
+    <p class="tagline">Two ways the bill comes in higher</p>
+    <h3>Watch these</h3>
+    <ul>
+      <li><b>Answer documentation requests fast.</b> They may ask for tax returns and family-size statements with a ~30-day window. Miss it and the amount defaults to the 10-year Standard calculation, which is higher.</li>
+      <li><b>Check the math on the letter.</b> It should reflect about $583 a month, your PAYE bill right before and after the gap. Not $795, and not Standard. A wrong calculation can be challenged within 90 days of the notice.</li>
+    </ul>
+  </div>
+
+  <details>
+    <summary>How to file it (May 2028)</summary>
+    <div class="body">
+      <p>StudentAid.gov → PSLF Reconsideration → reason "PSLF Buyback." Include this language, or it can be treated as a general question:</p>
+      <p class="quote">I have at least 120 months of approved qualifying employment, and I am seeking PSLF discharge through PSLF buyback. Please assess my eligibility for PSLF buyback.</p>
+      <p>File once. Duplicates get removed, not sped up. Certify all employment first, because a new PSLF form after the agreement is issued voids it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Do you keep paying while it's pending?</summary>
+    <div class="body">
+      <p>Yes. The Department's position is that you continue regular payments until the review is complete. Stopping early complicates your account.</p>
+      <p>Those payments count toward your 120 on their own, so they aren't wasted.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Do you get refunded for payments past 120?</summary>
+    <div class="body">
+      <p>Yes. Once the buyback is finalized and the balance hits zero, payments made after the 120th qualifying payment are refunded on Direct Loans.</p>
+      <p>Two caveats: if you have other outstanding federal loans, the surplus is applied there first and only the remainder is refunded. And refunds can be offset if you owe another federal debt.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>How forgiveness actually lands</summary>
+    <div class="body">
+      <p>Approval, then a buyback agreement with the amount owed, then you pay within 90 days, then discharge posts. Borrowers commonly wait several weeks between paying and seeing the discharge.</p>
+      <p>There's no status page. Updates come by email only. Keep your StudentAid.gov address current and check spam.</p>
+    </div>
+  </details>
+
+</section>
+
+<!-- ============ CALCULATOR ============ -->
+<section role="tabpanel" id="calc" hidden>
+
+  <div class="card calc">
+    <h3>Kyle's finish line</h3>
+    <p class="note" style="margin:0 0 4px">Enter your tracker numbers once the employment form clears. Assumes the ineligible months are your only gap.</p>
+
+    <label for="kc">Qualifying payments on your tracker</label>
+    <input id="kc" type="number" inputmode="numeric" value="83" min="0" max="120" step="1">
+
+    <label for="ka">Counted through</label>
+    <input id="ka" type="month" value="2026-08">
+
+    <label for="kl">Months still showing ineligible</label>
+    <input id="kl" type="number" inputmode="numeric" value="16" min="0" step="1">
+
+    <label for="kw">Buyback decision takes (months)</label>
+    <input id="kw" type="number" inputmode="numeric" value="12" min="0" step="1">
+
+    <label for="kp">Buyback price per month</label>
+    <input id="kp" type="number" inputmode="numeric" value="583" step="1">
+
+    <label for="kr">Your payment at that point</label>
+    <input id="kr" type="number" inputmode="numeric" value="795" step="5">
+
+    <div class="out">
+      <div class="row"><span>Payment 120, no buyback</span><b id="kNo">—</b></div>
+      <div class="row"><span>Buyback opens</span><b id="kOpen">—</b></div>
+      <div class="row"><span>Forgiven with buyback</span><b id="kYes">—</b></div>
+      <div class="row"><span>Months bought</span><b id="kBuy">—</b></div>
+      <div class="row"><span>Buyback cost</span><b id="kCost">—</b></div>
+      <div class="row"><span>Cash saved vs. paying</span><b id="kSave">—</b></div>
+    </div>
+    <p class="note" id="kNote"></p>
+  </div>
+
+  <div class="card calc">
+    <h3>Alyssa's payment estimator</h3>
+    <p class="note" style="margin:0 0 4px">Uses 2026 poverty guidelines. An estimate, not a servicer quote. Doesn't apply to Kyle: his PAYE cap is set on his balance when he entered PAYE.</p>
+
+    <label for="agi">Income used (AGI)</label>
+    <input id="agi" type="number" inputmode="numeric" value="202413" step="1000">
+
+    <label for="fam">Family size</label>
+    <select id="fam">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3" selected>3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+    </select>
+
+    <label for="dep">Dependents claimed on the tax return</label>
+    <input id="dep" type="number" inputmode="numeric" value="1" min="0" step="1">
+
+    <label for="bal">Her loan balance</label>
+    <input id="bal" type="number" inputmode="numeric" value="29931" step="500">
+
+    <label for="spb">Spouse's loan balance (0 if filing separately)</label>
+    <input id="spb" type="number" inputmode="numeric" value="82123" step="1000">
+
+    <label for="rate">Weighted average interest rate (%)</label>
+    <input id="rate" type="number" inputmode="decimal" value="4.44" step="0.01">
+
+    <div class="out">
+      <div class="row"><span>New IBR, her share</span><b id="oIBR">—</b></div>
+      <div class="row"><span>10-year Standard cap</span><b id="oCap">—</b></div>
+      <div class="row"><span>RAP, her share</span><b id="oRAP">—</b></div>
+    </div>
+    <p class="note" id="calcNote"></p>
+  </div>
+
+  <div class="card">
+    <h3>2026 protected income (150% of poverty)</h3>
+    <table>
+      <tr><th>Family size</th><th>Protected</th></tr>
+      <tr><td>1</td><td>$23,940</td></tr>
+      <tr><td>2</td><td>$32,460</td></tr>
+      <tr class="win"><td>3 (yours)</td><td>$40,980</td></tr>
+      <tr><td>4</td><td>$49,500</td></tr>
+      <tr><td>5</td><td>$58,020</td></tr>
+    </table>
+  </div>
+
+  <details>
+    <summary>How each formula works</summary>
+    <div class="body">
+      <p><b>New IBR.</b> Take AGI, subtract the protected amount for your family size, take 10%, divide by 12. Never more than the 10-year Standard payment. If both spouses have loans and file jointly, the household figure splits by each person's share of the total balance.</p>
+      <p><b>PAYE.</b> Same formula, but the cap is the 10-year Standard amount on the balance when you entered PAYE. That's why Kyle's is $795.</p>
+      <p><b>RAP.</b> A percentage of your full AGI with no protected amount: $120/year if AGI is $10,000 or less, then 1% per $10,000 band, reaching 10% above $100,000. Divide by 12, subtract $50 per dependent, floor of $10. No standard-payment cap.</p>
+      <p><b>Buyback.</b> Opens when your tracker plus your ineligible months reaches 120. Months you still need when the decision arrives, times the price per month.</p>
+    </div>
+  </details>
+
+</section>
+
+<!-- ============ TRAPS ============ -->
+<section role="tabpanel" id="traps" hidden>
+
+  <div class="card flag flag-alert">
+    <p class="tagline">Do not do these</p>
+    <h3>Ways to lose money here</h3>
+  </div>
+
+  <div class="card">
+    <ul>
+      <li><b>Don't consolidate or take out new federal loans.</b> Either one on or after July 1, 2026 makes RAP your only income-driven option, and consolidation reweights PSLF counts.</li>
+      <li><b>Don't use pay stubs, for either of you.</b> Alternative documentation is for income that dropped. It builds from gross pay and drops the deductions that make AGI lower. Picking a slow-overtime month to stand in for a year that averages ~$60k of overtime would misstate income. Kyle is capped anyway.</li>
+      <li><b>Don't check "separated or unable to access spouse's income."</b> It doesn't apply. The form is certified under penalty of perjury.</li>
+      <li><b>Don't round income down.</b> There's no estimation allowance. Falsification is punishable under 18 U.S.C. § 1001 by fine, up to five years, or both.</li>
+      <li><b>Kyle: don't switch plans or try to cancel the pending recertification.</b> $795 is your PAYE ceiling. IBR now would likely cap higher on today's balance, and any new application risks another processing forbearance.</li>
+      <li><b>Don't let an IDR application sit past 60 days.</b> Processing forbearance counts for 60 days, then turns into general forbearance, which doesn't. Call at day 55.</li>
+      <li><b>Don't file buyback early or twice.</b> Before both tests pass it's denied. Duplicates get removed, not sped up.</li>
+      <li><b>Don't file a new PSLF form after a buyback agreement is issued.</b> It voids the agreement, as does paying the loan off or applying to consolidate. Money already paid toward a voided agreement isn't refunded, just credited to the loans.</li>
+    </ul>
+  </div>
+
+  <h2>The two new plans</h2>
+  <div class="card flag flag-alert">
+    <p class="tagline">Tiered Standard</p>
+    <h3>Earns zero PSLF credit</h3>
+    <p>No tier qualifies, including the 10-year tier, even though its payments look identical to the legacy 10-year Standard that does qualify.</p>
+    <p>Neither of you can opt in; it requires a Direct Loan made on or after July 1, 2026. But SAVE borrowers who don't land on a plan can be defaulted onto a Standard plan. <b>If Alyssa's dashboard ever shows Standard or Tiered Standard instead of IBR, call immediately.</b></p>
+  </div>
+
+  <div class="card">
+    <h3>RAP costs you both more</h3>
+    <table class="cols">
+      <tr><th></th><th>Current</th><th>RAP</th></tr>
+      <tr><td>Alyssa</td><td>$309</td><td>~$440</td></tr>
+      <tr><td>Kyle</td><td>$795 capped</td><td>~$1,200</td></tr>
+    </table>
+    <p>RAP applies a percentage to full AGI with no protected-income floor and no Standard-payment cap. The cap is exactly what protects you both, and it's why Kyle needs IBR when PAYE ends.</p>
+  </div>
+
+  <h2>Which forbearances count</h2>
+  <div class="card">
+    <p>Worth keeping straight. It's the difference behind the 16 months on Kyle's tracker.</p>
+    <table>
+      <tr><th>Type</th><th>Counts?</th></tr>
+      <tr><td>Processing forbearance (first 60 days)</td><td>Yes</td></tr>
+      <tr><td>General forbearance after that</td><td>No</td></tr>
+      <tr><td>SAVE litigation forbearance</td><td>No</td></tr>
+      <tr><td>PSLF servicing transfer</td><td>Yes</td></tr>
+      <tr><td>COVID pause (Mar 2020 – Sep 2023)</td><td>Yes</td></tr>
+    </table>
+    <p class="note">If a month shows ineligible, read <b>both</b> reasons listed. A missing employment record is free to fix. A forbearance usually isn't.</p>
+  </div>
+
+  <h2>Good-faith estimate vs. understating</h2>
+  <div class="card">
+    <p><b>Good-faith estimate:</b> income is genuinely variable or unknowable, and you project it using a method you could explain to a servicer.</p>
+    <p><b>Understating:</b> you know the pattern and you pick a smaller number or a flattering slice of it. That's a false statement on a federal form.</p>
+    <p>Neither applies here. Both of you file W-2 returns and the tax return supplies the figure directly.</p>
+  </div>
+
+  <h2>Where things stand in the program</h2>
+  <div class="card">
+    <ul>
+      <li>SAVE was vacated March 10, 2026 and is gone.</li>
+      <li>RAP launched July 1, 2026. PAYE and ICR are closed to new borrowers and end entirely July 1, 2028.</li>
+      <li>IBR remains open to borrowers with older loans, and the partial financial hardship requirement was removed.</li>
+      <li>Since March 2026, buyback for SAVE-forbearance months can't be priced with the SAVE formula.</li>
+      <li>PSLF forgiveness remains federally tax-free. Non-PSLF forgiveness became taxable again after December 31, 2025.</li>
+      <li>Backlogs as of April 30, 2026: about 530,000 pending IDR applications and about 88,000 buyback requests.</li>
+    </ul>
+  </div>
+
+  <footer>
+    Built from your 2025 return, Alyssa's W-2 and MOHELA loan detail, and Kyle's StudentAid.gov screens. Updated September 23, 2026. Figures are estimates. Confirm plan mechanics with your servicer and the tax comparison with Di Bianco &amp; Company before acting.
+  </footer>
+
+</section>
+
+</main>
+
+<script>
+(function(){
+  // ---- tabs ----
+  var tabs = document.querySelectorAll('.tab');
+  var panels = document.querySelectorAll('section[role=tabpanel]');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.setAttribute('aria-selected','false'); });
+      t.setAttribute('aria-selected','true');
+      panels.forEach(function(p){ p.hidden = (p.id !== t.dataset.p); });
+      window.scrollTo(0,0);
+    });
+  });
+
+  // ---- checklist persistence (degrades gracefully) ----
+  var store = null;
+  try { window.localStorage.setItem('__t','1'); window.localStorage.removeItem('__t'); store = window.localStorage; } catch(e){ store = null; }
+  if(!store){ document.getElementById('ckNote').textContent = 'Progress resets when you close this file.'; }
+  document.querySelectorAll('[data-ck]').forEach(function(box){
+    var key = 'cullen-loan-v3-ck-' + box.dataset.ck;
+    if(store){
+      try {
+        var v = store.getItem(key);
+        if(v === '1') box.checked = true;
+        if(v === '0') box.checked = false;
+      } catch(e){}
+    }
+    box.addEventListener('change', function(){
+      if(!store) return;
+      try { store.setItem(key, box.checked ? '1' : '0'); } catch(e){}
+    });
+  });
+
+  // ---- shared helpers ----
+  var $ = function(id){ return document.getElementById(id); };
+  var money = function(n){
+    var r = Math.round(n);
+    return (r < 0 ? '−$' : '$') + Math.abs(r).toLocaleString('en-US');
+  };
+
+  // ---- Kyle's finish line ----
+  function parseMonth(v){
+    var m = /^(\d{4})-(\d{2})$/.exec(v || '');
+    if(!m) return {y:2026, m:8};
+    return {y:+m[1], m:+m[2]};
+  }
+  function monthLabel(base, add){
+    var d = new Date(base.y, base.m - 1 + add, 1);
+    var names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return names[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function kcalc(){
+    var c     = Math.max(0, Math.min(120, Math.floor(+$('kc').value || 0)));
+    var base  = parseMonth($('ka').value);
+    var lost  = Math.max(0, Math.floor(+$('kl').value || 0));
+    var wait  = Math.max(0, Math.floor(+$('kw').value || 0));
+    var price = Math.max(0, +$('kp').value || 0);
+    var later = Math.max(0, +$('kr').value || 0);
+    var notes = [];
+
+    var left = 120 - c;
+    if(left <= 0){
+      $('kNo').textContent = 'Done';
+      ['kOpen','kYes','kBuy','kCost','kSave'].forEach(function(id){ $(id).textContent = '—'; });
+      $('kNote').textContent = 'You\'re at 120. Apply for forgiveness.';
+      return;
+    }
+    $('kNo').textContent = monthLabel(base, left);
+
+    if(lost === 0){
+      ['kOpen','kYes','kBuy','kCost','kSave'].forEach(function(id){ $(id).textContent = '—'; });
+      $('kNote').textContent = 'No ineligible months left to buy.';
+      return;
+    }
+
+    var gap = Math.max(0, 120 - lost - c);
+    $('kOpen').textContent = gap === 0 ? 'Now' : monthLabel(base, gap);
+    var atOpen = c + gap;
+    var buy = Math.max(0, Math.min(lost, 120 - atOpen - wait));
+
+    if(buy === 0){
+      $('kYes').textContent = 'Moot';
+      $('kBuy').textContent = '0';
+      $('kCost').textContent = '$0';
+      $('kSave').textContent = '$0';
+      notes.push('The decision takes longer than your remaining payments, so you finish on your own first.');
+    } else {
+      $('kYes').textContent = '~' + monthLabel(base, gap + wait);
+      $('kBuy').textContent = String(buy);
+      $('kCost').textContent = money(buy * price);
+      $('kSave').textContent = money(buy * (later - price));
+      notes.push('Forgiveness lands ' + buy + ' month' + (buy > 1 ? 's' : '') + ' earlier than paying it out, plus a few weeks for the discharge to post.');
+    }
+    if(gap > 0) notes.push('Opens when your tracker reaches ' + (120 - lost) + '.');
+    $('kNote').textContent = notes.join(' ');
+  }
+  ['kc','ka','kl','kw','kp','kr'].forEach(function(id){
+    $(id).addEventListener('input', kcalc);
+    $(id).addEventListener('change', kcalc);
+  });
+  kcalc();
+
+  // ---- Alyssa's estimator ----
+  var FPL = {1:23940, 2:32460, 3:40980, 4:49500, 5:58020, 6:66540};
+
+  function rapPct(agi){
+    if(agi <= 10000) return null;           // flat $120/yr
+    if(agi > 100000) return 0.10;
+    return Math.ceil(agi/10000 - 1) * 0.01; // 1% per $10k band
+  }
+
+  function standardPayment(bal, ratePct){
+    if(bal <= 0) return 0;
+    var r = (ratePct/100)/12;
+    if(r <= 0) return bal/120;
+    return bal * r / (1 - Math.pow(1+r, -120));
+  }
+
+  function calc(){
+    var agi  = Math.max(0, +$('agi').value || 0);
+    var fam  = +$('fam').value;
+    var dep  = Math.max(0, +$('dep').value || 0);
+    var bal  = Math.max(0, +$('bal').value || 0);
+    var spb  = Math.max(0, +$('spb').value || 0);
+    var rate = Math.max(0, +$('rate').value || 0);
+
+    var share = (bal + spb) > 0 ? bal / (bal + spb) : 1;
+
+    // New IBR
+    var disc = Math.max(0, agi - FPL[fam]);
+    var household = disc * 0.10 / 12;
+    var ibrRaw = household * share;
+    var cap = standardPayment(bal, rate);
+    var ibr = Math.min(ibrRaw, cap);
+
+    // RAP
+    var pct = rapPct(agi);
+    var rapAnnual = (pct === null) ? 120 : agi * pct;
+    var rapHouse = rapAnnual / 12 - (dep * 50);
+    var rapShare = Math.max(10, rapHouse * share);
+
+    $('oIBR').textContent = money(ibr) + '/mo';
+    $('oCap').textContent = money(cap) + '/mo';
+    $('oRAP').textContent = money(rapShare) + '/mo';
+
+    var msgs = [];
+    if(ibrRaw > cap) msgs.push('The Standard cap is binding. The formula would give ' + money(ibrRaw) + ' but she pays the cap.');
+    if(spb > 0) msgs.push('Split by loan balance: her share is ' + Math.round(share*100) + '% of the household payment.');
+    if(spb === 0) msgs.push('No spouse balance entered, so no proration is applied.');
+    $('calcNote').textContent = msgs.join(' ');
+  }
+
+  ['agi','fam','dep','bal','spb','rate'].forEach(function(id){
+    $(id).addEventListener('input', calc);
+    $(id).addEventListener('change', calc);
+  });
+  calc();
+})();
+</script>
+</body>
+</html>
