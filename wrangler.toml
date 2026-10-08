@@ -1,0 +1,9 @@
+# Tells Cloudflare how to run the Ask AI worker straight from this GitHub repo.
+# Nothing secret here: the API key and access code stay in Cloudflare → Settings → Variables and Secrets.
+name = "protocol-ai"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+keep_vars = true
+
+[vars]
+ALLOWED_ORIGIN = "https://kycullen11-bot.github.io"
